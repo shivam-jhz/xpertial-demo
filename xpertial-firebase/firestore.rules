@@ -1,0 +1,102 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isAuth()          { return request.auth != null; }
+    function isOwner(uid)      { return request.auth.uid == uid; }
+    function isAdmin()         { return isAuth() && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin'; }
+    function isCollector()     { return isAuth() && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['collector', 'admin']; }
+
+    // ── USERS ──
+    match /users/{uid} {
+      allow read:   if isAuth() && (isOwner(uid) || isAdmin());
+      allow create: if isAuth() && isOwner(uid);
+      allow update: if isAuth() && (isOwner(uid) || isAdmin());
+    }
+
+    // ── REQUESTS (pre-auth form submissions) ──
+    match /requests/{id} {
+      allow create: if true;   // Public — anyone can submit a request
+      allow read:   if isAdmin() || (isAuth() && resource.data.clientId == request.auth.uid);
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // ── PROJECTS ──
+    match /projects/{id} {
+      allow read:   if isAuth() && (resource.data.clientId == request.auth.uid || isAdmin());
+      allow create: if isAdmin();
+      allow update: if isAdmin() ||
+                       // Clients can only update contractSigned field
+                       (isAuth() && resource.data.clientId == request.auth.uid &&
+                        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['contractSigned','contractId']));
+      allow delete: if isAdmin();
+    }
+
+    // ── PAYMENTS ──
+    match /payments/{id} {
+      allow read:   if isAuth() && (resource.data.clientId == request.auth.uid || isAdmin());
+      allow create: if isAdmin();   // Only Cloud Functions / admin write payments
+      allow update: if isAdmin();
+      allow delete: if false;       // Never delete payment records
+    }
+
+    // ── INVOICES ──
+    match /invoices/{id} {
+      allow read:   if isAuth() && (resource.data.clientId == request.auth.uid || isAdmin());
+      allow write:  if isAdmin();
+    }
+
+    // ── CONTRACTS ──
+    match /contracts/{id} {
+      allow read:   if isAuth() && (resource.data.clientId == request.auth.uid || isAdmin());
+      allow create: if isAuth() && request.resource.data.clientId == request.auth.uid;
+      allow update: if isAdmin();
+    }
+
+    // ── DOWNLOADS ──
+    match /downloads/{id} {
+      allow read:   if isAuth() && (resource.data.clientId == request.auth.uid || isAdmin());
+      allow write:  if isAdmin();
+    }
+
+    // ── NOTIFICATIONS ──
+    match /notifications/{id} {
+      allow read:   if isAuth() && resource.data.userId == request.auth.uid;
+      allow update: if isAuth() && resource.data.userId == request.auth.uid &&
+                       request.resource.data.diff(resource.data).affectedKeys().hasOnly(['read']);
+      allow create: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // ── TASKS (collector assignments) ──
+    match /tasks/{id} {
+      allow read:   if isAuth() && (resource.data.collectorId == request.auth.uid || isAdmin());
+      allow create: if isAdmin();
+      allow update: if isAdmin() ||
+                       (isCollector() && resource.data.collectorId == request.auth.uid &&
+                        request.resource.data.diff(resource.data).affectedKeys()
+                          .hasOnly(['status','submissions','updatedAt']));
+    }
+
+    // ── SUBMISSIONS (collector uploads) ──
+    match /submissions/{id} {
+      allow read:   if isAdmin() ||
+                       (isCollector() && resource.data.collectorId == request.auth.uid);
+      allow create: if isCollector() && request.resource.data.collectorId == request.auth.uid;
+      allow update: if isAdmin();
+    }
+
+    // ── PAYOUT REQUESTS ──
+    match /payoutRequests/{id} {
+      allow read:   if isAuth() && (resource.data.collectorId == request.auth.uid || isAdmin());
+      allow create: if isCollector() && request.resource.data.collectorId == request.auth.uid;
+      allow update: if isAdmin();
+    }
+
+    // ── ADMIN-ONLY: settings, analytics ──
+    match /settings/{id}   { allow read, write: if isAdmin(); }
+    match /analytics/{id}  { allow read, write: if isAdmin(); }
+  }
+}

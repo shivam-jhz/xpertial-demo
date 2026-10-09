@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Client Dashboard — XPERTIAL</title>
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml"/>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Space+Mono&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../assets/xpertial.css"/>
+<style>
+body{display:flex;flex-direction:column;min-height:100vh;}
+.dash-wrap{display:flex;min-height:100vh;padding-top:var(--nav);}
+.sidebar{width:234px;flex-shrink:0;background:var(--bg2);border-right:1px solid var(--b);position:fixed;top:var(--nav);bottom:0;left:0;overflow-y:auto;display:flex;flex-direction:column;transition:transform .3s;}
+.sidebar::-webkit-scrollbar{width:0;}
+.sidebar-brand{padding:1rem;border-bottom:1px solid var(--b);font-family:var(--fm);font-size:9.5px;color:var(--t3);letter-spacing:.15em;text-transform:uppercase;}
+.sidebar-section{padding:.65rem 1rem .2rem;font-family:var(--fm);font-size:9px;color:var(--t3);letter-spacing:.15em;text-transform:uppercase;}
+.sidebar-nav{padding:.25rem;}
+.side-link{display:flex;align-items:center;gap:.65rem;padding:8px 12px;border-radius:7px;font-size:13.5px;color:var(--t2);text-decoration:none;transition:all .2s;margin-bottom:1px;font-family:var(--fh);font-weight:600;letter-spacing:.02em;}
+.side-link:hover{background:rgba(0,212,255,.06);color:var(--text);}
+.side-link.active{background:rgba(0,212,255,.10);color:var(--c);border:1px solid var(--b);}
+.side-link .ico{width:18px;text-align:center;font-size:15px;flex-shrink:0;}
+.side-badge{margin-left:auto;background:var(--c);color:#000;font-family:var(--fm);font-size:9px;font-weight:700;border-radius:10px;padding:1px 7px;min-width:18px;text-align:center;}
+.sidebar-footer{margin-top:auto;padding:1rem;border-top:1px solid var(--b);}
+.user-card{display:flex;align-items:center;gap:.65rem;}
+.user-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--c),var(--pur));display:flex;align-items:center;justify-content:center;font-family:var(--fh);font-weight:700;font-size:.85rem;color:#000;flex-shrink:0;}
+.user-name{font-family:var(--fh);font-size:.9rem;font-weight:700;}
+.user-role{font-size:10.5px;color:var(--t3);}
+.logout-btn{margin-top:.75rem;width:100%;background:none;border:1px solid var(--b);border-radius:6px;padding:6px;font-family:var(--fh);font-size:12px;color:var(--t3);cursor:pointer;transition:all .2s;text-align:center;letter-spacing:.06em;text-transform:uppercase;}
+.logout-btn:hover{border-color:var(--red);color:var(--red);}
+.dash-main{flex:1;margin-left:234px;padding:2rem 2.5rem;min-width:0;}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem;}
+.stat-card{background:var(--bg2);border:1px solid var(--b);border-radius:10px;padding:1.25rem;position:relative;overflow:hidden;transition:border-color .2s;}
+.stat-card:hover{border-color:var(--b2);}
+.stat-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.sc-c::after{background:linear-gradient(90deg,transparent,var(--c),transparent);}
+.sc-a::after{background:linear-gradient(90deg,transparent,var(--amb),transparent);}
+.sc-g::after{background:linear-gradient(90deg,transparent,var(--grn),transparent);}
+.sc-p::after{background:linear-gradient(90deg,transparent,var(--pur),transparent);}
+.stat-label{font-family:var(--fm);font-size:9.5px;color:var(--t3);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem;}
+.stat-val{font-family:var(--fh);font-size:2rem;font-weight:700;line-height:1;}
+.sc-c .stat-val{color:var(--c);}.sc-a .stat-val{color:var(--amb);}.sc-g .stat-val{color:var(--grn);}.sc-p .stat-val{color:var(--pur);}
+.stat-sub{font-size:11.5px;color:var(--t3);margin-top:.35rem;}
+.stat-ico{position:absolute;top:1rem;right:1rem;font-size:1.5rem;opacity:.2;}
+.section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;flex-wrap:wrap;gap:.75rem;}
+.section-header h2{font-size:1.1rem;font-weight:700;}
+.table-wrap{background:var(--bg2);border:1px solid var(--b);border-radius:10px;overflow:hidden;margin-bottom:2rem;}
+.xp-table{width:100%;border-collapse:collapse;}
+.xp-table th{background:var(--bg3);font-family:var(--fm);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--t2);padding:10px 14px;text-align:left;border-bottom:1px solid var(--b);white-space:nowrap;}
+.xp-table td{padding:13px 14px;border-bottom:1px solid var(--b);font-size:13px;vertical-align:middle;}
+.xp-table tr:last-child td{border:none;}
+.xp-table tr:hover td{background:rgba(0,212,255,.03);}
+.proj-name{font-family:var(--fh);font-weight:600;font-size:.95rem;}
+.proj-id{font-family:var(--fm);font-size:9.5px;color:var(--t3);letter-spacing:.08em;margin-top:2px;}
+.mini-prog{height:4px;background:var(--bg3);border-radius:2px;margin-top:4px;overflow:hidden;min-width:80px;}
+.mini-prog-fill{height:100%;background:linear-gradient(90deg,var(--c),var(--pur));border-radius:2px;}
+.action-btn{background:none;border:1px solid var(--b);border-radius:5px;padding:5px 12px;font-family:var(--fh);font-size:12px;color:var(--t2);cursor:pointer;transition:all .2s;text-decoration:none;display:inline-flex;align-items:center;gap:5px;}
+.action-btn:hover{border-color:var(--c);color:var(--c);background:rgba(0,212,255,.06);}
+.action-btn.primary{background:var(--c);color:#000;border-color:var(--c);font-weight:700;}
+.action-btn.primary:hover{background:var(--c2);}
+.filter-tabs{display:flex;gap:.35rem;background:var(--bg3);border-radius:7px;padding:3px;}
+.filter-tab{padding:5px 14px;border-radius:5px;font-family:var(--fh);font-size:12px;font-weight:600;letter-spacing:.05em;cursor:pointer;color:var(--t2);transition:all .2s;}
+.filter-tab.active{background:var(--bg2);color:var(--c);border:1px solid var(--b2);}
+.quick-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin-bottom:2rem;}
+.quick-card{background:var(--bg2);border:1px solid var(--b);border-radius:8px;padding:1rem 1.25rem;display:flex;align-items:center;gap:.85rem;cursor:pointer;text-decoration:none;transition:all .2s;color:inherit;}
+.quick-card:hover{border-color:var(--b2);transform:translateY(-2px);box-shadow:var(--glow);}
+.quick-ico{font-size:1.5rem;}
+.quick-label{font-family:var(--fh);font-size:.95rem;font-weight:700;}
+.quick-sub{font-size:11.5px;color:var(--t2);margin-top:1px;}
+.notif-list{background:var(--bg2);border:1px solid var(--b);border-radius:10px;overflow:hidden;}
+.notif-item{display:flex;align-items:flex-start;gap:.85rem;padding:1rem 1.25rem;border-bottom:1px solid var(--b);transition:background .15s;}
+.notif-item:last-child{border:none;}
+.notif-item:hover{background:rgba(0,212,255,.03);}
+.notif-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px;}
+.notif-dot.c{background:var(--c);}.notif-dot.g{background:var(--grn);}.notif-dot.a{background:var(--amb);}
+.notif-text{font-size:13px;color:var(--t2);flex:1;}
+.notif-text strong{color:var(--text);}
+.notif-time{font-family:var(--fm);font-size:9.5px;color:var(--t3);letter-spacing:.06em;white-space:nowrap;}
+.empty-dash{text-align:center;padding:3.5rem 2rem;}
+.empty-dash .empty-ico{font-size:2.5rem;margin-bottom:1rem;opacity:.4;}
+.empty-dash p{font-size:13px;color:var(--t2);margin:.5rem 0 1.25rem;}
+@media(max-width:900px){.sidebar{transform:translateX(-100%);z-index:1500;}.sidebar.open{transform:translateX(0);}.dash-main{margin-left:0;padding:1.25rem;}.stats-grid{grid-template-columns:1fr 1fr;}.quick-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:500px){.stats-grid{grid-template-columns:1fr 1fr;}.quick-grid{grid-template-columns:1fr;}}
+</style>
+
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+</head>
+<body>
+<nav id="xpNav">
+  <a href="../index.html" class="xp-logo"><span class="xp-logo-text">XP<span>ER</span>TIAL</span></a>
+  <div style="position:absolute;left:50%;transform:translateX(-50%);font-family:var(--fm);font-size:10px;color:var(--t2);letter-spacing:.12em;display:none;" id="dashLabel">CLIENT PORTAL</div>
+  <div class="xp-right">
+    <button class="xp-icon-btn" onclick="xpSearchOpen()"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></button>
+    <div class="nav-auth-in" style="display:flex;">
+      <button class="xp-icon-btn" title="My Account" onclick="location.href='settings.html'"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></button>
+      <a href="../request.html" class="btn-signup">Request Data →</a>
+      <button class="btn-signout" onclick="xpAuth.logout()">Sign Out</button>
+    </div>
+    <button class="xp-icon-btn" onclick="document.getElementById('sidebar').classList.toggle('open')" style="display:none;" id="mobToggle">☰</button>
+  </div>
+</nav>
+
+<div class="dash-wrap">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">CLIENT PORTAL</div>
+    <div class="sidebar-nav">
+      <div class="sidebar-section">Overview</div>
+      <a href="index.html" class="side-link active"><span class="ico">📊</span> Dashboard</a>
+      <a href="projects.html" class="side-link"><span class="ico">📁</span> My Projects <span class="side-badge" id="projBadge" style="display:none">0</span></a>
+      <a href="notifications.html" class="side-link"><span class="ico">🔔</span> Notifications</a>
+      <div class="sidebar-section" style="margin-top:.5rem;">Data</div>
+      <a href="downloads.html" class="side-link"><span class="ico">📦</span> Downloads</a>
+      <a href="contracts.html" class="side-link"><span class="ico">📜</span> Contracts</a>
+      <div class="sidebar-section" style="margin-top:.5rem;">Billing</div>
+      <a href="payments.html" class="side-link"><span class="ico">💳</span> Payments</a>
+      <a href="invoices.html" class="side-link"><span class="ico">🧾</span> Invoices</a>
+      <div class="sidebar-section" style="margin-top:.5rem;">Account</div>
+      <a href="settings.html" class="side-link"><span class="ico">⚙️</span> Settings</a>
+      <a href="../company/contact.html" class="side-link" target="_blank"><span class="ico">💬</span> Support</a>
+    </div>
+    <div class="sidebar-footer">
+      <div class="user-card">
+        <div class="user-avatar" id="userAvatar">?</div>
+        <div><div class="user-name" id="userNameEl">Loading...</div><div class="user-role">Client</div></div>
+      </div>
+      <button class="logout-btn" onclick="xpAuth.logout()">Sign Out</button>
+    </div>
+  </aside>
+
+  <main class="dash-main" id="dashMain">
+    <!-- Populated by JS -->
+  </main>
+</div>
+
+<script src="../assets/xpertial.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  const user = xpAuth.requireAuth();
+  if (!user) return;
+
+  const name = user.name || user.email?.split('@')[0] || 'Client';
+  document.getElementById('userNameEl').textContent = name;
+  document.getElementById('userAvatar').textContent = name[0].toUpperCase();
+  if (window.innerWidth <= 900) {
+    document.getElementById('mobToggle').style.display = 'flex';
+    document.getElementById('dashLabel').style.display = 'block';
+  }
+  const h = new Date().getHours();
+  const greet = h < 12 ? 'morning' : h < 17 ? 'afternoon' : 'evening';
+  const firstName = name.split(' ')[0];
+
+  // Show loading skeleton
+  document.getElementById('dashMain').innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:200px;color:var(--t3);font-family:var(--fm);font-size:11px;letter-spacing:.15em;">LOADING DASHBOARD...</div>`;
+
+  try {
+    // Load projects from Firestore
+    const uid = await xpAuth.waitForUser().then(u => u?.uid);
+    if (!uid) return;
+    const snap = await db.collection('projects').where('clientId','==',uid).orderBy('createdAt','desc').limit(10).get();
+    const projects = snap.docs.map(d => ({ firestoreId: d.id, ...d.data() }));
+
+    // Listen for unread notification count
+    db.collection('notifications').where('userId','==',uid).where('read','==',false)
+      .onSnapshot(s => {
+        const badge = document.getElementById('notifBadge');
+        if (badge) { badge.textContent = s.size; badge.style.display = s.size ? 'flex' : 'none'; }
+      });
+
+    renderDashboard(projects, user, firstName, greet);
+  } catch(err) {
+    console.error(err);
+    document.getElementById('dashMain').innerHTML = `<div style="padding:2rem;text-align:center;color:var(--red);">Error loading dashboard: ${err.message}</div>`;
+  }
+});
+
+function renderDashboard(projects, user, firstName, greet) {
+  const statusLabel = { pending:'Pending', quoted:'Quote Sent', contracted:'Contracted', collecting:'Collecting', qc:'Under Review', completed:'Delivered', rejected:'Rejected' };
+  const statusClass = { pending:'badge-pending', quoted:'badge-pending', contracted:'badge-active', collecting:'badge-active', qc:'badge-active', completed:'badge-done', rejected:'badge-reject' };
+  const activeCount  = projects.filter(p => ['collecting','qc','contracted','quoted'].includes(p.status)).length;
+  const doneCount    = projects.filter(p => p.status === 'completed').length;
+  const pendingDl    = projects.filter(p => p.downloadable && p.status === 'completed').length;
+  const time = new Date().toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit', hour12:true });
+
+  document.getElementById('dashMain').innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;flex-wrap:wrap;gap:1rem;">
+      <div>
+        <h1 style="font-size:1.6rem;margin-bottom:.15rem;">Good <span style="color:var(--c)">${greet}</span>, ${firstName} 👋</h1>
+        <p style="font-size:13px;color:var(--t2);">Here's an overview of your data projects.</p>
+      </div>
+      <div style="display:flex;align-items:center;gap:.75rem;">
+        <span style="font-family:var(--fm);font-size:10px;color:var(--t3);letter-spacing:.1em;">${time}</span>
+        <a href="../request.html" class="btn-p" style="padding:7px 16px;font-size:12px;">+ New Request</a>
+      </div>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card sc-c"><div class="stat-ico">📁</div><div class="stat-label">Total Projects</div><div class="stat-val">${projects.length}</div><div class="stat-sub">All time</div></div>
+      <div class="stat-card sc-a"><div class="stat-ico">⏳</div><div class="stat-label">In Progress</div><div class="stat-val">${activeCount}</div><div class="stat-sub">Active now</div></div>
+      <div class="stat-card sc-g"><div class="stat-ico">✅</div><div class="stat-label">Completed</div><div class="stat-val">${doneCount}</div><div class="stat-sub">Delivered</div></div>
+      <div class="stat-card sc-p"><div class="stat-ico">📦</div><div class="stat-label">Pending Download</div><div class="stat-val">${pendingDl}</div><div class="stat-sub">Awaiting payment</div></div>
+    </div>
+    <div class="quick-grid">
+      <a href="../request.html" class="quick-card"><div class="quick-ico">📋</div><div><div class="quick-label">New Request</div><div class="quick-sub">Start a new data project</div></div></a>
+      <a href="downloads.html" class="quick-card"><div class="quick-ico">📦</div><div><div class="quick-label">Downloads</div><div class="quick-sub">Access your datasets</div></div></a>
+      <a href="payments.html" class="quick-card"><div class="quick-ico">💳</div><div><div class="quick-label">Payments</div><div class="quick-sub">View & pay invoices</div></div></a>
+    </div>
+    <div class="section-header">
+      <h2>My Projects</h2>
+      <a href="projects.html" class="action-btn">View All</a>
+    </div>
+    <div class="table-wrap">
+      ${projects.length ? `
+      <table class="xp-table"><thead><tr><th>Project</th><th>Type</th><th>Progress</th><th>Status</th><th>Deadline</th><th>Action</th></tr></thead><tbody>
+      ${projects.slice(0,5).map(p=>`<tr>
+        <td><div class="proj-name">${p.name||'Untitled Project'}</div><div class="proj-id">${p.id||p.firestoreId}</div></td>
+        <td><span style="font-family:var(--fm);font-size:9px;color:var(--pur);background:rgba(123,97,255,.08);border:1px solid rgba(123,97,255,.2);border-radius:3px;padding:2px 7px;">${p.dataType||p.type||'—'}</span></td>
+        <td style="min-width:110px;"><div style="font-family:var(--fm);font-size:9.5px;color:var(--t2);margin-bottom:3px;">${p.progress||0}%</div><div class="mini-prog"><div class="mini-prog-fill" style="width:${p.progress||0}%"></div></div></td>
+        <td><span class="badge ${statusClass[p.status]||'badge-pending'}">${statusLabel[p.status]||p.status}</span></td>
+        <td style="font-size:12.5px;color:var(--t2);">${p.deadline?xpFmt.date(p.deadline.seconds?new Date(p.deadline.seconds*1000):p.deadline):'—'}</td>
+        <td><a href="project.html?id=${p.firestoreId}" class="${p.downloadable?'action-btn primary':'action-btn'}">${p.downloadable?'Pay & Download':'View →'}</a></td>
+      </tr>`).join('')}
+      </tbody></table>` : `
+      <div class="empty-dash"><div class="empty-ico">📋</div><h3 style="margin-bottom:.5rem;">No projects yet</h3><p>Submit a data request to get started.</p><a href="../request.html" class="btn-p">Request Your First Dataset →</a></div>`}
+    </div>
+    <div class="section-header"><h2>Recent Notifications</h2><a href="notifications.html" class="action-btn">View All</a></div>
+    <div class="notif-list" id="notifList"><div style="padding:1.25rem;text-align:center;font-size:12px;color:var(--t3);">Loading notifications...</div></div>`;
+
+  // Live notifications
+  const uid = xpAuth.getUser()?.uid;
+  if (uid) {
+    xpDB.listenNotifications(uid, notifs => {
+      const nl = document.getElementById('notifList');
+      if (!nl) return;
+      if (!notifs.length) {
+        nl.innerHTML = `<div class="notif-item"><div class="notif-dot c"></div><div class="notif-text"><strong>Welcome to XPERTIAL!</strong> Your account is active. Submit a request to get started.</div><div class="notif-time">Now</div></div>`;
+        return;
+      }
+      const dotColor = { info:'c', success:'g', warning:'a', error:'r' };
+      nl.innerHTML = notifs.slice(0,5).map(n => `
+        <div class="notif-item${n.read?'':' unread'}" onclick="markRead('${n.firestoreId}')">
+          <div class="notif-dot ${dotColor[n.type]||'c'}"></div>
+          <div class="notif-text">${n.read?'':''}<strong>${n.title||''}</strong>${n.title?' — ':''}${n.message}</div>
+          <div class="notif-time">${n.createdAt?.seconds ? timeAgo(n.createdAt.seconds*1000) : 'Now'}</div>
+        </div>`).join('');
+    });
+  }
+  window.xpInitGlow && xpInitGlow();
+}
+
+async function markRead(id) { await xpDB.markNotifRead(id); }
+function timeAgo(ms) {
+  const diff = Date.now() - ms;
+  if (diff < 60000) return 'Just now';
+  if (diff < 3600000) return Math.floor(diff/60000) + 'm ago';
+  if (diff < 86400000) return Math.floor(diff/3600000) + 'h ago';
+  return Math.floor(diff/86400000) + 'd ago';
+}
+</script>
+</body>
+</html>

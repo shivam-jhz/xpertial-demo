@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Pricing — XPERTIAL</title>
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml"/>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Space+Mono&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="assets/xpertial.css"/>
+<style>
+.page-hero{padding:calc(var(--nav) + 110px) 5vw 90px;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(0,212,255,.07) 0%,transparent 70%);border-bottom:1px solid var(--b);position:relative;overflow:hidden;}
+.page-hero::after{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(0,212,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,.025) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;}
+.page-hero .container{position:relative;z-index:1;text-align:center;}
+@media(max-width:768px){.page-hero{padding:calc(var(--nav) + 56px) 5vw 60px;}}
+
+/* ── HOW PRICING WORKS ── */
+.pricing-factors{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;}
+.factor-card{background:var(--bg2);border:1px solid var(--b);border-radius:12px;padding:1.5rem;position:relative;overflow:hidden;transition:border-color .3s,transform .3s;}
+.factor-card:hover{border-color:var(--b2);transform:translateY(-3px);}
+.factor-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--c),transparent);opacity:0;transition:opacity .3s;}
+.factor-card:hover::before{opacity:1;}
+.factor-icon{font-size:1.75rem;margin-bottom:.75rem;}
+.factor-name{font-family:var(--fh);font-size:1rem;font-weight:700;margin-bottom:.35rem;}
+.factor-desc{font-size:12.5px;color:var(--t2);line-height:1.7;}
+
+/* ── RANGE BANDS ── */
+.range-table{width:100%;border-collapse:collapse;}
+.range-table thead th{font-family:var(--fm);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--t3);padding:.6rem 1rem;text-align:left;border-bottom:1px solid var(--b);}
+.range-table tbody tr{border-bottom:1px solid var(--b);transition:background .2s;}
+.range-table tbody tr:last-child{border:none;}
+.range-table tbody tr:hover{background:rgba(0,212,255,.025);}
+.range-table td{padding:1rem 1rem;vertical-align:middle;}
+.range-badge{display:inline-flex;align-items:center;gap:.5rem;font-family:var(--fh);font-size:1.05rem;font-weight:700;}
+.range-badge.basic{color:#22C55E;}
+.range-badge.structured{color:#F59E0B;}
+.range-badge.complex{color:var(--c);}
+.range-bar-wrap{width:100%;height:6px;background:var(--bg3);border-radius:3px;overflow:hidden;}
+.range-bar{height:100%;border-radius:3px;transition:width .8s ease;}
+.bar-basic{background:linear-gradient(90deg,#22C55E,#16A34A);width:25%;}
+.bar-structured{background:linear-gradient(90deg,#F59E0B,#D97706);width:55%;}
+.bar-complex{background:linear-gradient(90deg,var(--c),var(--pur));width:100%;}
+.range-label{font-family:var(--fh);font-size:.85rem;font-weight:600;color:var(--t2);}
+.range-note{font-size:12px;color:var(--t2);}
+
+/* ── WHAT YOU GET ── */
+.value-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.25rem;}
+.value-item{background:var(--bg2);border:1px solid var(--b);border-radius:10px;padding:1.25rem 1.5rem;display:flex;gap:1rem;align-items:flex-start;transition:border-color .25s;}
+.value-item:hover{border-color:var(--b2);}
+.vi-icon{font-size:1.4rem;flex-shrink:0;margin-top:.1rem;}
+.vi-title{font-family:var(--fh);font-size:.95rem;font-weight:700;margin-bottom:.25rem;}
+.vi-desc{font-size:12.5px;color:var(--t2);line-height:1.65;}
+
+/* ── CALCULATOR ── */
+.calc-wrap{background:var(--bg2);border:1px solid var(--b2);border-radius:14px;padding:2rem;max-width:700px;margin:0 auto;}
+.calc-wrap::before{content:'';display:block;height:2px;background:linear-gradient(90deg,transparent,var(--c),transparent);margin:-2rem -2rem 2rem;border-radius:14px 14px 0 0;}
+.calc-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;}
+.calc-select{background:var(--bg3);border:1px solid var(--b2);border-radius:7px;padding:.65rem .9rem;color:var(--text);font-family:var(--fb);font-size:13.5px;outline:none;width:100%;transition:border-color .2s;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath d='M1 2.5L4 5.5L7 2.5' stroke='%23667' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;background-size:14px;}
+.calc-select:focus{border-color:var(--c);box-shadow:0 0 0 3px rgba(0,212,255,.1);}
+.calc-result{background:var(--bg3);border:1px solid var(--b2);border-radius:10px;padding:1.25rem 1.5rem;display:flex;justify-content:space-between;align-items:center;margin-top:1.25rem;flex-wrap:wrap;gap:.75rem;}
+.calc-result-label{font-family:var(--fm);font-size:9.5px;color:var(--t3);letter-spacing:.15em;text-transform:uppercase;}
+.calc-result-val{font-family:var(--fh);font-size:1.75rem;font-weight:700;color:var(--c);}
+.calc-disclaimer{font-size:11.5px;color:var(--t3);margin-top:.75rem;text-align:center;}
+.calc-example{background:rgba(0,212,255,.04);border-left:2px solid var(--c);border-radius:0 6px 6px 0;padding:.75rem 1rem;font-size:13px;color:var(--t2);margin-bottom:.75rem;}
+.calc-example strong{color:var(--text);}
+
+/* ── PROCESS TIMELINE ── */
+.process-steps{display:flex;flex-direction:column;gap:0;}
+.ps-item{display:grid;grid-template-columns:56px 1fr;gap:0 1.25rem;position:relative;}
+.ps-left{display:flex;flex-direction:column;align-items:center;}
+.ps-num{width:40px;height:40px;border-radius:50%;background:var(--bg2);border:1.5px solid var(--b2);display:flex;align-items:center;justify-content:center;font-family:var(--fh);font-size:.95rem;font-weight:700;color:var(--c);flex-shrink:0;z-index:1;}
+.ps-line{flex:1;width:1px;background:linear-gradient(var(--b2),var(--b));min-height:40px;}
+.ps-item:last-child .ps-line{display:none;}
+.ps-content{padding:0 0 2rem;}
+.ps-title{font-family:var(--fh);font-size:1rem;font-weight:700;margin-bottom:.3rem;margin-top:.4rem;}
+.ps-desc{font-size:13px;color:var(--t2);line-height:1.7;}
+
+/* ── IMPORTANT NOTES ── */
+.notes-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;}
+.note-item{background:var(--bg2);border:1px solid var(--b);border-radius:8px;padding:1rem 1.25rem;display:flex;gap:.75rem;align-items:flex-start;}
+.note-ico{font-size:1.1rem;flex-shrink:0;margin-top:.1rem;}
+.note-text{font-size:13px;color:var(--t2);line-height:1.65;}
+
+/* ── CTA SECTION ── */
+.cta-section{background:radial-gradient(ellipse 80% 100% at 50% 50%,rgba(0,212,255,.07) 0%,transparent 70%);border-top:1px solid var(--b);border-bottom:1px solid var(--b);text-align:center;}
+.cta-section h2{font-size:clamp(1.6rem,3vw,2.2rem);margin-bottom:.6rem;}
+.cta-section p{color:var(--t2);font-size:15px;max-width:500px;margin:0 auto 1.75rem;}
+
+/* ── REVEAL ── */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease;}
+.reveal.visible{opacity:1;transform:none;}
+
+@media(max-width:900px){
+  .pricing-factors{grid-template-columns:1fr 1fr;}
+  .notes-grid{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:640px){
+  .pricing-factors{grid-template-columns:1fr;}
+  .value-grid{grid-template-columns:1fr;}
+  .calc-row{grid-template-columns:1fr;}
+  .notes-grid{grid-template-columns:1fr;}
+  .calc-wrap{padding:1.25rem;}
+  .calc-wrap::before{margin:-1.25rem -1.25rem 1.5rem;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="xpNav">
+  <a href="index.html" class="xp-logo"><img src="assets/logo.png" alt="XPERTIAL" class="xp-logo-img"/></a>
+  <div class="xp-center">
+    <div class="xp-ni">
+      <button class="xp-nb">Services<svg class="xp-arr" viewBox="0 0 8 8" fill="none"><path d="M1 2.5L4 5.5L7 2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+      <div class="xp-drop"><a href="services.html#image" class="xp-di"><div class="xp-dico">🖼️</div><div><div class="xp-dlbl">Image Collection</div><div class="xp-dsub">Labeled images for CV models</div></div></a><a href="services.html#video" class="xp-di"><div class="xp-dico">🎥</div><div><div class="xp-dlbl">Video Collection</div><div class="xp-dsub">Frame-level annotation &amp; tracking</div></div></a><a href="services.html#text" class="xp-di"><div class="xp-dico">📝</div><div><div class="xp-dlbl">Text &amp; NLP Data</div><div class="xp-dsub">Annotated text, conversations</div></div></a><a href="services.html#audio" class="xp-di"><div class="xp-dico">🎙️</div><div><div class="xp-dlbl">Audio &amp; Speech</div><div class="xp-dsub">Transcribed, labeled audio</div></div></a><div class="xp-dsep"></div><a href="services.html#custom" class="xp-di"><div class="xp-dico">⚙️</div><div><div class="xp-dlbl">Custom Collection</div><div class="xp-dsub">Any data type, any format</div></div></a></div>
+    </div>
+    <a href="pricing.html" class="xp-nb active">Pricing</a>
+    <a href="join-collector.html" class="xp-nb">Join as Collector</a>
+    <div class="xp-ni">
+      <button class="xp-nb">Company<svg class="xp-arr" viewBox="0 0 8 8" fill="none"><path d="M1 2.5L4 5.5L7 2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+      <div class="xp-drop"><a href="company/about.html" class="xp-di"><div class="xp-dico">🏢</div><div><div class="xp-dlbl">About Us</div><div class="xp-dsub">Our vision &amp; team</div></div></a><a href="company/contact.html" class="xp-di"><div class="xp-dico">📞</div><div><div class="xp-dlbl">Contact</div><div class="xp-dsub">Get in touch</div></div></a><a href="company/blog.html" class="xp-di"><div class="xp-dico">✍️</div><div><div class="xp-dlbl">Blog</div><div class="xp-dsub">Insights &amp; company updates</div></div></a><a href="company/careers.html" class="xp-di"><div class="xp-dico">💼</div><div><div class="xp-dlbl">Careers</div><div class="xp-dsub">Join our team</div></div></a><a href="company/events.html" class="xp-di"><div class="xp-dico">📅</div><div><div class="xp-dlbl">Events</div><div class="xp-dsub">Talks, webinars &amp; meetups</div></div></a><a href="company/press.html" class="xp-di"><div class="xp-dico">📰</div><div><div class="xp-dlbl">Press</div><div class="xp-dsub">Media &amp; coverage</div></div></a><div class="xp-dsep"></div><a href="company/privacy.html" class="xp-di"><div class="xp-dico">🔒</div><div><div class="xp-dlbl">Privacy Policy</div></div></a><a href="company/terms.html" class="xp-di"><div class="xp-dico">📄</div><div><div class="xp-dlbl">Terms of Service</div></div></a></div>
+    </div>
+  </div>
+  <div class="xp-right">
+    <button class="xp-icon-btn" onclick="xpSearchOpen()" title="Search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></button>
+    <div class="nav-auth-out">
+      <a href="login.html" class="btn-signin">Sign In</a>
+      <a href="login.html?tab=register" class="btn-signup">Sign Up</a>
+    </div>
+    <div class="nav-auth-in">
+      <button class="xp-icon-btn" onclick="location.href='client/index.html'"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></button>
+      <a href="request.html" class="btn-signup">Request Data →</a>
+      <button class="btn-signout" onclick="xpAuth.logout()">Sign Out</button>
+    </div>
+    <div class="xp-hbg" id="xpHbg"><span></span><span></span><span></span></div>
+  </div>
+</nav>
+<div class="xp-mob" id="xpMob">
+  <div class="xp-ms">
+    <button class="xp-msb">Services <span class="xp-marr">▼</span></button>
+    <div class="xp-msub">
+      <a href="services.html#image" class="xp-ml">Image Collection</a>
+      <a href="services.html#video" class="xp-ml">Video Collection</a>
+      <a href="services.html#text" class="xp-ml">Text &amp; NLP Data</a>
+      <a href="services.html#audio" class="xp-ml">Audio &amp; Speech</a>
+      <a href="services.html#custom" class="xp-ml">Custom Collection</a>
+    </div>
+  </div>
+  <div class="xp-ms"><button class="xp-msb"><a href="pricing.html" style="color:inherit;text-decoration:none;">Pricing</a></button></div>
+  <div class="xp-ms"><button class="xp-msb"><a href="join-collector.html" style="color:inherit;text-decoration:none;">Join as Collector</a></button></div>
+  <div class="xp-ms">
+    <button class="xp-msb">Company <span class="xp-marr">▼</span></button>
+    <div class="xp-msub">
+      <a href="company/about.html" class="xp-ml">About Us</a>
+      <a href="company/contact.html" class="xp-ml">Contact</a><a href="company/blog.html" class="xp-ml">Blog</a>
+      <a href="company/careers.html" class="xp-ml">Careers</a>
+      <a href="company/events.html" class="xp-ml">Events</a>
+      <a href="company/press.html" class="xp-ml">Press</a>
+      <a href="company/privacy.html" class="xp-ml">Privacy Policy</a>
+      <a href="company/terms.html" class="xp-ml">Terms of Service</a>
+    </div>
+  </div>
+  <div class="xp-mb">
+    <a href="login.html" class="btn-signin">Sign In</a>
+    <a href="login.html?tab=register" class="btn-signup">Sign Up</a>
+  </div>
+</div>
+
+<!-- ═══ HERO ═══ -->
+<section class="page-hero">
+  <div class="container">
+    <div class="section-tag" style="justify-content:center;">Custom Project Pricing</div>
+    <h1 style="font-size:clamp(2rem,4.5vw,3rem);margin:.6rem 0;">Flexible Pricing for<br/><span class="accent">Custom Data Collection</span></h1>
+    <p class="muted" style="font-size:15px;max-width:560px;margin:.75rem auto 2rem;line-height:1.8;">Pricing is based on your exact project requirements — not generic packages. Tell us what you need and get a precise quote within 24 hours.</p>
+    <div style="display:flex;gap:.85rem;justify-content:center;flex-wrap:wrap;">
+      <a href="request.html" class="btn-p" style="font-size:15px;padding:13px 28px;">Get Custom Quote →</a>
+      <a href="company/contact.html" class="btn-g" style="font-size:15px;padding:13px 28px;">Talk to Us</a>
+    </div>
+    <!-- Trust bar -->
+    <div style="display:flex;gap:2.5rem;justify-content:center;flex-wrap:wrap;margin-top:2.5rem;padding-top:2rem;border-top:1px solid var(--b);">
+      <div style="text-align:center;"><div style="font-family:var(--fh);font-size:1.4rem;font-weight:700;color:var(--c);">2.4M+</div><div style="font-size:11.5px;color:var(--t2);font-family:var(--fm);letter-spacing:.08em;">DATA POINTS</div></div>
+      <div style="text-align:center;"><div style="font-family:var(--fh);font-size:1.4rem;font-weight:700;color:var(--c);">340+</div><div style="font-size:11.5px;color:var(--t2);font-family:var(--fm);letter-spacing:.08em;">PROJECTS</div></div>
+      <div style="text-align:center;"><div style="font-family:var(--fh);font-size:1.4rem;font-weight:700;color:var(--c);">98.7%</div><div style="font-size:11.5px;color:var(--t2);font-family:var(--fm);letter-spacing:.08em;">QC PASS RATE</div></div>
+      <div style="text-align:center;"><div style="font-family:var(--fh);font-size:1.4rem;font-weight:700;color:var(--c);">72h</div><div style="font-size:11.5px;color:var(--t2);font-family:var(--fm);letter-spacing:.08em;">AVG TURNAROUND</div></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- CURRENCY TOGGLE BAR -->
+<div style="background:var(--bg2);border-bottom:1px solid var(--b);">
+  <div class="container">
+    <div class="pricing-currency-bar">
+      <p>All prices shown in your selected currency. USD values are approximate.</p>
+      <div data-currency-toggle data-currency-hint></div>
+    </div>
+  </div>
+</div>
+<!-- ═══ HOW PRICING WORKS ═══ -->
+<section style="background:var(--bg2);border-bottom:1px solid var(--b);">
+  <div class="container">
+    <div class="reveal" style="margin-bottom:2.5rem;">
+      <div class="section-tag">Transparency</div>
+      <h2>How <span class="accent">Pricing Works</span></h2>
+      <p class="muted" style="font-size:14px;margin:.5rem 0 0;max-width:560px;">Every project is different. We evaluate six key factors to give you the most accurate, fair quote possible.</p>
+    </div>
+    <div class="pricing-factors reveal">
+      <div class="factor-card">
+        <div class="factor-icon">🖼️</div>
+        <div class="factor-name">Data Type</div>
+        <div class="factor-desc">Image, Video, Text, Audio, or Custom. Each type has different collection complexity and equipment requirements.</div>
+      </div>
+      <div class="factor-card">
+        <div class="factor-icon">📊</div>
+        <div class="factor-name">Volume</div>
+        <div class="factor-desc">The number of data points required. Larger volumes often benefit from lower per-unit costs due to collection efficiency.</div>
+      </div>
+      <div class="factor-card">
+        <div class="factor-icon">📍</div>
+        <div class="factor-name">Location</div>
+        <div class="factor-desc">City tier, region, and number of distinct locations affect collector deployment cost and availability.</div>
+      </div>
+      <div class="factor-card">
+        <div class="factor-icon">⚙️</div>
+        <div class="factor-name">Complexity</div>
+        <div class="factor-desc">Simple open-ended tasks vs. strict scenarios with specific conditions, rare environments, or unusual demographics.</div>
+      </div>
+      <div class="factor-card">
+        <div class="factor-icon">🏆</div>
+        <div class="factor-name">Quality Level</div>
+        <div class="factor-desc">Standard automated QC (~95%), Professional human+auto QC (~98%), or Enterprise gold-standard auditing (~99%+).</div>
+      </div>
+      <div class="factor-card">
+        <div class="factor-icon">⚡</div>
+        <div class="factor-name">Timeline</div>
+        <div class="factor-desc">Rush delivery within 24h costs more than a relaxed 2-week window. We always meet deadlines, whatever you choose.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PRICE RANGES ═══ -->
+<section>
+  <div class="container">
+    <div class="reveal" style="margin-bottom:2.5rem;">
+      <div class="section-tag">Reference Ranges</div>
+      <h2>Typical Price <span class="accent">Ranges</span></h2>
+      <p class="muted" style="font-size:14px;margin:.5rem 0 0;max-width:540px;">These ranges reflect real project costs. Your final quote will depend on specific requirements.</p>
+    </div>
+    <div class="reveal" style="background:var(--bg2);border:1px solid var(--b2);border-radius:14px;overflow:hidden;">
+      <table class="range-table">
+        <thead>
+          <tr>
+            <th>Dataset Type</th>
+            <th>Price per Data Point</th>
+            <th>Typical Use Cases</th>
+            <th>Volume Range</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <div class="range-badge basic">🟢 Basic</div>
+              <div class="range-note" style="margin-top:.4rem;">Simple, no strict conditions</div>
+            </td>
+            <td>
+              <div style="font-family:var(--fh);font-size:1.35rem;font-weight:700;color:#22C55E;margin-bottom:.5rem;" data-price-range="10,20">₹10 – ₹20</div>
+              <div class="range-bar-wrap"><div class="range-bar bar-basic" id="barBasic"></div></div>
+            </td>
+            <td class="range-label">Street photos, product images, basic text labeling, common audio recording</td>
+            <td class="range-note">1K – 500K+ pts</td>
+          </tr>
+          <tr>
+            <td>
+              <div class="range-badge structured">🟡 Structured</div>
+              <div class="range-note" style="margin-top:.4rem;">Specific conditions &amp; annotation</div>
+            </td>
+            <td>
+              <div style="font-family:var(--fh);font-size:1.35rem;font-weight:700;color:#F59E0B;margin-bottom:.5rem;" data-price-range="20,60">₹20 – ₹60</div>
+              <div class="range-bar-wrap"><div class="range-bar bar-structured" id="barStructured"></div></div>
+            </td>
+            <td class="range-label">Bounding box annotation, indoor/outdoor conditions, specific angles, NLP datasets with NER tagging</td>
+            <td class="range-note">5K – 200K pts</td>
+          </tr>
+          <tr>
+            <td>
+              <div class="range-badge complex">🔵 Complex</div>
+              <div class="range-note" style="margin-top:.4rem;">Rare scenarios, strict QC, demographics</div>
+            </td>
+            <td>
+              <div style="font-family:var(--fh);font-size:1.35rem;font-weight:700;color:var(--c);margin-bottom:.5rem;" data-price-range="60,150">₹60 – ₹150+</div>
+              <div class="range-bar-wrap"><div class="range-bar bar-complex" id="barComplex"></div></div>
+            </td>
+            <td class="range-label">Medical imagery, rare demographic targeting, pixel-perfect segmentation, real-time collection with gold QC</td>
+            <td class="range-note">500 – 50K pts</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="reveal" style="background:rgba(0,212,255,.05);border:1px solid var(--b2);border-radius:8px;padding:1rem 1.25rem;margin-top:1rem;display:flex;align-items:flex-start;gap:.75rem;">
+      <span style="font-size:1.1rem;">ℹ️</span>
+      <span style="font-size:13px;color:var(--t2);line-height:1.7;">Final pricing always depends on the full scope of project requirements. The ranges above are indicative. Annotation, delivery format, and QC level will affect the final number. We are always transparent — no hidden fees.</span>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ WHAT YOU GET ═══ -->
+<section>
+  <div class="container">
+    <div class="reveal" style="margin-bottom:2.5rem;">
+      <div class="section-tag">Value</div>
+      <h2>What's <span class="accent">Included</span></h2>
+      <p class="muted" style="font-size:14px;margin:.5rem 0 0;">Every project — regardless of size — comes with the full XPERTIAL service stack.</p>
+    </div>
+    <div class="value-grid reveal">
+      <div class="value-item">
+        <div class="vi-icon">🌍</div>
+        <div><div class="vi-title">Real-world Data Collection</div><div class="vi-desc">Data is collected in the field by verified, trained collectors — not scraped or synthetic unless you need it to be.</div></div>
+      </div>
+      <div class="value-item">
+        <div class="vi-icon">📦</div>
+        <div><div class="vi-title">Structured Dataset Delivery</div><div class="vi-desc">Delivered in your chosen format — JSON, CSV, COCO, YOLO, Parquet, XML, or custom — ready to load into your pipeline.</div></div>
+      </div>
+      <div class="value-item">
+        <div class="vi-icon">✅</div>
+        <div><div class="vi-title">Quality Control Process</div><div class="vi-desc">Every data point passes automated and/or human QC before delivery. No garbage data — ever.</div></div>
+      </div>
+      <div class="value-item">
+        <div class="vi-icon">📍</div>
+        <div><div class="vi-title">Location-specific Collection</div><div class="vi-desc">Collectors deployed precisely to your target cities, regions, or environments across India.</div></div>
+      </div>
+      <div class="value-item">
+        <div class="vi-icon">📈</div>
+        <div><div class="vi-title">Flexible Scaling</div><div class="vi-desc">Start with a pilot batch and scale up. We can ramp from hundreds to hundreds of thousands of data points.</div></div>
+      </div>
+      <div class="value-item">
+        <div class="vi-icon">🤝</div>
+        <div><div class="vi-title">Dedicated Project Manager</div><div class="vi-desc">A single point of contact manages your project end-to-end — from brief to delivery and any revisions.</div></div>
+      </div>
+      <div class="value-item">
+        <div class="vi-icon">🔄</div>
+        <div><div class="vi-title">Revisions &amp; Rejects Policy</div><div class="vi-desc">If approved data does not meet your spec on delivery, we recollect at no extra charge. Your satisfaction is guaranteed.</div></div>
+      </div>
+      <div class="value-item">
+        <div class="vi-icon">🔒</div>
+        <div><div class="vi-title">Data Privacy &amp; NDA</div><div class="vi-desc">All project details are covered by NDA by default. Collector agreements ensure your data stays yours.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ HOW THE PROCESS WORKS ═══ -->
+<section style="background:var(--bg2);border-top:1px solid var(--b);border-bottom:1px solid var(--b);">
+  <div class="container">
+    <div style="display:grid;grid-template-columns:1fr 1.4fr;gap:4rem;align-items:start;">
+      <div class="reveal">
+        <div class="section-tag">Process</div>
+        <h2>From <span class="accent">Request to Delivery</span></h2>
+        <p class="muted" style="font-size:14px;margin:.5rem 0 1.75rem;">A streamlined, transparent process — you always know exactly where your project stands.</p>
+        <div class="process-steps">
+          <div class="ps-item">
+            <div class="ps-left"><div class="ps-num">01</div><div class="ps-line"></div></div>
+            <div class="ps-content"><div class="ps-title">Submit Your Requirements</div><div class="ps-desc">Fill the Request a Dataset form with your data type, volume, location, and spec details.</div></div>
+          </div>
+          <div class="ps-item">
+            <div class="ps-left"><div class="ps-num">02</div><div class="ps-line"></div></div>
+            <div class="ps-content"><div class="ps-title">Receive Custom Quote</div><div class="ps-desc">Our team reviews your requirements and sends a detailed, itemized quote within 24 hours.</div></div>
+          </div>
+          <div class="ps-item">
+            <div class="ps-left"><div class="ps-num">03</div><div class="ps-line"></div></div>
+            <div class="ps-content"><div class="ps-title">Approve &amp; Kick Off</div><div class="ps-desc">Once you approve the quote, we assign collectors and begin data collection immediately.</div></div>
+          </div>
+          <div class="ps-item">
+            <div class="ps-left"><div class="ps-num">04</div><div class="ps-line"></div></div>
+            <div class="ps-content"><div class="ps-title">QC &amp; Delivery</div><div class="ps-desc">All data passes quality control and is delivered in your chosen format by the agreed deadline.</div></div>
+          </div>
+          <div class="ps-item">
+            <div class="ps-left"><div class="ps-num">05</div><div class="ps-line"></div></div>
+            <div class="ps-content"><div class="ps-title">Review &amp; Payment</div><div class="ps-desc">You review the delivered dataset. Payment is due only after you are satisfied with the output.</div></div>
+          </div>
+        </div>
+      </div>
+      <!-- Important notes -->
+      <div class="reveal">
+        <div class="section-tag">Important Notes</div>
+        <h2>What to <span class="accent">Keep in Mind</span></h2>
+        <p class="muted" style="font-size:14px;margin:.5rem 0 1.75rem;">We believe in full transparency — no surprises at invoice time.</p>
+        <div style="display:flex;flex-direction:column;gap:.85rem;">
+          <div class="note-item">
+            <div class="note-ico">📏</div>
+            <div class="note-text"><strong style="color:var(--text);display:block;margin-bottom:.2rem;">Minimum Project Size</strong>A minimum project engagement applies to ensure collector deployment is economically viable. Most projects start from ₹5,000.</div>
+          </div>
+          <div class="note-item">
+            <div class="note-ico">✅</div>
+            <div class="note-text"><strong style="color:var(--text);display:block;margin-bottom:.2rem;">Pay Only for Approved Data</strong>You are billed only for data that passes QC and meets your specification — not for rejected or defective data points.</div>
+          </div>
+          <div class="note-item">
+            <div class="note-ico">⚡</div>
+            <div class="note-text"><strong style="color:var(--text);display:block;margin-bottom:.2rem;">Rush Pricing</strong>Projects with 24-hour or 48-hour deadlines carry a priority surcharge of 20–40% depending on volume and type.</div>
+          </div>
+          <div class="note-item">
+            <div class="note-ico">🔄</div>
+            <div class="note-text"><strong style="color:var(--text);display:block;margin-bottom:.2rem;">Ongoing Projects Get Better Rates</strong>Recurring or subscription-style projects benefit from reduced per-unit pricing as we build an optimized collector network for your needs.</div>
+          </div>
+          <div class="note-item">
+            <div class="note-ico">🤝</div>
+            <div class="note-text"><strong style="color:var(--text);display:block;margin-bottom:.2rem;">No Hidden Fees</strong>Your quote includes collection, QC, formatting, and delivery. There are no platform fees, access fees, or surprise charges.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CTA ═══ -->
+<section class="cta-section">
+  <div class="container reveal">
+    <div style="max-width:580px;margin:0 auto;">
+      <div class="section-tag" style="justify-content:center;">Ready to Start?</div>
+      <h2>Tell us your requirements.<br/>Get a quote <span class="accent">within 24 hours.</span></h2>
+      <p>No commitment required. Our team will review your project and send a precise, itemized quote — free of charge.</p>
+      <div style="display:flex;gap:.85rem;justify-content:center;flex-wrap:wrap;">
+        <a href="request.html" class="btn-p" style="font-size:15px;padding:14px 32px;">Get Custom Quote →</a>
+        <a href="company/contact.html" class="btn-g" style="font-size:15px;padding:14px 32px;">Contact Us</a>
+      </div>
+      <div style="margin-top:1.5rem;font-size:13px;color:var(--t3);">Questions? Email <a href="mailto:hello@xpertial.com" style="color:var(--c);">hello@xpertial.com</a> — we usually respond within 2 hours.</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="index.html" class="xp-logo" style="display:inline-block;margin-bottom:.85rem;"><img src="assets/logo.png" alt="XPERTIAL" class="xp-logo-img"/></a>
+      <p>We help teams collect real-world data based on their specific requirements.</p>
+      <div class="footer-social">
+        <a href="https://www.instagram.com/xpertial" target="_blank" rel="noopener noreferrer" class="social-icon" title="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".5" fill="currentColor" stroke="none"/></svg></a>
+        <a href="https://x.com/xpertial_" target="_blank" rel="noopener noreferrer" class="social-icon" title="X (Twitter)"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+        <a href="https://www.facebook.com/xpertial" target="_blank" rel="noopener noreferrer" class="social-icon" title="Facebook"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+        <a href="https://www.youtube.com/@xpertial" target="_blank" rel="noopener noreferrer" class="social-icon" title="YouTube"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="var(--bg2)"/></svg></a>
+        <a href="https://github.com/xpertial" target="_blank" rel="noopener noreferrer" class="social-icon" title="GitHub"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/></svg></a>
+      </div>
+    </div>
+    <div class="footer-col"><h4>Services</h4><a href="services.html#image">Image Collection</a><a href="services.html#video">Video Collection</a><a href="services.html#text">Text &amp; NLP</a><a href="services.html#audio">Audio &amp; Speech</a><a href="services.html#custom">Custom Collection</a></div>
+    <div class="footer-col"><h4>Company</h4><a href="company/about.html">About Us</a><a href="company/careers.html">Careers</a><a href="company/contact.html">Contact Us</a><a href="company/events.html">Events</a><a href="company/press.html">Press</a></div>
+    <div class="footer-col"><h4>Collectors</h4><a href="join-collector.html">Join as Collector</a><a href="pricing.html">Pricing</a><a href="join-collector.html#earn">Earnings</a><a href="join-collector.html#req">Requirements</a></div>
+    <div class="footer-col"><h4>Legal</h4><a href="company/privacy.html">Privacy Policy</a><a href="company/terms.html">Terms</a><a href="login.html">My Account</a><a href="request.html">Book a Demo</a></div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">&copy; 2026 XPERTIAL Technologies Pvt. Ltd. All rights reserved.</div>
+    <div class="footer-status"><span class="status-dot"></span>All systems operational</div>
+  </div>
+</footer>
+
+<script src="assets/xpertial.js"></script>
+<script src="assets/xpertial-currency.js"></script>
+<script>
+/* ── ESTIMATOR ── */
+var baseRates={
+  image:{basic:[10,20],structured:[20,50],complex:[60,120]},
+  video:{basic:[15,25],structured:[30,70],complex:[80,150]},
+  text:{basic:[8,18],structured:[18,45],complex:[50,100]},
+  audio:{basic:[10,20],structured:[20,55],complex:[55,120]},
+  custom:{basic:[12,25],structured:[25,65],complex:[65,150]}
+};
+var qcMulti={standard:1,professional:1.18,enterprise:1.38};
+function calcEstimate(){
+  var type=document.getElementById('estType').value;
+  var vol=parseInt(document.getElementById('estVol').value)||0;
+  var cx=document.getElementById('estCx').value;
+  var qc=document.getElementById('estQC').value;
+  var res=document.getElementById('calcResult');
+  var note=document.getElementById('calcNote');
+  if(!type||!vol||!cx||!qc){res.style.display='none';note.style.display='none';return;}
+  var rates=baseRates[type][cx];
+  var mult=qcMulti[qc];
+  var minINR=Math.round(rates[0]*mult*vol);
+  var maxINR=Math.round(rates[1]*mult*vol);
+  var minTxt = typeof XpCurrency!=='undefined' ? XpCurrency.fmtTotal(minINR) : ('₹'+minINR);
+  var maxTxt = typeof XpCurrency!=='undefined' ? XpCurrency.fmtTotal(maxINR) : ('₹'+maxINR);
+  document.getElementById('calcMin').textContent=minTxt;
+  document.getElementById('calcMax').textContent=maxTxt;
+  var approx = typeof XpCurrency!=='undefined'&&XpCurrency.get()==='USD'
+    ? ' (Approx. ~USD, rate: 1 INR ≈ $'+XpCurrency.rate+')'
+    : '';
+  document.getElementById('calcNote').innerHTML='This is a rough estimate only'+approx+'. <a href="request.html" style="color:var(--c);">Submit a request</a> for your accurate quote.';
+  res.style.display='flex';note.style.display='block';
+}
+/* Re-run estimate when currency changes */
+document.addEventListener('xp:currency', function(){ if(document.getElementById('calcResult')&&document.getElementById('calcResult').style.display!=='none') calcEstimate(); });
+
+/* ── SCROLL REVEAL ── */
+(function(){
+  var obs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:.1});
+  document.querySelectorAll('.reveal').forEach(function(el){obs.observe(el);});
+  /* Animate range bars */
+  var barObs=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){
+        document.querySelector('.bar-basic').style.width='25%';
+        document.querySelector('.bar-structured').style.width='55%';
+        document.querySelector('.bar-complex').style.width='100%';
+        barObs.disconnect();
+      }
+    });
+  },{threshold:.3});
+  var t=document.querySelector('.range-table');
+  if(t) barObs.observe(t);
+})();
+</script>
+</body>
+</html>

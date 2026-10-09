@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Invoices — XPERTIAL Client</title>
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml"/>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Space+Mono&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../assets/xpertial.css"/>
+<style>
+body{display:flex;flex-direction:column;min-height:100vh;}
+.dash-wrap{display:flex;min-height:100vh;padding-top:var(--nav);}
+.sidebar{width:234px;flex-shrink:0;background:var(--bg2);border-right:1px solid var(--b);position:fixed;top:var(--nav);bottom:0;left:0;overflow-y:auto;display:flex;flex-direction:column;}
+.sidebar::-webkit-scrollbar{width:0;}
+.sidebar-brand{padding:1rem;border-bottom:1px solid var(--b);font-family:var(--fm);font-size:9.5px;color:var(--t3);letter-spacing:.15em;text-transform:uppercase;}
+.sidebar-section{padding:.65rem 1rem .2rem;font-family:var(--fm);font-size:9px;color:var(--t3);letter-spacing:.15em;text-transform:uppercase;}
+.sidebar-nav{padding:.25rem;}
+.side-link{display:flex;align-items:center;gap:.65rem;padding:8px 12px;border-radius:7px;font-size:13.5px;color:var(--t2);text-decoration:none;transition:all .2s;margin-bottom:1px;font-family:var(--fh);font-weight:600;letter-spacing:.02em;}
+.side-link:hover{background:rgba(0,212,255,.06);color:var(--text);}
+.side-link.active{background:rgba(0,212,255,.10);color:var(--c);border:1px solid var(--b);}
+.side-link .ico{width:18px;text-align:center;font-size:15px;flex-shrink:0;}
+.sidebar-footer{margin-top:auto;padding:1rem;border-top:1px solid var(--b);}
+.user-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--c),var(--pur));display:flex;align-items:center;justify-content:center;font-family:var(--fh);font-weight:700;font-size:.85rem;color:#000;flex-shrink:0;}
+.user-card{display:flex;align-items:center;gap:.65rem;}
+.user-name{font-family:var(--fh);font-size:.9rem;font-weight:700;}
+.logout-btn{margin-top:.75rem;width:100%;background:none;border:1px solid var(--b);border-radius:6px;padding:6px;font-family:var(--fh);font-size:12px;color:var(--t3);cursor:pointer;transition:all .2s;text-align:center;letter-spacing:.06em;text-transform:uppercase;}
+.logout-btn:hover{border-color:var(--red);color:var(--red);}
+.dash-main{flex:1;margin-left:234px;padding:2rem 2.5rem;min-width:0;}
+.empty-state{text-align:center;padding:4rem 2rem;background:var(--bg2);border:1px solid var(--b);border-radius:10px;}
+@media(max-width:900px){.sidebar{transform:translateX(-100%);transition:transform .3s;z-index:1500;}.sidebar.open{transform:translateX(0);}.dash-main{margin-left:0;padding:1.25rem;}}
+</style>
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+</head>
+<body>
+<nav id="xpNav">
+  <a href="../index.html" class="xp-logo"><span class="xp-logo-text">XP<span>ER</span>TIAL</span></a>
+  <div class="xp-right">
+    <button class="xp-icon-btn" onclick="xpSearchOpen()"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></button>
+    <div class="nav-auth-in" style="display:flex;">
+      <button class="xp-icon-btn" onclick="location.href='settings.html'"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></button>
+      <a href="../request.html" class="btn-signup">Request Data</a>
+      <button class="btn-signout" onclick="xpAuth.logout()">Sign Out</button>
+    </div>
+    <button class="xp-icon-btn" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+  </div>
+</nav>
+<div class="dash-wrap">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">CLIENT PORTAL</div>
+    <div class="sidebar-nav">
+      <div class="sidebar-section">Overview</div>
+      <a href="index.html" class="side-link"><span class="ico">📊</span> Dashboard</a>
+      <a href="projects.html" class="side-link"><span class="ico">📁</span> My Projects</a>
+      <a href="notifications.html" class="side-link"><span class="ico">🔔</span> Notifications</a>
+      <div class="sidebar-section" style="margin-top:.5rem;">Data</div>
+      <a href="downloads.html" class="side-link"><span class="ico">📦</span> Downloads</a>
+      <a href="contracts.html" class="side-link"><span class="ico">📜</span> Contracts</a>
+      <div class="sidebar-section" style="margin-top:.5rem;">Billing</div>
+      <a href="payments.html" class="side-link"><span class="ico">💳</span> Payments</a>
+      <a href="invoices.html" class="side-link"><span class="ico">🧾</span> Invoices</a>
+      <div class="sidebar-section" style="margin-top:.5rem;">Account</div>
+      <a href="settings.html" class="side-link"><span class="ico">⚙️</span> Settings</a>
+    </div>
+    <div class="sidebar-footer">
+      <div class="user-card">
+        <div class="user-avatar" id="ua">C</div>
+        <div><div class="user-name" id="un">Client</div><div style="font-size:10.5px;color:var(--t3);">Client</div></div>
+      </div>
+      <button class="logout-btn" onclick="xpAuth.logout()">Sign Out</button>
+    </div>
+  </aside>
+  <main class="dash-main">
+    <div style="margin-bottom:2rem;">
+      <h1 style="font-size:1.6rem;margin-bottom:.15rem;">Invoices</h1>
+      <p style="font-size:13px;color:var(--t2);">Connected to Firebase — data appears once your projects are active.</p>
+    </div>
+    <div class="empty-state">
+      <div style="font-size:2.5rem;margin-bottom:1rem;opacity:.4;">📭</div>
+      <h3 style="margin-bottom:.5rem;">No Invoices yet</h3>
+      <p style="font-size:13px;color:var(--t2);margin-bottom:1.25rem;">Your Invoices will appear here once you have active projects.</p>
+      <a href="../request.html" class="btn-p">Request a Dataset →</a>
+    </div>
+  </main>
+</div>
+<script src="../assets/xpertial.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  const user = xpAuth.requireAuth();
+  if (!user) return;
+  document.getElementById('userNameEl').textContent = user.name || user.email;
+  document.getElementById('userAvatar').textContent = (user.name||user.email||'C')[0].toUpperCase();
+
+  const uid = await xpAuth.waitForUser().then(u => u?.uid);
+  if (!uid) return;
+  const container = document.getElementById('invoicesList');
+
+  try {
+    const invoices = await xpDB.getInvoices(uid);
+    if (!invoices.length) {
+      if (container) container.innerHTML = `<div class="empty-dash"><div class="empty-ico">🧾</div><h3>No invoices yet</h3><p>Invoices are generated automatically when payments are made.</p></div>`;
+      return;
+    }
+    if (container) container.innerHTML = `<table class="xp-table"><thead><tr><th>Invoice #</th><th>Project</th><th>Type</th><th>Amount</th><th>Date</th><th>Status</th><th></th></tr></thead><tbody>` +
+      invoices.map(inv=>`<tr>
+        <td style="font-family:var(--fm);font-size:11px;">${inv.invoiceNumber||inv.firestoreId.slice(0,10).toUpperCase()}</td>
+        <td>${inv.projectName||'—'}</td>
+        <td style="font-size:12px;color:var(--t2);">${inv.type==='deposit'?'50% Deposit':inv.type==='final'?'Final Payment':'Invoice'}</td>
+        <td style="font-weight:600;">${xpFmt.currency(inv.amount||0)}</td>
+        <td style="font-size:12px;color:var(--t2);">${inv.createdAt?.seconds?xpFmt.date(new Date(inv.createdAt.seconds*1000)):'—'}</td>
+        <td><span class="badge ${inv.paid?'badge-done':'badge-pending'}">${inv.paid?'Paid':'Unpaid'}</span></td>
+        <td>${inv.pdfUrl?`<a href="${inv.pdfUrl}" target="_blank" class="action-btn">Download</a>`:'<span style="color:var(--t3);font-size:12px;">—</span>'}</td>
+      </tr>`).join('') + `</tbody></table>`;
+  } catch(err) {
+    xpToast('Failed to load invoices: ' + err.message, 'error');
+  }
+});
+</script>
+</body>
+</html>

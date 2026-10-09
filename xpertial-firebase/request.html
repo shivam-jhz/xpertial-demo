@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Request a Dataset — XPERTIAL</title>
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Space+Mono&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="assets/xpertial.css"/>
+<style>
+.req-wrap{min-height:100vh;padding:calc(var(--nav) + 3.5rem) 1rem 4rem;background:radial-gradient(ellipse 70% 50% at 50% 0%,rgba(0,212,255,.055) 0%,transparent 70%);position:relative;}
+.req-wrap::before{content:'';position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(0,212,255,.022) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,.022) 1px,transparent 1px);background-size:60px 60px;}
+.req-container{max-width:760px;margin:0 auto;position:relative;z-index:1;}
+.req-header{text-align:center;margin-bottom:2.5rem;}
+.req-header h1{font-size:clamp(1.6rem,3.5vw,2.4rem);margin-bottom:.5rem;}
+.req-header p{color:var(--t2);font-size:14px;}
+
+/* Progress */
+.progress-bar{display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:2.5rem;flex-wrap:wrap;row-gap:.75rem;}
+.prog-step{display:flex;flex-direction:column;align-items:center;gap:.35rem;position:relative;z-index:1;}
+.prog-dot{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--fh);font-size:.85rem;font-weight:700;background:var(--bg3);border:1.5px solid var(--b);color:var(--t3);transition:all .3s;}
+.prog-step.active .prog-dot{background:rgba(0,212,255,.15);border-color:var(--c);color:var(--c);box-shadow:0 0 16px rgba(0,212,255,.25);}
+.prog-step.done .prog-dot{background:rgba(0,212,255,.2);border-color:var(--c);color:var(--c);}
+.prog-label{font-family:var(--fm);font-size:8.5px;color:var(--t3);letter-spacing:.1em;text-transform:uppercase;transition:color .3s;white-space:nowrap;}
+.prog-step.active .prog-label,.prog-step.done .prog-label{color:var(--c);}
+.prog-line{flex:1;height:1px;background:var(--b);max-width:55px;min-width:18px;transition:background .3s;}
+.prog-line.done{background:var(--c);}
+
+/* Form card */
+.req-card{background:var(--bg2);border:1px solid var(--b2);border-radius:14px;padding:2rem;box-shadow:0 24px 60px rgba(0,0,0,.4);}
+.req-card::before{content:'';display:block;height:2px;background:linear-gradient(90deg,transparent,var(--c),transparent);margin:-2rem -2rem 2rem;border-radius:14px 14px 0 0;}
+.step-panel{display:none;}
+.step-panel.active{display:block;}
+.step-title{font-family:var(--fh);font-size:1.3rem;font-weight:700;margin-bottom:.3rem;}
+.step-sub{font-size:13px;color:var(--t2);margin-bottom:1.75rem;}
+
+/* Type selector — 3 col for 6 types */
+.type-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin-bottom:1.5rem;}
+.type-btn{background:var(--bg3);border:1.5px solid var(--b);border-radius:10px;padding:1rem;cursor:pointer;text-align:left;transition:all .25s;position:relative;}
+.type-btn:hover{border-color:var(--b2);background:var(--bg2);}
+.type-btn.selected{border-color:var(--c);background:rgba(0,212,255,.07);}
+.type-btn.selected::after{content:'✓';position:absolute;top:10px;right:12px;color:var(--c);font-family:var(--fh);font-weight:700;}
+.type-icon{font-size:1.5rem;margin-bottom:.4rem;}
+.type-name{font-family:var(--fh);font-size:.95rem;font-weight:700;margin-bottom:.2rem;}
+.type-desc{font-size:11px;color:var(--t2);line-height:1.5;}
+
+/* Vol slider */
+.volume-display{font-family:var(--fh);font-size:2rem;font-weight:700;color:var(--c);text-align:center;margin:.5rem 0;}
+.volume-label{font-size:11px;color:var(--t2);text-align:center;margin-bottom:1rem;}
+.range-input{width:100%;-webkit-appearance:none;height:4px;background:var(--bg3);border-radius:2px;outline:none;}
+.range-input::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--c);cursor:pointer;box-shadow:0 0 8px rgba(0,212,255,.4);}
+.range-input::-webkit-slider-runnable-track{background:linear-gradient(to right,var(--c) var(--val,30%),var(--bg3) var(--val,30%));border-radius:2px;}
+
+/* Radio / Checkbox groups */
+.radio-group,.check-group{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.35rem;}
+.radio-opt,.check-opt{display:flex;align-items:center;gap:.5rem;background:var(--bg3);border:1.5px solid var(--b);border-radius:6px;padding:8px 14px;cursor:pointer;transition:all .2s;user-select:none;font-size:13px;}
+.radio-opt:hover,.check-opt:hover{border-color:var(--b2);}
+.radio-opt.selected,.check-opt.selected{border-color:var(--c);color:var(--c);background:rgba(0,212,255,.08);}
+.radio-opt input,.check-opt input{display:none;}
+
+/* Format chips */
+.format-chips{display:flex;flex-wrap:wrap;gap:.5rem;}
+.chip{background:var(--bg3);border:1.5px solid var(--b);border-radius:5px;padding:6px 14px;font-family:var(--fm);font-size:10px;color:var(--t2);cursor:pointer;letter-spacing:.1em;transition:all .2s;}
+.chip:hover{border-color:var(--b2);color:var(--text);}
+.chip.selected{border-color:var(--c);color:var(--c);background:rgba(0,212,255,.08);}
+
+/* Upload zone */
+.upload-zone{background:var(--bg3);border:1.5px dashed var(--b2);border-radius:8px;padding:1.5rem;text-align:center;cursor:pointer;transition:border-color .2s;}
+.upload-zone:hover{border-color:var(--c);}
+.upload-zone input{display:none;}
+
+/* Summary */
+.summary-card{background:var(--bg3);border:1px solid var(--b);border-radius:8px;padding:1.25rem;}
+.sum-row{display:flex;justify-content:space-between;align-items:flex-start;padding:.5rem 0;border-bottom:1px solid var(--b);font-size:13px;gap:1rem;}
+.sum-row:last-child{border:none;}
+.sum-key{color:var(--t2);flex-shrink:0;}
+.sum-val{font-family:var(--fh);font-weight:600;text-align:right;}
+.sum-val.accent{color:var(--c);}
+.sum-val.green{color:var(--grn);}
+
+/* Nav */
+.req-nav{display:flex;justify-content:space-between;align-items:center;margin-top:1.75rem;padding-top:1.25rem;border-top:1px solid var(--b);}
+.req-nav-info{font-size:11.5px;color:var(--t3);font-family:var(--fm);}
+
+/* Success */
+.success-icon{font-size:4rem;margin-bottom:1.25rem;}
+.success-id{font-family:var(--fm);font-size:.85rem;color:var(--c);background:rgba(0,212,255,.08);border:1px solid var(--b2);border-radius:5px;padding:8px 16px;display:inline-block;margin:.75rem 0 1.5rem;letter-spacing:.1em;}
+
+/* Section divider */
+.form-section-hdr{font-family:var(--fm);font-size:9.5px;color:var(--c);letter-spacing:.18em;text-transform:uppercase;padding:.6rem 0 .6rem;border-bottom:1px solid var(--b);margin-bottom:1.25rem;margin-top:1.5rem;}
+.form-section-hdr:first-of-type{margin-top:0;}
+
+@media(max-width:640px){
+  .type-grid{grid-template-columns:1fr 1fr;}
+  .req-card{padding:1.25rem;}
+  .req-card::before{margin:-1.25rem -1.25rem 1.5rem;}
+  .req-wrap{padding:calc(var(--nav) + 2rem) .75rem 3rem;}
+}
+@media(max-width:400px){.type-grid{grid-template-columns:1fr;}}
+</style>
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="xpNav">
+  <a href="index.html" class="xp-logo"><img src="assets/logo.png" alt="XPERTIAL" class="xp-logo-img"/></a>
+  <div class="xp-center">
+    <div class="xp-ni">
+      <button class="xp-nb">Services<svg class="xp-arr" viewBox="0 0 8 8" fill="none"><path d="M1 2.5L4 5.5L7 2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+      <div class="xp-drop"><a href="services.html#image" class="xp-di"><div class="xp-dico">🖼️</div><div><div class="xp-dlbl">Image Collection</div><div class="xp-dsub">Labeled images for CV models</div></div></a><a href="services.html#video" class="xp-di"><div class="xp-dico">🎥</div><div><div class="xp-dlbl">Video Collection</div><div class="xp-dsub">Frame-level annotation &amp; tracking</div></div></a><a href="services.html#text" class="xp-di"><div class="xp-dico">📝</div><div><div class="xp-dlbl">Text &amp; NLP Data</div><div class="xp-dsub">Annotated text, conversations</div></div></a><a href="services.html#audio" class="xp-di"><div class="xp-dico">🎙️</div><div><div class="xp-dlbl">Audio &amp; Speech</div><div class="xp-dsub">Transcribed, labeled audio</div></div></a><div class="xp-dsep"></div><a href="services.html#custom" class="xp-di"><div class="xp-dico">⚙️</div><div><div class="xp-dlbl">Custom Collection</div><div class="xp-dsub">Any data type, any format</div></div></a></div>
+    </div>
+    <a href="pricing.html" class="xp-nb">Pricing</a>
+    <a href="join-collector.html" class="xp-nb">Join as Collector</a>
+    <div class="xp-ni">
+      <button class="xp-nb">Company<svg class="xp-arr" viewBox="0 0 8 8" fill="none"><path d="M1 2.5L4 5.5L7 2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+      <div class="xp-drop"><a href="company/about.html" class="xp-di"><div class="xp-dico">🏢</div><div><div class="xp-dlbl">About Us</div><div class="xp-dsub">Our vision &amp; team</div></div></a><a href="company/contact.html" class="xp-di"><div class="xp-dico">📞</div><div><div class="xp-dlbl">Contact</div><div class="xp-dsub">Get in touch</div></div></a><a href="company/blog.html" class="xp-di"><div class="xp-dico">✍️</div><div><div class="xp-dlbl">Blog</div><div class="xp-dsub">Insights &amp; company updates</div></div></a><a href="company/careers.html" class="xp-di"><div class="xp-dico">💼</div><div><div class="xp-dlbl">Careers</div><div class="xp-dsub">Join our team</div></div></a><a href="company/events.html" class="xp-di"><div class="xp-dico">📅</div><div><div class="xp-dlbl">Events</div><div class="xp-dsub">Talks, webinars &amp; meetups</div></div></a><a href="company/press.html" class="xp-di"><div class="xp-dico">📰</div><div><div class="xp-dlbl">Press</div><div class="xp-dsub">Media &amp; coverage</div></div></a><div class="xp-dsep"></div><a href="company/privacy.html" class="xp-di"><div class="xp-dico">🔒</div><div><div class="xp-dlbl">Privacy Policy</div></div></a><a href="company/terms.html" class="xp-di"><div class="xp-dico">📄</div><div><div class="xp-dlbl">Terms of Service</div></div></a></div>
+    </div>
+  </div>
+  <div class="xp-right">
+    <button class="xp-icon-btn" onclick="xpSearchOpen()" title="Search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></button>
+    <div class="nav-auth-out">
+      <a href="login.html" class="btn-signin">Sign In</a>
+      <a href="login.html?tab=register" class="btn-signup">Sign Up</a>
+    </div>
+    <div class="nav-auth-in">
+      <button class="xp-icon-btn" onclick="location.href='client/index.html'"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></button>
+      <a href="request.html" class="btn-signup">Request Data →</a>
+      <button class="btn-signout" onclick="xpAuth.logout()">Sign Out</button>
+    </div>
+    <div class="xp-hbg" id="xpHbg"><span></span><span></span><span></span></div>
+  </div>
+</nav>
+<div class="xp-mob" id="xpMob">
+  <div class="xp-ms">
+    <button class="xp-msb">Services <span class="xp-marr">▼</span></button>
+    <div class="xp-msub">
+      <a href="services.html#image" class="xp-ml">Image Collection</a>
+      <a href="services.html#video" class="xp-ml">Video Collection</a>
+      <a href="services.html#text" class="xp-ml">Text &amp; NLP Data</a>
+      <a href="services.html#audio" class="xp-ml">Audio &amp; Speech</a>
+      <a href="services.html#custom" class="xp-ml">Custom Collection</a>
+    </div>
+  </div>
+  <div class="xp-ms"><button class="xp-msb"><a href="pricing.html" style="color:inherit;text-decoration:none;">Pricing</a></button></div>
+  <div class="xp-ms"><button class="xp-msb"><a href="join-collector.html" style="color:inherit;text-decoration:none;">Join as Collector</a></button></div>
+  <div class="xp-ms">
+    <button class="xp-msb">Company <span class="xp-marr">▼</span></button>
+    <div class="xp-msub">
+      <a href="company/about.html" class="xp-ml">About Us</a>
+      <a href="company/contact.html" class="xp-ml">Contact</a><a href="company/blog.html" class="xp-ml">Blog</a>
+      <a href="company/careers.html" class="xp-ml">Careers</a>
+      <a href="company/events.html" class="xp-ml">Events</a>
+      <a href="company/press.html" class="xp-ml">Press</a>
+      <a href="company/privacy.html" class="xp-ml">Privacy Policy</a>
+      <a href="company/terms.html" class="xp-ml">Terms of Service</a>
+    </div>
+  </div>
+  <div class="xp-mb">
+    <a href="login.html" class="btn-signin">Sign In</a>
+    <a href="login.html?tab=register" class="btn-signup">Sign Up</a>
+  </div>
+</div>
+
+<div class="req-wrap">
+  <div class="req-container">
+    <div class="req-header">
+      <div class="section-tag" style="justify-content:center;margin-bottom:.5rem;">New Project</div>
+      <h1>Request a <span class="accent">Custom Dataset</span></h1>
+      <p>Tell us exactly what you need — we'll send a detailed quote within 24 hours.</p>
+    </div>
+
+    <!-- PROGRESS -->
+    <div class="progress-bar" id="progressBar">
+      <div class="prog-step active" data-step="1"><div class="prog-dot"><span>1</span></div><div class="prog-label">Data Type</div></div>
+      <div class="prog-line" id="line1"></div>
+      <div class="prog-step" data-step="2"><div class="prog-dot"><span>2</span></div><div class="prog-label">Requirements</div></div>
+      <div class="prog-line" id="line2"></div>
+      <div class="prog-step" data-step="3"><div class="prog-dot"><span>3</span></div><div class="prog-label">Specifications</div></div>
+      <div class="prog-line" id="line3"></div>
+      <div class="prog-step" data-step="4"><div class="prog-dot"><span>4</span></div><div class="prog-label">Business</div></div>
+      <div class="prog-line" id="line4"></div>
+      <div class="prog-step" data-step="5"><div class="prog-dot"><span>5</span></div><div class="prog-label">Contact</div></div>
+    </div>
+
+    <div class="req-card">
+
+      <!-- ═══ STEP 1: Data Type ═══ -->
+      <div class="step-panel active" id="step1">
+        <div class="step-title">What type of data do you need?</div>
+        <div class="step-sub">Select the primary data category for your project. Image and Video are separate services.</div>
+        <div class="type-grid">
+          <div class="type-btn" data-type="image" onclick="selectType(this)">
+            <div class="type-icon">🖼️</div>
+            <div class="type-name">Image</div>
+            <div class="type-desc">Photos, labeled images, bounding boxes, segmentation, classification.</div>
+          </div>
+          <div class="type-btn" data-type="video" onclick="selectType(this)">
+            <div class="type-icon">🎥</div>
+            <div class="type-name">Video</div>
+            <div class="type-desc">Video clips, frame-level annotation, object tracking, activity recognition.</div>
+          </div>
+          <div class="type-btn" data-type="text" onclick="selectType(this)">
+            <div class="type-icon">📝</div>
+            <div class="type-name">Text &amp; NLP</div>
+            <div class="type-desc">Annotated text, intent classification, NER, sentiment, translation pairs.</div>
+          </div>
+          <div class="type-btn" data-type="audio" onclick="selectType(this)">
+            <div class="type-icon">🎙️</div>
+            <div class="type-name">Audio &amp; Speech</div>
+            <div class="type-desc">Speech recordings, transcriptions, speaker diarization, accent diversity.</div>
+          </div>
+          <div class="type-btn" data-type="custom" onclick="selectType(this)">
+            <div class="type-icon">⚙️</div>
+            <div class="type-name">Custom / Other</div>
+            <div class="type-desc">Geospatial, sensor data, forms, surveys, or any bespoke collection need.</div>
+          </div>
+        </div>
+        <div class="form-error" id="step1Error">Please select a data type to continue.</div>
+        <div class="req-nav">
+          <div class="req-nav-info">STEP 1 OF 5</div>
+          <button class="btn-p" onclick="nextStep(1)">Next: Core Requirements →</button>
+        </div>
+      </div>
+
+      <!-- ═══ STEP 2: Core Requirements ═══ -->
+      <div class="step-panel" id="step2">
+        <div class="step-title">Core Requirements</div>
+        <div class="step-sub">Define the volume, location, source, complexity, quality and timeline.</div>
+
+        <div class="form-section-hdr">Volume</div>
+        <div class="form-group">
+          <label class="form-label">Estimated Volume (data points)</label>
+          <div class="volume-display" id="volDisplay">10,000</div>
+          <div class="volume-label" id="volLabel">data points</div>
+          <input type="range" class="range-input" id="volSlider" min="0" max="100" value="30" oninput="updateVolume(this)"/>
+          <div style="display:flex;justify-content:space-between;font-family:var(--fm);font-size:9px;color:var(--t3);margin-top:.4rem;letter-spacing:.05em;">
+            <span>1K</span><span>10K</span><span>50K</span><span>100K</span><span>500K+</span>
+          </div>
+          <div class="form-group" style="margin-top:.85rem;">
+            <label class="form-label">Manual Input (optional)</label>
+            <input type="number" class="form-input" id="volManual" placeholder="e.g. 25000" oninput="syncVolManual(this)"/>
+          </div>
+        </div>
+
+        <div class="form-section-hdr">Location</div>
+        <div class="form-group">
+          <label class="form-label">Where should data be collected? <span style="color:var(--red)">*</span></label>
+          <input type="text" class="form-input" id="colLocation" placeholder="e.g. Mumbai, Delhi, Bangalore — or Pan India"/>
+          <div class="form-hint">Specify cities, states, or regions. Multiple locations okay.</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Number of Distinct Locations</label>
+          <input type="number" class="form-input" id="numLocations" placeholder="e.g. 5" min="1"/>
+        </div>
+
+        <div class="form-section-hdr">Data Source</div>
+        <div class="form-group">
+          <label class="form-label">Preferred Data Source</label>
+          <div class="radio-group" id="dataSource">
+            <label class="radio-opt"><input type="radio" name="src" value="real"/><span>🌍 Real-world Collection</span></label>
+            <label class="radio-opt"><input type="radio" name="src" value="existing"/><span>📦 Existing Dataset</span></label>
+            <label class="radio-opt"><input type="radio" name="src" value="synthetic"/><span>🤖 Synthetic / Generated</span></label>
+          </div>
+        </div>
+
+        <div class="form-section-hdr">Complexity &amp; Quality</div>
+        <div class="form-group">
+          <label class="form-label">Complexity Level</label>
+          <div class="radio-group" id="complexity">
+            <label class="radio-opt"><input type="radio" name="cx" value="basic"/><span>🟢 Basic — simple, no strict conditions</span></label>
+            <label class="radio-opt"><input type="radio" name="cx" value="moderate"/><span>🟡 Moderate — some constraints (angle/light)</span></label>
+            <label class="radio-opt"><input type="radio" name="cx" value="complex"/><span>🔴 Complex — strict scenarios, rare conditions</span></label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Quality Assurance Level <span style="color:var(--red)">*</span></label>
+          <div class="radio-group" id="qaLevel">
+            <label class="radio-opt"><input type="radio" name="qa" value="standard"/><span>Standard — Automated QC ~95%</span></label>
+            <label class="radio-opt"><input type="radio" name="qa" value="professional"/><span>Professional — Human + Auto QC ~98%</span></label>
+            <label class="radio-opt"><input type="radio" name="qa" value="enterprise"/><span>Enterprise — Gold QC + Auditing ~99%+</span></label>
+          </div>
+        </div>
+
+        <div class="form-section-hdr">Timeline</div>
+        <div class="form-group">
+          <label class="form-label">Desired Timeline <span style="color:var(--red)">*</span></label>
+          <div class="radio-group" id="timeline">
+            <label class="radio-opt"><input type="radio" name="tl" value="24h"/><span>⚡ Rush — within 24 hours</span></label>
+            <label class="radio-opt"><input type="radio" name="tl" value="72h"/><span>🕐 Standard — within 72 hours</span></label>
+            <label class="radio-opt"><input type="radio" name="tl" value="1w"/><span>📅 Relaxed — within 1 week</span></label>
+            <label class="radio-opt"><input type="radio" name="tl" value="2w+"/><span>🗓️ Flexible — 2+ weeks</span></label>
+          </div>
+        </div>
+
+        <div class="form-error" id="step2Error"></div>
+        <div class="req-nav">
+          <button class="btn-g" onclick="prevStep(2)">← Back</button>
+          <div class="req-nav-info">STEP 2 OF 5</div>
+          <button class="btn-p" onclick="nextStep(2)">Next: Specifications →</button>
+        </div>
+      </div>
+
+      <!-- ═══ STEP 3: Data Specifications ═══ -->
+      <div class="step-panel" id="step3">
+        <div class="step-title">Data Specifications</div>
+        <div class="step-sub">Define exactly what you need — the more detail, the more accurate your quote.</div>
+
+        <div class="form-section-hdr">Data Point Definition</div>
+        <div class="form-group">
+          <label class="form-label">What counts as 1 data point?</label>
+          <input type="text" class="form-input" id="dpDefinition" placeholder="e.g. 1 image = 1 data point / 1 video clip (5–10s) = 1 data point"/>
+        </div>
+
+        <div class="form-section-hdr">Required Content</div>
+        <div class="form-group">
+          <label class="form-label">What should be captured / collected?</label>
+          <textarea class="form-textarea" id="reqContent" rows="3" placeholder="e.g. Objects, scenarios, text type, audio context. Be as specific as possible."></textarea>
+        </div>
+
+        <div class="form-section-hdr">Environment &amp; Conditions</div>
+        <div class="form-group">
+          <label class="form-label">Environment</label>
+          <div class="check-group" id="envType">
+            <label class="check-opt"><input type="checkbox" value="indoor"/><span>🏠 Indoor</span></label>
+            <label class="check-opt"><input type="checkbox" value="outdoor"/><span>🌳 Outdoor</span></label>
+            <label class="check-opt"><input type="checkbox" value="mixed"/><span>🔀 Mixed</span></label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Time of Day</label>
+          <div class="check-group" id="timeOfDay">
+            <label class="check-opt"><input type="checkbox" value="day"/><span>☀️ Day</span></label>
+            <label class="check-opt"><input type="checkbox" value="night"/><span>🌙 Night</span></label>
+            <label class="check-opt"><input type="checkbox" value="both"/><span>🔀 Both</span></label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Quality Constraints</label>
+          <div class="check-group" id="qualConstraints">
+            <label class="check-opt"><input type="checkbox" value="highres"/><span>📷 High Resolution</span></label>
+            <label class="check-opt"><input type="checkbox" value="angle"/><span>📐 Specific Angle</span></label>
+            <label class="check-opt"><input type="checkbox" value="noblur"/><span>🔍 No Blur</span></label>
+            <label class="check-opt"><input type="checkbox" value="stable"/><span>🎬 Stable Recording</span></label>
+            <label class="check-opt"><input type="checkbox" value="clearaudio"/><span>🎤 Clear Audio</span></label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Variation / Demographics Required</label>
+          <div class="check-group" id="variation">
+            <label class="check-opt"><input type="checkbox" value="age"/><span>👴 Age Groups</span></label>
+            <label class="check-opt"><input type="checkbox" value="gender"/><span>⚧ Gender Diversity</span></label>
+            <label class="check-opt"><input type="checkbox" value="objvar"/><span>🎭 Object Variation</span></label>
+            <label class="check-opt"><input type="checkbox" value="none"/><span>— Not Required</span></label>
+          </div>
+        </div>
+
+        <div class="form-section-hdr">Annotation Requirements</div>
+        <div class="form-group">
+          <label class="form-label">Annotation Type</label>
+          <div class="check-group" id="annotationType">
+            <label class="check-opt"><input type="checkbox" value="none"/><span>— Not Required</span></label>
+            <label class="check-opt"><input type="checkbox" value="bbox"/><span>📦 Bounding Box</span></label>
+            <label class="check-opt"><input type="checkbox" value="seg"/><span>✂️ Segmentation</span></label>
+            <label class="check-opt"><input type="checkbox" value="cls"/><span>🏷️ Classification</span></label>
+            <label class="check-opt"><input type="checkbox" value="ner"/><span>🔤 NER / Tagging</span></label>
+            <label class="check-opt"><input type="checkbox" value="other"/><span>⚙️ Other</span></label>
+          </div>
+        </div>
+
+        <div class="form-section-hdr">File Requirements</div>
+        <div class="form-group">
+          <label class="form-label">Delivery Format</label>
+          <div class="format-chips" id="formatChips">
+            <span class="chip" onclick="toggleChip(this)">JSON</span>
+            <span class="chip" onclick="toggleChip(this)">CSV</span>
+            <span class="chip" onclick="toggleChip(this)">COCO</span>
+            <span class="chip" onclick="toggleChip(this)">YOLO</span>
+            <span class="chip" onclick="toggleChip(this)">JSONL</span>
+            <span class="chip" onclick="toggleChip(this)">Parquet</span>
+            <span class="chip" onclick="toggleChip(this)">XML</span>
+            <span class="chip" onclick="toggleChip(this)">Custom</span>
+            <span class="chip" onclick="toggleChip(this)">Not Sure — Suggest Best</span>
+          </div>
+          <div class="form-hint">Select all that apply.</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+          <div class="form-group" style="margin:0;">
+            <label class="form-label">Resolution (if applicable)</label>
+            <input type="text" class="form-input" id="resolution" placeholder="e.g. 1080p, 4K, 224×224"/>
+          </div>
+          <div class="form-group" style="margin:0;">
+            <label class="form-label">Naming Convention</label>
+            <input type="text" class="form-input" id="naming" placeholder="e.g. img_001.jpg, UUID"/>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-top:1rem;">
+          <label class="form-label">Reference / Sample Files (Optional)</label>
+          <div class="upload-zone" onclick="document.getElementById('refFiles').click()">
+            <input type="file" id="refFiles" multiple accept=".pdf,.docx,.png,.jpg,.zip,.csv" onchange="handleRefFiles(this)"/>
+            <div style="font-size:1.5rem;margin-bottom:.4rem;">📎</div>
+            <div style="font-size:13px;color:var(--t2);">Drop files or click to browse</div>
+            <div style="font-size:11px;color:var(--t3);margin-top:.25rem;">PDF, DOCX, PNG, ZIP, CSV — max 50MB</div>
+          </div>
+          <div id="refFilesList" style="margin-top:.5rem;"></div>
+        </div>
+
+        <div class="form-error" id="step3Error"></div>
+        <div class="req-nav">
+          <button class="btn-g" onclick="prevStep(3)">← Back</button>
+          <div class="req-nav-info">STEP 3 OF 5</div>
+          <button class="btn-p" onclick="nextStep(3)">Next: Business Context →</button>
+        </div>
+      </div>
+
+      <!-- ═══ STEP 4: Business Context ═══ -->
+      <div class="step-panel" id="step4">
+        <div class="step-title">Business Context</div>
+        <div class="step-sub">Help us understand your use case and priority so we can tailor the right solution.</div>
+
+        <div class="form-group">
+          <label class="form-label">Use Case <span style="color:var(--red)">*</span></label>
+          <div class="radio-group" id="useCase">
+            <label class="radio-opt"><input type="radio" name="uc" value="training"/><span>🤖 AI Model Training</span></label>
+            <label class="radio-opt"><input type="radio" name="uc" value="research"/><span>🔬 Research</span></label>
+            <label class="radio-opt"><input type="radio" name="uc" value="product"/><span>🛠️ Product Feature</span></label>
+            <label class="radio-opt"><input type="radio" name="uc" value="analytics"/><span>📊 Analytics</span></label>
+            <label class="radio-opt"><input type="radio" name="uc" value="other"/><span>⚙️ Other</span></label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Budget Range (INR) <span style="color:var(--red)">*</span></label>
+          <div class="radio-group" id="budget">
+            <label class="radio-opt"><input type="radio" name="bd" value="5-20k"/><span>₹5K – ₹20K</span></label>
+            <label class="radio-opt"><input type="radio" name="bd" value="20k-1l"/><span>₹20K – ₹1L</span></label>
+            <label class="radio-opt"><input type="radio" name="bd" value="1l-5l"/><span>₹1L – ₹5L</span></label>
+            <label class="radio-opt"><input type="radio" name="bd" value="5l+"/><span>₹5L+</span></label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">What Matters Most to You?</label>
+          <div class="radio-group" id="priority">
+            <label class="radio-opt"><input type="radio" name="pr" value="speed"/><span>⚡ Speed</span></label>
+            <label class="radio-opt"><input type="radio" name="pr" value="cost"/><span>💰 Cost</span></label>
+            <label class="radio-opt"><input type="radio" name="pr" value="quality"/><span>🏆 Quality</span></label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Project Type</label>
+          <div class="radio-group" id="projType">
+            <label class="radio-opt"><input type="radio" name="pt" value="onetime"/><span>📌 One-time Project</span></label>
+            <label class="radio-opt"><input type="radio" name="pt" value="ongoing"/><span>🔄 Ongoing / Recurring</span></label>
+          </div>
+        </div>
+
+        <div class="form-error" id="step4Error"></div>
+        <div class="req-nav">
+          <button class="btn-g" onclick="prevStep(4)">← Back</button>
+          <div class="req-nav-info">STEP 4 OF 5</div>
+          <button class="btn-p" onclick="nextStep(4)">Next: Contact Info →</button>
+        </div>
+      </div>
+
+      <!-- ═══ STEP 5: Contact ═══ -->
+      <div class="step-panel" id="step5">
+        <div class="step-title">Contact Information</div>
+        <div class="step-sub">We'll send your quote to this address within 24 hours.</div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+          <div class="form-group" style="margin:0;"><label class="form-label">First Name <span style="color:var(--red)">*</span></label><input type="text" class="form-input" id="ctFirst" placeholder="Rahul"/></div>
+          <div class="form-group" style="margin:0;"><label class="form-label">Last Name <span style="color:var(--red)">*</span></label><input type="text" class="form-input" id="ctLast" placeholder="Kumar"/></div>
+        </div>
+        <div class="form-group" style="margin-top:1rem;"><label class="form-label">Work Email <span style="color:var(--red)">*</span></label><input type="email" class="form-input" id="ctEmail" placeholder="you@company.com"/></div>
+        <div class="form-group"><label class="form-label">Phone Number <span style="color:var(--red)">*</span></label><input type="tel" class="form-input" id="ctPhone" placeholder="+91 98765 43210"/></div>
+        <div class="form-group"><label class="form-label">Company / Organisation</label><input type="text" class="form-input" id="ctCompany" placeholder="Acme AI Labs"/></div>
+        <div class="form-group">
+          <label class="form-label">Company Size</label>
+          <div class="radio-group" id="compSize">
+            <label class="radio-opt"><input type="radio" name="cs" value="individual"/><span>🧑 Individual</span></label>
+            <label class="radio-opt"><input type="radio" name="cs" value="startup"/><span>🚀 Startup</span></label>
+            <label class="radio-opt"><input type="radio" name="cs" value="midsize"/><span>🏢 Mid-size</span></label>
+            <label class="radio-opt"><input type="radio" name="cs" value="enterprise"/><span>🌐 Enterprise</span></label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Preferred Communication</label>
+          <div class="check-group" id="prefComm">
+            <label class="check-opt"><input type="checkbox" value="email"/><span>📧 Email</span></label>
+            <label class="check-opt"><input type="checkbox" value="whatsapp"/><span>💬 WhatsApp</span></label>
+            <label class="check-opt"><input type="checkbox" value="call"/><span>📞 Call</span></label>
+          </div>
+        </div>
+
+        <!-- Summary -->
+        <div style="margin:1.5rem 0;">
+          <div style="font-family:var(--fm);font-size:9.5px;color:var(--c);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.75rem;">Request Summary</div>
+          <div class="summary-card" id="summaryCard">
+            <div class="sum-row"><span class="sum-key">Data Type</span><span class="sum-val accent" id="sumType">—</span></div>
+            <div class="sum-row"><span class="sum-key">Volume</span><span class="sum-val" id="sumVol">—</span></div>
+            <div class="sum-row"><span class="sum-key">Location</span><span class="sum-val" id="sumLoc">—</span></div>
+            <div class="sum-row"><span class="sum-key">Format</span><span class="sum-val" id="sumFmt">—</span></div>
+            <div class="sum-row"><span class="sum-key">Quality</span><span class="sum-val" id="sumQC">—</span></div>
+            <div class="sum-row"><span class="sum-key">Timeline</span><span class="sum-val green" id="sumTL">—</span></div>
+            <div class="sum-row"><span class="sum-key">Budget</span><span class="sum-val" id="sumBdg">—</span></div>
+          </div>
+        </div>
+
+        <div class="form-error" id="step5Error"></div>
+        <div class="req-nav">
+          <button class="btn-g" onclick="prevStep(5)">← Back</button>
+          <div class="req-nav-info">STEP 5 OF 5</div>
+          <button class="btn-p" onclick="submitRequest()">Submit Request →</button>
+        </div>
+      </div>
+
+      <!-- SUCCESS -->
+      <div class="step-panel" id="successPanel" style="text-align:center;">
+        <div class="success-icon">🎉</div>
+        <h2 style="margin-bottom:.5rem;">Request Submitted!</h2>
+        <p class="muted" style="font-size:14px;">Your project request is in our system. You'll receive a quote within 24 hours.</p>
+        <div class="success-id" id="reqId">REQ-2025-XXXXXX</div>
+        <p class="muted" style="font-size:13px;margin-bottom:1.75rem;">Save your request ID above. You can track your project after signing in.</p>
+        <div style="display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap;">
+          <a href="login.html" class="btn-p">Create Account / Sign In →</a>
+          <a href="index.html" class="btn-g">Back to Home</a>
+        </div>
+        <p style="font-size:12px;color:var(--t3);margin-top:1.25rem;">Questions? Email <a href="mailto:hello@xpertial.com" style="color:var(--c);">hello@xpertial.com</a></p>
+      </div>
+
+    </div><!-- /req-card -->
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="index.html" class="xp-logo" style="display:inline-block;margin-bottom:.85rem;"><img src="assets/logo.png" alt="XPERTIAL" class="xp-logo-img"/></a>
+      <p>We help teams collect real-world data based on their specific requirements.</p>
+      <div class="footer-social">
+        <a href="https://www.instagram.com/xpertial" target="_blank" rel="noopener noreferrer" class="social-icon" title="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".5" fill="currentColor" stroke="none"/></svg></a>
+        <a href="https://x.com/xpertial_" target="_blank" rel="noopener noreferrer" class="social-icon" title="X (Twitter)"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+        <a href="https://www.facebook.com/xpertial" target="_blank" rel="noopener noreferrer" class="social-icon" title="Facebook"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+        <a href="https://www.youtube.com/@xpertial" target="_blank" rel="noopener noreferrer" class="social-icon" title="YouTube"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="var(--bg2)"/></svg></a>
+        <a href="https://github.com/xpertial" target="_blank" rel="noopener noreferrer" class="social-icon" title="GitHub"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/></svg></a>
+      </div>
+    </div>
+    <div class="footer-col"><h4>Services</h4><a href="services.html#image">Image Collection</a><a href="services.html#video">Video Collection</a><a href="services.html#text">Text &amp; NLP</a><a href="services.html#audio">Audio &amp; Speech</a><a href="services.html#custom">Custom Collection</a></div>
+    <div class="footer-col"><h4>Company</h4><a href="company/about.html">About Us</a><a href="company/careers.html">Careers</a><a href="company/contact.html">Contact Us</a><a href="company/events.html">Events</a><a href="company/press.html">Press</a></div>
+    <div class="footer-col"><h4>Collectors</h4><a href="join-collector.html">Join as Collector</a><a href="pricing.html">Pricing</a><a href="join-collector.html#earn">Earnings</a><a href="join-collector.html#req">Requirements</a></div>
+    <div class="footer-col"><h4>Legal</h4><a href="company/privacy.html">Privacy Policy</a><a href="company/terms.html">Terms</a><a href="login.html">My Account</a><a href="request.html">Book a Demo</a></div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">&copy; 2026 XPERTIAL Technologies Pvt. Ltd. All rights reserved.</div>
+    <div class="footer-status"><span class="status-dot"></span>All systems operational</div>
+  </div>
+</footer>
+
+<script src="assets/xpertial.js"></script>
+<script>
+let currentStep = 1;
+let formData = { type:'', volume:10000, location:'', formats:[], quality:'', timeline:'', useCase:'', budget:'' };
+
+function selectType(btn){
+  document.querySelectorAll('.type-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  formData.type = btn.dataset.type;
+}
+
+(function(){
+  document.querySelectorAll('.radio-group').forEach(function(grp){
+    grp.querySelectorAll('.radio-opt').forEach(function(opt){
+      opt.addEventListener('click',function(e){
+        e.preventDefault();e.stopPropagation();
+        grp.querySelectorAll('.radio-opt').forEach(function(o){o.classList.remove('selected');});
+        opt.classList.add('selected');
+      });
+    });
+  });
+  document.querySelectorAll('.check-group').forEach(function(grp){
+    grp.querySelectorAll('.check-opt').forEach(function(opt){
+      opt.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();opt.classList.toggle('selected');});
+    });
+  });
+})();
+
+const volumeMap=[1000,2000,3000,5000,7500,10000,15000,20000,30000,50000,75000,100000,150000,200000,300000,500000,750000,1000000];
+function updateVolume(slider){
+  const idx=Math.floor(slider.value/100*(volumeMap.length-1));
+  const vol=volumeMap[idx];formData.volume=vol;
+  document.getElementById('volDisplay').textContent=vol>=1000000?(vol/1000000).toFixed(1)+'M':vol>=1000?(vol/1000).toFixed(0)+'K':vol;
+  slider.style.setProperty('--val',(slider.value)+'%');
+  const manual=document.getElementById('volManual');
+  if(manual&&document.activeElement!==manual)manual.value=vol;
+}
+function syncVolManual(inp){
+  const v=parseInt(inp.value)||0;formData.volume=v;
+  document.getElementById('volDisplay').textContent=v>=1000000?(v/1000000).toFixed(1)+'M':v>=1000?(v/1000).toFixed(0)+'K':v;
+}
+function toggleChip(chip){
+  chip.classList.toggle('selected');
+  const fmt=chip.textContent;
+  if(chip.classList.contains('selected'))formData.formats.push(fmt);
+  else formData.formats=formData.formats.filter(f=>f!==fmt);
+}
+function handleRefFiles(inp){
+  const list=document.getElementById('refFilesList');list.innerHTML='';
+  Array.from(inp.files).forEach(f=>{
+    const el=document.createElement('div');
+    el.style.cssText='background:rgba(0,212,255,.06);border:1px solid var(--b2);border-radius:5px;padding:6px 12px;font-size:12px;color:var(--t2);display:flex;gap:.5rem;margin-top:.4rem;';
+    el.innerHTML='<span>'+f.name+'</span><span style="color:var(--t3)">'+(f.size/1024/1024).toFixed(1)+' MB</span>';
+    list.appendChild(el);
+  });
+}
+
+function nextStep(from){
+  if(from===1){if(!formData.type){document.getElementById('step1Error').classList.add('show');return;}document.getElementById('step1Error').classList.remove('show');}
+  if(from===2){
+    const loc=document.getElementById('colLocation').value.trim();
+    const qa=document.querySelector('#qaLevel .radio-opt.selected');
+    const tl=document.querySelector('#timeline .radio-opt.selected');
+    if(!loc||!qa||!tl){showErr('step2Error','Please fill location and select quality and timeline.');return;}
+    clearErr('step2Error');formData.location=loc;
+  }
+  if(from===4){
+    const uc=document.querySelector('#useCase .radio-opt.selected');
+    const bd=document.querySelector('#budget .radio-opt.selected');
+    if(!uc||!bd){showErr('step4Error','Please select a use case and budget range.');return;}
+    clearErr('step4Error');
+  }
+  goToStep(from+1);
+}
+function prevStep(from){goToStep(from-1);}
+function goToStep(n){
+  document.querySelectorAll('.step-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('step'+n).classList.add('active');
+  document.querySelectorAll('.prog-step').forEach(s=>{
+    const sn=parseInt(s.dataset.step);
+    s.classList.toggle('active',sn===n);s.classList.toggle('done',sn<n);
+    s.querySelector('.prog-dot').innerHTML=sn<n?'✓':'<span>'+sn+'</span>';
+  });
+  for(let i=1;i<=4;i++){const l=document.getElementById('line'+i);if(l)l.classList.toggle('done',i<n);}
+  currentStep=n;if(n===5)updateSummary();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function updateSummary(){
+  const typeLabels={image:'Image',video:'Video',text:'Text & NLP',audio:'Audio & Speech',custom:'Custom'};
+  document.getElementById('sumType').textContent=typeLabels[formData.type]||'—';
+  const vol=formData.volume;
+  document.getElementById('sumVol').textContent=vol>=1000000?(vol/1000000).toFixed(1)+'M pts':vol>=1000?(vol/1000).toFixed(0)+'K pts':vol+' pts';
+  document.getElementById('sumLoc').textContent=document.getElementById('colLocation').value||'—';
+  const fmts=document.querySelectorAll('#formatChips .chip.selected');
+  document.getElementById('sumFmt').textContent=fmts.length?Array.from(fmts).map(c=>c.textContent).join(', '):'Not specified';
+  const qa=document.querySelector('#qaLevel .radio-opt.selected');
+  document.getElementById('sumQC').textContent=qa?qa.querySelector('span').textContent:'—';
+  const tl=document.querySelector('#timeline .radio-opt.selected');
+  document.getElementById('sumTL').textContent=tl?tl.querySelector('span').textContent:'—';
+  const bd=document.querySelector('#budget .radio-opt.selected');
+  document.getElementById('sumBdg').textContent=bd?bd.querySelector('span').textContent:'—';
+}
+
+/* ── SUBMIT TO FIRESTORE ── */
+async function submitRequest(){
+  const email=document.getElementById('ctEmail').value.trim();
+  const first=document.getElementById('ctFirst').value.trim();
+  const last=document.getElementById('ctLast').value.trim();
+  const phone=document.getElementById('ctPhone').value.trim();
+  if(!first||!last||!email||!phone){showErr('step5Error','Please fill in your name, email and phone.');return;}
+  clearErr('step5Error');
+
+  // Collect remaining form data
+  formData.quality = document.querySelector('#qaLevel .radio-opt.selected')?.querySelector('span')?.textContent || '';
+  formData.timeline = document.querySelector('#timeline .radio-opt.selected')?.querySelector('span')?.textContent || '';
+  formData.useCase = document.querySelector('#useCase .radio-opt.selected')?.querySelector('span')?.textContent || '';
+  formData.budget = document.querySelector('#budget .radio-opt.selected')?.querySelector('span')?.textContent || '';
+  formData.formats = Array.from(document.querySelectorAll('#formatChips .chip.selected')).map(c=>c.textContent);
+
+  const submitBtn = document.querySelector('#step5 .btn-p[onclick="submitRequest()"]');
+  if(submitBtn){submitBtn.disabled=true;submitBtn.textContent='Submitting...';}
+
+  try {
+    const ref = db.collection('requests').doc();
+    const reqId = 'REQ-' + Date.now().toString(36).toUpperCase();
+    await ref.set({
+      id: reqId,
+      firestoreId: ref.id,
+      status: 'pending',
+      // data spec
+      dataType: formData.type,
+      volume: formData.volume,
+      location: formData.location,
+      formats: formData.formats,
+      quality: formData.quality,
+      timeline: formData.timeline,
+      useCase: formData.useCase,
+      budget: formData.budget,
+      description: document.getElementById('projDesc')?.value?.trim() || '',
+      // contact
+      contact: { firstName: first, lastName: last, email, phone,
+        company: document.getElementById('ctCompany')?.value?.trim() || '' },
+      // linked to account if signed in
+      clientId: firebase.auth().currentUser?.uid || null,
+      clientEmail: email,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+    document.getElementById('reqId').textContent = reqId;
+    document.getElementById('progressBar').style.display = 'none';
+    document.querySelectorAll('.step-panel').forEach(p=>p.classList.remove('active'));
+    document.getElementById('successPanel').classList.add('active');
+    xpToast('Request submitted! Quote within 24 hours.','success');
+  } catch(err) {
+    console.error(err);
+    xpToast('Submission failed: ' + err.message, 'error');
+    if(submitBtn){submitBtn.disabled=false;submitBtn.textContent='Submit Request →';}
+  }
+}
+
+function showErr(id,msg){const el=document.getElementById(id);if(el){el.textContent=msg;el.classList.add('show');}}
+function clearErr(id){const el=document.getElementById(id);if(el)el.classList.remove('show');}
+</script>
+</body>
+</html>

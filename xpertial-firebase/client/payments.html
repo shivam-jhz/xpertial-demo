@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Payments — XPERTIAL Client Portal</title>
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Space+Mono&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../assets/xpertial.css"/>
+<style>
+body{display:flex;flex-direction:column;min-height:100vh;}
+.dash-wrap{display:flex;min-height:100vh;padding-top:var(--nav);}
+.sidebar{width:240px;flex-shrink:0;background:var(--bg2);border-right:1px solid var(--b);position:fixed;top:var(--nav);bottom:0;left:0;overflow-y:auto;display:flex;flex-direction:column;}
+.sidebar::-webkit-scrollbar{width:0;}
+.sidebar-brand{padding:1.25rem 1rem;border-bottom:1px solid var(--b);font-family:var(--fm);font-size:9.5px;color:var(--t3);letter-spacing:.15em;text-transform:uppercase;}
+.sidebar-section{padding:.75rem 1rem .25rem;font-family:var(--fm);font-size:9px;color:var(--t3);letter-spacing:.15em;text-transform:uppercase;}
+.sidebar-nav{padding:.25rem;}
+.side-link{display:flex;align-items:center;gap:.65rem;padding:8px 12px;border-radius:7px;font-size:13.5px;color:var(--t2);text-decoration:none;transition:all .2s;margin-bottom:1px;font-family:var(--fh);font-weight:600;letter-spacing:.02em;}
+.side-link:hover{background:rgba(0,212,255,.06);color:var(--text);}
+.side-link.active{background:rgba(0,212,255,.10);color:var(--c);border:1px solid var(--b);}
+.side-link .ico{width:18px;text-align:center;font-size:15px;}
+.sidebar-footer{margin-top:auto;padding:1rem;border-top:1px solid var(--b);}
+.user-card{display:flex;align-items:center;gap:.65rem;}
+.user-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--c),var(--pur));display:flex;align-items:center;justify-content:center;font-family:var(--fh);font-weight:700;font-size:.85rem;color:#000;flex-shrink:0;}
+.user-name{font-family:var(--fh);font-size:.9rem;font-weight:700;}
+.user-role{font-size:10.5px;color:var(--t3);}
+.logout-btn{margin-top:.75rem;width:100%;background:none;border:1px solid var(--b);border-radius:6px;padding:6px;font-family:var(--fh);font-size:12px;color:var(--t3);cursor:pointer;transition:all .2s;text-align:center;letter-spacing:.06em;text-transform:uppercase;}
+.logout-btn:hover{border-color:var(--red);color:var(--red);}
+.dash-main{flex:1;margin-left:240px;padding:2rem 2.5rem;min-width:0;}
+.table-wrap{background:var(--bg2);border:1px solid var(--b);border-radius:10px;overflow:hidden;margin-bottom:2rem;}
+.xp-table{width:100%;border-collapse:collapse;}
+.xp-table th{background:var(--bg3);font-family:var(--fm);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--t2);padding:10px 14px;text-align:left;border-bottom:1px solid var(--b);white-space:nowrap;}
+.xp-table td{padding:13px 14px;border-bottom:1px solid var(--b);font-size:13px;vertical-align:middle;}
+.xp-table tr:last-child td{border:none;}
+.xp-table tr{transition:background .15s;}
+.xp-table tr:hover td{background:rgba(0,212,255,.03);}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2rem;}
+.stat-card{background:var(--bg2);border:1px solid var(--b);border-radius:10px;padding:1.25rem;position:relative;overflow:hidden;}
+.stat-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.stat-card.cyan::after{background:linear-gradient(90deg,transparent,var(--c),transparent);}
+.stat-card.green::after{background:linear-gradient(90deg,transparent,var(--grn),transparent);}
+.stat-card.amber::after{background:linear-gradient(90deg,transparent,var(--amb),transparent);}
+.stat-label{font-family:var(--fm);font-size:9.5px;color:var(--t3);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem;}
+.stat-val{font-family:var(--fh);font-size:1.9rem;font-weight:700;}
+.stat-card.cyan .stat-val{color:var(--c);}
+.stat-card.green .stat-val{color:var(--grn);}
+.stat-card.amber .stat-val{color:var(--amb);}
+.stat-sub{font-size:11.5px;color:var(--t3);margin-top:.35rem;}
+.section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;}
+.section-header h2{font-size:1.1rem;font-weight:700;}
+.action-btn{background:none;border:1px solid var(--b);border-radius:5px;padding:5px 12px;font-family:var(--fh);font-size:12px;color:var(--t2);cursor:pointer;transition:all .2s;text-decoration:none;display:inline-flex;align-items:center;gap:5px;}
+.action-btn:hover{border-color:var(--c);color:var(--c);background:rgba(0,212,255,.06);}
+.action-btn.primary{background:var(--c);color:#000;border-color:var(--c);font-weight:700;}
+.action-btn.primary:hover{background:var(--c2);}
+.pay-method{display:flex;align-items:center;gap:.5rem;font-size:12px;color:var(--t2);}
+@media(max-width:900px){.sidebar{transform:translateX(-100%);transition:transform .3s;z-index:1500;}.sidebar.open{transform:translateX(0);}.dash-main{margin-left:0;padding:1.25rem;}.stats-grid{grid-template-columns:1fr;}}
+</style>
+
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+</head>
+<body>
+<nav id="xpNav">
+  <a href="../index.html" class="xp-logo"><span class="xp-logo-text">XP<span>ER</span>TIAL</span></a>
+  <div class="xp-right">
+    <button class="xp-icon-btn" onclick="xpSearchOpen()"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></button>
+    <div class="nav-auth-in" style="display:flex;">
+      <button class="xp-icon-btn" title="Account" onclick="location.href='settings.html'"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></button>
+      <a href="../request.html" class="btn-signup">Request Data →</a>
+      <button class="btn-signout" onclick="xpAuth.logout()">Sign Out</button>
+    </div>
+    <button class="xp-icon-btn" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+  </div>
+</nav>
+
+<div class="dash-wrap">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">CLIENT PORTAL</div>
+    <div class="sidebar-nav">
+      <div class="sidebar-section">Overview</div>
+      <a href="index.html" class="side-link"><span class="ico">📊</span> Dashboard</a>
+      <a href="projects.html" class="side-link"><span class="ico">📁</span> My Projects</a>
+      <a href="notifications.html" class="side-link"><span class="ico">🔔</span> Notifications</a>
+      <div class="sidebar-section" style="margin-top:.5rem;">Data</div>
+      <a href="downloads.html" class="side-link"><span class="ico">📦</span> Downloads</a>
+      <a href="contracts.html" class="side-link"><span class="ico">📜</span> Contracts</a>
+      <div class="sidebar-section" style="margin-top:.5rem;">Billing</div>
+      <a href="payments.html" class="side-link active"><span class="ico">💳</span> Payments</a>
+      <a href="invoices.html" class="side-link"><span class="ico">🧾</span> Invoices</a>
+      <div class="sidebar-section" style="margin-top:.5rem;">Account</div>
+      <a href="settings.html" class="side-link"><span class="ico">⚙️</span> Settings</a>
+    </div>
+    <div class="sidebar-footer">
+      <div class="user-card">
+        <div class="user-avatar" id="userAvatarSide">C</div>
+        <div><div class="user-name" id="userNameSide">Client</div><div class="user-role">Client</div></div>
+      </div>
+      <button class="logout-btn" onclick="xpAuth.logout()">Sign Out</button>
+    </div>
+  </aside>
+
+  <main class="dash-main">
+    <div class="dash-header" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;flex-wrap:wrap;gap:1rem;">
+      <div>
+        <h1 style="font-size:1.6rem;margin-bottom:.15rem;">Payments</h1>
+        <p style="font-size:13px;color:var(--t2);">Track all project payments and pending invoices.</p>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-grid">
+      <div class="stat-card cyan"><div class="stat-label">Total Spent</div><div class="stat-val">₹0</div><div class="stat-sub">All projects</div></div>
+      <div class="stat-card green"><div class="stat-label">Payments Made</div><div class="stat-val">₹0</div><div class="stat-sub">Completed</div></div>
+      <div class="stat-card amber"><div class="stat-label">Amount Due</div><div class="stat-val">₹0</div><div class="stat-sub">Awaiting payment</div></div>
+    </div>
+
+    <!-- PENDING PAYMENTS -->
+    <div class="section-header"><h2>Pending Payments</h2></div>
+    <div class="table-wrap">
+      <table class="xp-table">
+        <thead><tr><th>Invoice</th><th>Project</th><th>Type</th><th>Amount</th><th>Due Date</th><th>Action</th></tr></thead>
+        <tbody>
+          <tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--t3);font-family:var(--fm);font-size:10px;letter-spacing:.1em;">NO PENDING PAYMENTS</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- PAYMENT HISTORY -->
+    <div class="section-header"><h2>Payment History</h2></div>
+    <div class="table-wrap">
+      <table class="xp-table">
+        <thead><tr><th>Payment ID</th><th>Project</th><th>Type</th><th>Amount</th><th>Method</th><th>Date</th><th>Status</th></tr></thead>
+        <tbody id="paymentHistory">
+          <!-- Populated from Firestore -->
+          <tr><td colspan="7" style="text-align:center;padding:2.5rem;color:var(--t3);font-family:var(--fm);font-size:10px;letter-spacing:.1em;">NO PAYMENT HISTORY YET</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+</div>
+<script src="../assets/xpertial.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  const user = xpAuth.requireAuth();
+  if (!user) return;
+  document.getElementById('userNameEl').textContent = user.name || user.email;
+  document.getElementById('userAvatar').textContent = (user.name||user.email||'C')[0].toUpperCase();
+
+  const uid = await xpAuth.waitForUser().then(u => u?.uid);
+  if (!uid) return;
+
+  try {
+    const [payments, projects] = await Promise.all([
+      xpDB.getPayments(uid),
+      xpDB.getProjects(uid)
+    ]);
+
+    // Stats
+    const totalPaid = payments.filter(p=>p.status==='paid').reduce((s,p)=>s+(p.amount||0),0);
+    const pending   = projects.filter(p=>p.quoteAmount && !p.finalPaid);
+    const pendingAmt= pending.reduce((s,p)=>s+(p.depositPaid?p.quoteAmount/2:p.quoteAmount||0),0);
+    document.getElementById('totalPaid')   && (document.getElementById('totalPaid').textContent   = xpFmt.currency(totalPaid));
+    document.getElementById('pendingAmt')  && (document.getElementById('pendingAmt').textContent  = xpFmt.currency(pendingAmt));
+    document.getElementById('txnCount')    && (document.getElementById('txnCount').textContent    = payments.length);
+
+    // Render payments table
+    const tbody = document.getElementById('paymentsTbody');
+    const empty = document.getElementById('paymentsEmpty');
+    if (!payments.length) {
+      if (empty) empty.style.display = 'block';
+    } else {
+      if (empty) empty.style.display = 'none';
+      if (tbody) tbody.innerHTML = payments.map(p=>`<tr>
+        <td style="font-family:var(--fm);font-size:11px;color:var(--t3);">${p.id||p.firestoreId.slice(0,10).toUpperCase()}</td>
+        <td style="font-size:13px;">${p.projectName||'—'}</td>
+        <td><span style="font-family:var(--fm);font-size:10px;background:rgba(0,212,255,.06);border:1px solid var(--b2);border-radius:3px;padding:2px 8px;">${p.type==='deposit'?'50% Deposit':p.type==='final'?'Final Payment':'Payment'}</span></td>
+        <td style="font-weight:600;color:var(--c);">${xpFmt.currency(p.amount||0)}</td>
+        <td><span class="badge ${p.status==='paid'?'badge-done':'badge-pending'}">${p.status||'pending'}</span></td>
+        <td style="font-size:12px;color:var(--t2);">${p.createdAt?.seconds?xpFmt.date(new Date(p.createdAt.seconds*1000)):'—'}</td>
+        <td>${p.invoiceUrl?`<a href="${p.invoiceUrl}" target="_blank" class="action-btn">Invoice</a>`:'<span style="color:var(--t3);font-size:12px;">—</span>'}</td>
+      </tr>`).join('');
+    }
+
+    // Pending payments (invoices from projects)
+    const pendingEl = document.getElementById('pendingInvoices');
+    if (pendingEl) {
+      if (!pending.length) {
+        pendingEl.innerHTML = `<div style="padding:1.25rem;text-align:center;font-size:12px;color:var(--t3);">No pending payments</div>`;
+      } else {
+        pendingEl.innerHTML = pending.map(proj=>`
+          <div class="notif-item" style="justify-content:space-between;align-items:center;">
+            <div>
+              <div style="font-size:13.5px;font-weight:600;margin-bottom:.2rem;">${proj.name||'Data Project'}</div>
+              <div style="font-size:11px;color:var(--t3);">${proj.depositPaid?'Final payment due':'Deposit due'}</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:1rem;">
+              <span style="font-weight:700;color:var(--c);">${xpFmt.currency(proj.depositPaid?proj.quoteAmount/2:proj.quoteAmount)}</span>
+              <a href="project.html?id=${proj.firestoreId}" class="btn-p" style="padding:6px 14px;font-size:12px;">Pay Now</a>
+            </div>
+          </div>`).join('');
+      }
+    }
+  } catch(err) {
+    console.error(err);
+    xpToast('Failed to load payments: ' + err.message, 'error');
+  }
+});
+</script>
+</body>
+</html>

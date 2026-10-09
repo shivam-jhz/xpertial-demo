@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Project Details — XPERTIAL</title>
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Space+Mono&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../assets/xpertial.css"/>
+<style>
+body { display: flex; flex-direction: column; min-height: 100vh; }
+.dash-wrap { display: flex; min-height: 100vh; padding-top: var(--nav); }
+/* Sidebar (same as dashboard) */
+.sidebar { width: 240px; flex-shrink: 0; background: var(--bg2); border-right: 1px solid var(--b); position: fixed; top: var(--nav); bottom: 0; left: 0; overflow-y: auto; display: flex; flex-direction: column; }
+.sidebar::-webkit-scrollbar { width: 0; }
+.sidebar-brand { padding: 1.25rem 1rem; border-bottom: 1px solid var(--b); font-family: var(--fm); font-size: 9.5px; color: var(--t3); letter-spacing: .15em; text-transform: uppercase; }
+.sidebar-section { padding: .75rem 1rem .25rem; font-family: var(--fm); font-size: 9px; color: var(--t3); letter-spacing: .15em; text-transform: uppercase; }
+.sidebar-nav { padding: .25rem; }
+.side-link { display: flex; align-items: center; gap: .65rem; padding: 8px 12px; border-radius: 7px; font-size: 13.5px; color: var(--t2); text-decoration: none; transition: all .2s; margin-bottom: 1px; font-family: var(--fh); font-weight: 600; letter-spacing: .02em; }
+.side-link:hover { background: rgba(0,212,255,.06); color: var(--text); }
+.side-link.active { background: rgba(0,212,255,.10); color: var(--c); border: 1px solid var(--b); }
+.side-link .ico { width: 18px; text-align: center; font-size: 15px; }
+.side-link .badge-count { margin-left: auto; background: var(--c); color: #000; font-family: var(--fm); font-size: 9px; font-weight: 700; border-radius: 10px; padding: 1px 7px; min-width: 18px; text-align: center; }
+.sidebar-footer { margin-top: auto; padding: 1rem; border-top: 1px solid var(--b); }
+.user-card { display: flex; align-items: center; gap: .65rem; }
+.user-avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg,var(--c),var(--pur)); display: flex; align-items: center; justify-content: center; font-family: var(--fh); font-weight: 700; font-size: .85rem; color: #000; flex-shrink: 0; }
+.user-name { font-family: var(--fh); font-size: .9rem; font-weight: 700; }
+.user-role { font-size: 10.5px; color: var(--t3); }
+.logout-btn { margin-top: .75rem; width: 100%; background: none; border: 1px solid var(--b); border-radius: 6px; padding: 6px; font-family: var(--fh); font-size: 12px; color: var(--t3); cursor: pointer; transition: all .2s; text-align: center; letter-spacing: .06em; text-transform: uppercase; }
+.logout-btn:hover { border-color: var(--red); color: var(--red); }
+
+.dash-main { flex: 1; margin-left: 240px; padding: 2rem 2.5rem; min-width: 0; }
+
+/* ── BREADCRUMB ── */
+.breadcrumb { display: flex; align-items: center; gap: .5rem; font-family: var(--fm); font-size: 10.5px; color: var(--t3); letter-spacing: .08em; margin-bottom: 1.5rem; }
+.breadcrumb a { color: var(--t2); text-decoration: none; transition: color .2s; }
+.breadcrumb a:hover { color: var(--c); }
+.breadcrumb span { color: var(--c); }
+
+/* ── PROJECT HEADER ── */
+.proj-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 1.5rem; margin-bottom: 2rem; flex-wrap: wrap; }
+.proj-title { font-size: clamp(1.3rem, 2.5vw, 1.8rem); margin-bottom: .3rem; }
+.proj-meta { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; margin-top: .5rem; }
+.meta-item { display: flex; align-items: center; gap: .4rem; font-size: 12.5px; color: var(--t2); }
+.meta-item .ico { font-size: 13px; }
+
+/* ── WORKFLOW TIMELINE ── */
+.timeline-wrap { position: relative; }
+.timeline-wrap::before { content: ''; position: absolute; left: 23px; top: 0; bottom: 0; width: 1px; background: var(--b); }
+.tl-step { display: flex; gap: 1.25rem; margin-bottom: 0; position: relative; }
+.tl-marker {
+  width: 46px; height: 46px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; position: relative; z-index: 1;
+  background: var(--bg2); border: 1.5px solid var(--b); transition: all .3s;
+}
+.tl-step.done .tl-marker { background: rgba(0,212,255,.15); border-color: var(--c); box-shadow: 0 0 16px rgba(0,212,255,.2); }
+.tl-step.active .tl-marker { background: rgba(0,212,255,.2); border-color: var(--c); box-shadow: 0 0 20px rgba(0,212,255,.35); animation: pulseMarker 2s ease infinite; }
+.tl-step.locked .tl-marker { opacity: .45; }
+@keyframes pulseMarker { 0%,100%{box-shadow:0 0 20px rgba(0,212,255,.35);} 50%{box-shadow:0 0 32px rgba(0,212,255,.55);} }
+.tl-content { flex: 1; padding-bottom: 2.25rem; }
+.tl-step:last-child .tl-content { padding-bottom: 0; }
+.tl-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; flex-wrap: wrap; }
+.tl-title { font-family: var(--fh); font-size: 1rem; font-weight: 700; margin-bottom: .2rem; }
+.tl-step.locked .tl-title { color: var(--t3); }
+.tl-desc { font-size: 12.5px; color: var(--t2); line-height: 1.65; margin-bottom: .85rem; }
+.tl-step.locked .tl-desc { color: var(--t3); }
+.tl-date { font-family: var(--fm); font-size: 9.5px; color: var(--t3); letter-spacing: .08em; white-space: nowrap; }
+
+/* ── PAYMENT CARD ── */
+.pay-card { background: var(--bg2); border: 1px solid var(--b2); border-radius: 10px; padding: 1.25rem; margin-top: .75rem; }
+.pay-card.highlight { border-color: var(--c); background: rgba(0,212,255,.04); box-shadow: 0 0 24px rgba(0,212,255,.1); }
+.pay-row { display: flex; justify-content: space-between; align-items: center; padding: .4rem 0; border-bottom: 1px solid var(--b); font-size: 13px; }
+.pay-row:last-child { border: none; }
+.pay-key { color: var(--t2); }
+.pay-val { font-family: var(--fh); font-weight: 600; }
+.pay-total { font-size: 1.1rem; font-weight: 700; color: var(--c); }
+.pay-paid { color: var(--grn); }
+.pay-due { color: var(--amb); }
+
+/* ── DOWNLOAD CARD ── */
+.dl-card { background: var(--bg2); border: 1px solid var(--b); border-radius: 8px; padding: 1rem 1.25rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+.dl-file { display: flex; align-items: center; gap: .65rem; }
+.dl-icon { font-size: 1.5rem; }
+.dl-name { font-family: var(--fh); font-weight: 600; font-size: .95rem; }
+.dl-size { font-size: 11.5px; color: var(--t2); margin-top: 2px; }
+.dl-btn { background: var(--c); color: #000; font-family: var(--fh); font-weight: 700; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; padding: 8px 18px; border-radius: 5px; border: none; cursor: pointer; transition: all .2s; display: inline-flex; align-items: center; gap: 5px; }
+.dl-btn:hover { background: var(--c2); transform: translateY(-1px); }
+.dl-btn:disabled { opacity: .4; cursor: not-allowed; transform: none; }
+
+/* ── INFO GRID ── */
+.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: .75rem; }
+.info-box { background: var(--bg3); border: 1px solid var(--b); border-radius: 8px; padding: .85rem 1rem; }
+.info-label { font-family: var(--fm); font-size: 9px; color: var(--t3); letter-spacing: .1em; text-transform: uppercase; margin-bottom: .3rem; }
+.info-val { font-family: var(--fh); font-size: 1rem; font-weight: 700; }
+
+/* ── MODAL ── */
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.75); z-index: 5000; align-items: center; justify-content: center; padding: 1rem; }
+.modal-box { background: var(--bg2); border: 1px solid var(--b2); border-radius: 14px; padding: 2rem; width: 100%; max-width: 440px; position: relative; box-shadow: 0 32px 80px rgba(0,0,0,.6); }
+.modal-box::before { content: ''; display: block; height: 2px; background: linear-gradient(90deg,transparent,var(--c),transparent); margin: -2rem -2rem 1.5rem; border-radius: 14px 14px 0 0; }
+.modal-title { font-family: var(--fh); font-size: 1.3rem; font-weight: 700; margin-bottom: .3rem; }
+.modal-close { position: absolute; top: 1.25rem; right: 1.25rem; background: none; border: none; color: var(--t3); font-size: 18px; cursor: pointer; transition: color .2s; }
+.modal-close:hover { color: var(--text); }
+.razorpay-note { background: var(--bg3); border: 1px solid var(--b); border-radius: 7px; padding: .75rem 1rem; font-size: 12px; color: var(--t2); display: flex; align-items: center; gap: .5rem; margin-top: .85rem; }
+
+@media(max-width:900px) {
+  .sidebar { transform: translateX(-100%); transition: transform .3s; z-index: 1500; }
+  .sidebar.open { transform: translateX(0); }
+  .dash-main { margin-left: 0; padding: 1.25rem; }
+  .info-grid { grid-template-columns: 1fr; }
+}
+</style>
+
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="xpNav">
+  <a href="../index.html" class="xp-logo"><span class="xp-logo-text">XP<span>ER</span>TIAL</span></a>
+  <div class="xp-right">
+    <button class="xp-icon-btn" onclick="xpSearchOpen()"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></button>
+    <div class="nav-auth-in" style="display:flex;">
+      <button class="xp-icon-btn" title="Account" onclick="location.href='settings.html'"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></button>
+      <a href="../request.html" class="btn-signup">Request Data →</a>
+      <button class="btn-signout" onclick="xpAuth.logout()">Sign Out</button>
+    </div>
+    <button class="xp-icon-btn" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+  </div>
+</nav>
+
+<div class="dash-wrap">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">CLIENT PORTAL</div>
+    <div class="sidebar-nav">
+      <div class="sidebar-section">Overview</div>
+      <a href="index.html" class="side-link"><span class="ico">📊</span> Dashboard</a>
+      <a href="projects.html" class="side-link active"><span class="ico">📁</span> My Projects</a>
+      <a href="notifications.html" class="side-link"><span class="ico">🔔</span> Notifications <span class="badge-count">2</span></a>
+      <div class="sidebar-section" style="margin-top:.5rem;">Data</div>
+      <a href="downloads.html" class="side-link"><span class="ico">📦</span> Downloads</a>
+      <a href="contracts.html" class="side-link"><span class="ico">📜</span> Contracts</a>
+      <div class="sidebar-section" style="margin-top:.5rem;">Billing</div>
+      <a href="payments.html" class="side-link"><span class="ico">💳</span> Payments</a>
+      <a href="invoices.html" class="side-link"><span class="ico">🧾</span> Invoices</a>
+      <div class="sidebar-section" style="margin-top:.5rem;">Account</div>
+      <a href="settings.html" class="side-link"><span class="ico">⚙️</span> Settings</a>
+    </div>
+    <div class="sidebar-footer">
+      <div class="user-card">
+        <div class="user-avatar" id="userAvatarSide">C</div>
+        <div>
+          <div class="user-name" id="userNameSide">Client</div>
+          <div class="user-role">Client</div>
+        </div>
+      </div>
+      <button class="logout-btn" onclick="xpAuth.logout()">Sign Out</button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="dash-main" id="mainContent">
+    <!-- Populated by JS -->
+    <div style="text-align:center;padding:4rem;color:var(--t3);">
+      <div style="font-size:2rem;margin-bottom:1rem;">⏳</div>
+      <div style="font-family:var(--fm);font-size:11px;letter-spacing:.1em;">LOADING PROJECT...</div>
+    </div>
+  </main>
+</div>
+
+<!-- PAYMENT MODAL -->
+<div class="modal-overlay" id="payModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="xpModal.close('payModal')">✕</button>
+    <div class="modal-title">Complete Payment</div>
+    <p style="font-size:13px;color:var(--t2);margin-bottom:1.25rem;" id="payModalDesc">Processing payment...</p>
+    <div class="pay-card" id="payModalSummary"></div>
+    <div class="razorpay-note">
+      <span>🔒</span>
+      <span>Secured by Razorpay. We accept UPI, Cards, Net Banking & Wallets.</span>
+    </div>
+    <div style="margin-top:1.25rem;display:flex;gap:.75rem;">
+      <button class="btn-g" style="flex:1;justify-content:center;" onclick="xpModal.close('payModal')">Cancel</button>
+      <button class="btn-p" style="flex:2;justify-content:center;" onclick="initiatePayment()" id="payNowBtn">Pay Now →</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONTRACT MODAL -->
+<div class="modal-overlay" id="contractModal">
+  <div class="modal-box" style="max-width:560px;">
+    <button class="modal-close" onclick="xpModal.close('contractModal')">✕</button>
+    <div class="modal-title">Data Collection Agreement</div>
+    <p style="font-size:13px;color:var(--t2);margin:0 0 1.25rem;">Please read and sign the contract below to proceed with your project.</p>
+    <div style="background:var(--bg3);border:1px solid var(--b);border-radius:8px;padding:1.25rem;max-height:280px;overflow-y:auto;font-size:12.5px;color:var(--t2);line-height:1.75;margin-bottom:1.25rem;">
+      <strong style="color:var(--text);font-family:var(--fh);">DATA COLLECTION AGREEMENT</strong><br/>
+      Between XPERTIAL ("Service Provider") and the Client ("Client").<br/><br/>
+      <strong style="color:var(--c);">1. SCOPE OF WORK</strong><br/>
+      XPERTIAL agrees to collect, annotate, and deliver the dataset as described in the Project Request submitted by the Client.<br/><br/>
+      <strong style="color:var(--c);">2. PAYMENT TERMS</strong><br/>
+      The Client agrees to pay 50% of the total project cost upfront upon signing this agreement, and the remaining 50% upon completion and delivery of the dataset.<br/><br/>
+      <strong style="color:var(--c);">3. QUALITY STANDARDS</strong><br/>
+      XPERTIAL guarantees that all delivered data will meet the agreed QC standards. Any data not meeting standards will be replaced at no additional cost.<br/><br/>
+      <strong style="color:var(--c);">4. DATA OWNERSHIP</strong><br/>
+      Upon full payment, the Client retains full ownership of the collected and annotated dataset.<br/><br/>
+      <strong style="color:var(--c);">5. CONFIDENTIALITY</strong><br/>
+      Both parties agree to maintain confidentiality regarding project details, pricing, and deliverables.<br/><br/>
+      <strong style="color:var(--c);">6. TIMELINE</strong><br/>
+      XPERTIAL will make reasonable efforts to deliver within the agreed timeline. Delays due to force majeure events are excluded.
+    </div>
+    <div style="display:flex;align-items:flex-start;gap:.65rem;margin-bottom:1.25rem;">
+      <input type="checkbox" id="contractCheck" style="margin-top:3px;accent-color:var(--c);width:15px;height:15px;cursor:pointer;"/>
+      <label for="contractCheck" style="font-size:13px;color:var(--t2);cursor:pointer;">I have read and agree to the <strong style="color:var(--text);">Data Collection Agreement</strong> and authorize XPERTIAL to proceed with this project.</label>
+    </div>
+    <div style="display:flex;gap:.75rem;">
+      <button class="btn-g" style="flex:1;justify-content:center;" onclick="xpModal.close('contractModal')">Decline</button>
+      <button class="btn-p" style="flex:2;justify-content:center;" onclick="signContract()">Sign & Continue →</button>
+    </div>
+  </div>
+</div>
+
+<script src="../assets/xpertial.js"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+const PROJECT_ID = new URLSearchParams(location.search).get('id');
+let currentProject = null;
+
+document.addEventListener('DOMContentLoaded', async () => {
+  const user = xpAuth.requireAuth();
+  if (!user) return;
+  document.getElementById('userNameEl').textContent = user.name || user.email;
+  document.getElementById('userAvatar').textContent = (user.name||user.email||'C')[0].toUpperCase();
+
+  if (!PROJECT_ID) { showError('No project ID specified.'); return; }
+
+  const uid = await xpAuth.waitForUser().then(u => u?.uid);
+  if (!uid) return;
+
+  showLoading(true);
+
+  // Live listener — project updates push to UI automatically
+  xpDB.listenProject(PROJECT_ID, project => {
+    if (project.clientId !== uid) { showError('Access denied.'); return; }
+    currentProject = project;
+    renderProject(project, user);
+    showLoading(false);
+  });
+});
+
+function showLoading(show) {
+  const el = document.getElementById('projectContent');
+  if (!el) return;
+  if (show) el.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:300px;color:var(--t3);font-family:var(--fm);font-size:11px;letter-spacing:.15em;">LOADING PROJECT...</div>`;
+}
+function showError(msg) {
+  const el = document.getElementById('projectContent');
+  if (el) el.innerHTML = `<div style="padding:3rem;text-align:center;color:var(--red);">${msg}</div>`;
+}
+
+function renderProject(p, user) {
+  const statusLabel = { pending:'Pending Review', quoted:'Quote Sent', contracted:'Contracted', collecting:'Data Collection', qc:'Quality Review', completed:'Delivered', rejected:'Rejected' };
+  const statusClass = { pending:'badge-pending', quoted:'badge-pending', contracted:'badge-active', collecting:'badge-active', qc:'badge-active', completed:'badge-done', rejected:'badge-reject' };
+
+  const steps = [
+    { key:'pending',     label:'Request Received', icon:'📋' },
+    { key:'quoted',      label:'Quote Sent',        icon:'📊' },
+    { key:'contracted',  label:'MSA Signed',        icon:'✍️' },
+    { key:'collecting',  label:'Collecting',        icon:'📡' },
+    { key:'qc',          label:'Quality Review',    icon:'🔍' },
+    { key:'completed',   label:'Delivered',         icon:'✅' },
+  ];
+  const statusOrder = ['pending','quoted','contracted','collecting','qc','completed'];
+  const currentIdx  = statusOrder.indexOf(p.status);
+
+  // Payment state
+  const needsDeposit = p.status === 'quoted' && !p.depositPaid && p.quoteAmount;
+  const needsFinal   = p.status === 'completed' && p.depositPaid && !p.finalPaid && p.quoteAmount;
+  const canDownload  = p.status === 'completed' && p.finalPaid && p.datasetUrl;
+  const needsMSA     = p.status === 'quoted' && p.depositPaid && !p.contractSigned;
+
+  document.getElementById('projectContent').innerHTML = `
+    <div class="proj-detail-header">
+      <div>
+        <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.4rem;flex-wrap:wrap;">
+          <h1 style="font-size:1.4rem;">${p.name||'Data Collection Project'}</h1>
+          <span class="badge ${statusClass[p.status]||'badge-pending'}">${statusLabel[p.status]||p.status}</span>
+        </div>
+        <div style="font-family:var(--fm);font-size:10px;color:var(--t3);letter-spacing:.1em;">${p.id||PROJECT_ID}</div>
+      </div>
+      <div style="display:flex;gap:.75rem;flex-wrap:wrap;">
+        ${canDownload ? `<button class="btn-p" onclick="downloadDataset()">⬇ Download Dataset</button>` : ''}
+        ${needsDeposit ? `<button class="btn-p" onclick="payDeposit()">Pay 50% Deposit →</button>` : ''}
+        ${needsFinal   ? `<button class="btn-p" onclick="payFinal()">Pay & Download →</button>` : ''}
+        ${needsMSA     ? `<button class="btn-p" onclick="signMSA()">Sign MSA Agreement →</button>` : ''}
+      </div>
+    </div>
+
+    <!-- Progress Timeline -->
+    <div class="section-card" style="margin-bottom:1.5rem;">
+      <h3 style="margin-bottom:1.25rem;">Project Progress</h3>
+      <div class="timeline-steps">
+        ${steps.map((s,i) => `
+          <div class="timeline-step ${i < currentIdx ? 'done' : i === currentIdx ? 'active' : ''}">
+            <div class="ts-dot">${i < currentIdx ? '✓' : s.icon}</div>
+            <div class="ts-label">${s.label}</div>
+          </div>${i < steps.length-1 ? '<div class="ts-line '+(i < currentIdx?'done':'')+'"></div>' : ''}`).join('')}
+      </div>
+    </div>
+
+    <!-- Project Details -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.5rem;" class="proj-detail-grid">
+      <div class="section-card">
+        <h3 style="margin-bottom:1rem;">Project Details</h3>
+        <div class="detail-row"><span class="detail-label">Data Type</span><span>${p.dataType||p.type||'—'}</span></div>
+        <div class="detail-row"><span class="detail-label">Volume</span><span>${p.volume?Number(p.volume).toLocaleString()+' samples':'—'}</span></div>
+        <div class="detail-row"><span class="detail-label">Location</span><span>${p.location||'—'}</span></div>
+        <div class="detail-row"><span class="detail-label">Quality Level</span><span>${p.quality||'—'}</span></div>
+        <div class="detail-row"><span class="detail-label">Timeline</span><span>${p.timeline||'—'}</span></div>
+        <div class="detail-row"><span class="detail-label">Formats</span><span>${Array.isArray(p.formats)?p.formats.join(', '):p.formats||'—'}</span></div>
+        ${p.description?`<div class="detail-row" style="align-items:flex-start;"><span class="detail-label">Notes</span><span style="color:var(--t2);font-size:12.5px;line-height:1.6;">${p.description}</span></div>`:''}
+      </div>
+      <div class="section-card">
+        <h3 style="margin-bottom:1rem;">Payment Summary</h3>
+        ${p.quoteAmount ? `
+        <div class="detail-row"><span class="detail-label">Total Quote</span><span style="font-size:1.1rem;font-weight:700;color:var(--c);">${xpFmt.currency(p.quoteAmount)}</span></div>
+        <div class="detail-row"><span class="detail-label">50% Deposit</span><span class="${p.depositPaid?'text-green':'text-amber'}">${p.depositPaid?'✓ Paid':xpFmt.currency(p.quoteAmount/2)+' due'}</span></div>
+        <div class="detail-row"><span class="detail-label">Final Payment</span><span class="${p.finalPaid?'text-green':'text-amber'}">${p.finalPaid?'✓ Paid':p.depositPaid?xpFmt.currency(p.quoteAmount/2)+' due':'Pending deposit'}</span></div>
+        <div class="detail-row" style="border-top:1px solid var(--b);margin-top:.5rem;padding-top:.75rem;"><span class="detail-label">Balance Due</span><span style="font-weight:700;">${xpFmt.currency(p.finalPaid?0:p.depositPaid?p.quoteAmount/2:p.quoteAmount)}</span></div>
+        ` : `<div style="color:var(--t2);font-size:13px;">Quote not sent yet. Our team will review your request and send a quote within 24 hours.</div>`}
+      </div>
+    </div>
+
+    <!-- Quote Detail if available -->
+    ${p.quoteNote ? `<div class="section-card" style="margin-bottom:1.5rem;"><h3 style="margin-bottom:.75rem;">Quote from XPERTIAL</h3><p style="color:var(--t2);font-size:13px;line-height:1.75;">${p.quoteNote}</p></div>` : ''}
+
+    <!-- MSA Contract -->
+    ${p.status !== 'pending' ? `
+    <div class="section-card" style="margin-bottom:1.5rem;">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <h3>XPERTIAL Master Service Agreement</h3>
+        <span class="badge ${p.contractSigned?'badge-done':'badge-pending'}">${p.contractSigned?'Signed':'Awaiting Signature'}</span>
+      </div>
+      <p style="color:var(--t2);font-size:13px;margin:.75rem 0 1rem;">The MSA governs the terms of the data collection engagement. You must sign and pay 50% deposit to activate this project.</p>
+      ${!p.contractSigned && p.depositPaid ? `<button class="btn-p" onclick="signMSA()">✍️ Sign MSA</button>` :
+        p.contractSigned ? `<div style="color:var(--green);font-size:13px;">✓ Signed on ${p.contractSignedAt?.seconds?xpFmt.date(new Date(p.contractSignedAt.seconds*1000)):'—'}</div>` : ''}
+    </div>` : ''}
+
+    <!-- Activity Log -->
+    ${p.activity?.length ? `
+    <div class="section-card">
+      <h3 style="margin-bottom:1rem;">Activity Log</h3>
+      ${p.activity.slice().reverse().map(a=>`
+        <div class="notif-item">
+          <div class="notif-dot c"></div>
+          <div class="notif-text">${a.message}</div>
+          <div class="notif-time">${a.at?.seconds?xpFmt.date(new Date(a.at.seconds*1000)):''}</div>
+        </div>`).join('')}
+    </div>` : ''}
+  `;
+}
+
+/* ── RAZORPAY PAYMENT ── */
+async function initiatePayment(type) {
+  if (!currentProject) return;
+  const amount = Math.round(currentProject.quoteAmount / 2 * 100); // paise
+  const user = xpAuth.getUser();
+
+  xpToast('Opening payment...', 'info');
+
+  // Create Razorpay order via Cloud Function
+  let orderId;
+  try {
+    const token = await firebase.auth().currentUser?.getIdToken();
+    const res = await fetch(`${FUNCTIONS_URL}/createRazorpayOrder`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify({ projectId: currentProject.firestoreId, amount, type })
+    });
+    const data = await res.json();
+    orderId = data.orderId;
+  } catch(err) {
+    xpToast('Could not create payment order. Try again.', 'error');
+    return;
+  }
+
+  const rzp = new Razorpay({
+    key: RAZORPAY_KEY,
+    amount,
+    currency: 'INR',
+    order_id: orderId,
+    name: 'XPERTIAL',
+    description: `${type === 'deposit' ? '50% Deposit' : 'Final Payment'} — ${currentProject.name||'Data Project'}`,
+    prefill: { name: user?.name, email: user?.email, contact: user?.phone },
+    theme: { color: '#00D4FF' },
+    handler: async function(response) {
+      // Verify payment via Cloud Function
+      try {
+        const token = await firebase.auth().currentUser?.getIdToken();
+        await fetch(`${FUNCTIONS_URL}/verifyRazorpayPayment`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+          body: JSON.stringify({ ...response, projectId: currentProject.firestoreId, type })
+        });
+        xpToast('Payment successful! ✓', 'success');
+      } catch(err) {
+        xpToast('Payment received but verification pending. Contact support.', 'warn');
+      }
+    }
+  });
+  rzp.open();
+}
+
+function payDeposit()  { initiatePayment('deposit'); }
+function payFinal()    { initiatePayment('final'); }
+
+async function signMSA() {
+  const user = xpAuth.getUser();
+  if (!confirm('By clicking OK you agree to the XPERTIAL Master Service Agreement and authorize this engagement.')) return;
+  try {
+    await xpDB.signContract(currentProject.firestoreId, user.uid);
+    xpToast('MSA signed successfully!', 'success');
+  } catch(err) {
+    xpToast('Could not sign MSA: ' + err.message, 'error');
+  }
+}
+
+async function downloadDataset() {
+  if (!currentProject?.datasetUrl) { xpToast('Dataset not available yet.', 'warn'); return; }
+  xpToast('Preparing download...', 'info');
+  try {
+    const url = await xpStorage.getDownloadUrl(currentProject.datasetUrl);
+    window.open(url, '_blank');
+  } catch(err) {
+    xpToast('Download failed: ' + err.message, 'error');
+  }
+}
+</script>
+</body>
+</html>

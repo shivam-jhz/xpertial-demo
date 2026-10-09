@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Contact — XPERTIAL</title>
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml"/>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Space+Mono&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../assets/xpertial.css"/>
+<style>
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .65s ease,transform .65s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.contact-layout{display:grid;grid-template-columns:1fr 1.5fr;gap:3rem;align-items:start;}
+.contact-info{display:flex;flex-direction:column;gap:.85rem;}
+.contact-card{background:var(--bg2);border:1px solid var(--b);border-radius:10px;padding:1.25rem;display:flex;align-items:flex-start;gap:1rem;transition:border-color .2s;}
+.contact-card:hover{border-color:var(--b2);}
+.cico{font-size:1.5rem;flex-shrink:0;}
+.c-label{font-family:var(--fm);font-size:9.5px;color:var(--t3);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.3rem;}
+.c-val{font-family:var(--fh);font-size:1rem;font-weight:700;}
+.c-sub{font-size:12px;color:var(--t2);margin-top:.2rem;}
+.form-card{background:var(--bg2);border:1px solid var(--b2);border-radius:12px;padding:2rem;position:relative;}
+.form-card::before{content:'';display:block;height:2px;background:linear-gradient(90deg,transparent,var(--c),transparent);margin:-2rem -2rem 1.75rem;border-radius:12px 12px 0 0;}
+@media(max-width:800px){.contact-layout{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<nav id="xpNav">
+  <a href="../index.html" class="xp-logo"><img src="../assets/logo.png" alt="XPERTIAL" class="xp-logo-img"/></a>
+  <div class="xp-center">
+    <div class="xp-ni">
+      <button class="xp-nb">Services<svg class="xp-arr" viewBox="0 0 8 8" fill="none"><path d="M1 2.5L4 5.5L7 2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+      <div class="xp-drop"><a href="../services.html#image" class="xp-di"><div class="xp-dico">🖼️</div><div><div class="xp-dlbl">Image Collection</div><div class="xp-dsub">Labeled images for CV models</div></div></a><a href="../services.html#video" class="xp-di"><div class="xp-dico">🎥</div><div><div class="xp-dlbl">Video Collection</div><div class="xp-dsub">Frame-level annotation &amp; tracking</div></div></a><a href="../services.html#text" class="xp-di"><div class="xp-dico">📝</div><div><div class="xp-dlbl">Text &amp; NLP Data</div><div class="xp-dsub">Annotated text, conversations</div></div></a><a href="../services.html#audio" class="xp-di"><div class="xp-dico">🎙️</div><div><div class="xp-dlbl">Audio &amp; Speech</div><div class="xp-dsub">Transcribed, labeled audio</div></div></a><div class="xp-dsep"></div><a href="../services.html#custom" class="xp-di"><div class="xp-dico">⚙️</div><div><div class="xp-dlbl">Custom Collection</div><div class="xp-dsub">Any data type, any format</div></div></a></div>
+    </div>
+    <a href="../pricing.html" class="xp-nb">Pricing</a>
+    <a href="../join-collector.html" class="xp-nb">Join as Collector</a>
+    <div class="xp-ni">
+      <button class="xp-nb active">Company<svg class="xp-arr" viewBox="0 0 8 8" fill="none"><path d="M1 2.5L4 5.5L7 2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+      <div class="xp-drop"><a href="../company/about.html" class="xp-di"><div class="xp-dico">🏢</div><div><div class="xp-dlbl">About Us</div><div class="xp-dsub">Our vision &amp; team</div></div></a><a href="../company/contact.html" class="xp-di"><div class="xp-dico">📞</div><div><div class="xp-dlbl">Contact</div><div class="xp-dsub">Get in touch</div></div></a><a href="../company/blog.html" class="xp-di"><div class="xp-dico">✍️</div><div><div class="xp-dlbl">Blog</div><div class="xp-dsub">Insights &amp; company updates</div></div></a><a href="../company/careers.html" class="xp-di"><div class="xp-dico">💼</div><div><div class="xp-dlbl">Careers</div><div class="xp-dsub">Join our team</div></div></a><a href="../company/events.html" class="xp-di"><div class="xp-dico">📅</div><div><div class="xp-dlbl">Events</div><div class="xp-dsub">Talks, webinars &amp; meetups</div></div></a><a href="../company/press.html" class="xp-di"><div class="xp-dico">📰</div><div><div class="xp-dlbl">Press</div><div class="xp-dsub">Media &amp; coverage</div></div></a><div class="xp-dsep"></div><a href="../company/privacy.html" class="xp-di"><div class="xp-dico">🔒</div><div><div class="xp-dlbl">Privacy Policy</div></div></a><a href="../company/terms.html" class="xp-di"><div class="xp-dico">📄</div><div><div class="xp-dlbl">Terms of Service</div></div></a></div>
+    </div>
+  </div>
+  <div class="xp-right">
+    <button class="xp-icon-btn" onclick="xpSearchOpen()" title="Search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></button>
+    <div class="nav-auth-out">
+      <a href="../login.html" class="btn-signin">Sign In</a>
+      <a href="../login.html?tab=register" class="btn-signup">Sign Up</a>
+    </div>
+    <div class="nav-auth-in">
+      <button class="xp-icon-btn" onclick="location.href='../client/index.html'"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></button>
+      <a href="../request.html" class="btn-signup">Request Data →</a>
+      <button class="btn-signout" onclick="xpAuth.logout()">Sign Out</button>
+    </div>
+    <div class="xp-hbg" id="xpHbg"><span></span><span></span><span></span></div>
+  </div>
+</nav>
+<div class="xp-mob" id="xpMob">
+  <div class="xp-ms">
+    <button class="xp-msb">Services <span class="xp-marr">▼</span></button>
+    <div class="xp-msub">
+      <a href="../services.html#image" class="xp-ml">Image Collection</a>
+      <a href="../services.html#video" class="xp-ml">Video Collection</a>
+      <a href="../services.html#text" class="xp-ml">Text &amp; NLP Data</a>
+      <a href="../services.html#audio" class="xp-ml">Audio &amp; Speech</a>
+      <a href="../services.html#custom" class="xp-ml">Custom Collection</a>
+    </div>
+  </div>
+  <div class="xp-ms"><button class="xp-msb"><a href="../pricing.html" style="color:inherit;text-decoration:none;">Pricing</a></button></div>
+  <div class="xp-ms"><button class="xp-msb"><a href="../join-collector.html" style="color:inherit;text-decoration:none;">Join as Collector</a></button></div>
+  <div class="xp-ms">
+    <button class="xp-msb">Company <span class="xp-marr">▼</span></button>
+    <div class="xp-msub">
+      <a href="../company/about.html" class="xp-ml">About Us</a>
+      <a href="../company/contact.html" class="xp-ml">Contact</a><a href="../company/blog.html" class="xp-ml">Blog</a>
+      <a href="../company/careers.html" class="xp-ml">Careers</a>
+      <a href="../company/events.html" class="xp-ml">Events</a>
+      <a href="../company/press.html" class="xp-ml">Press</a>
+      <a href="../company/privacy.html" class="xp-ml">Privacy Policy</a>
+      <a href="../company/terms.html" class="xp-ml">Terms of Service</a>
+    </div>
+  </div>
+  <div class="xp-mb">
+    <a href="../login.html" class="btn-signin">Sign In</a>
+    <a href="../login.html?tab=register" class="btn-signup">Sign Up</a>
+  </div>
+</div>
+
+<section class="page-hero">
+  <div class="container">
+    <div class="section-tag">Contact</div>
+    <h1>Get in <span class="accent">Touch</span></h1>
+    <p class="muted" style="max-width:520px;font-size:15px;margin:.5rem 0 0;line-height:1.7;">Have a project in mind or a question? We respond to every message within 24 hours, Mon–Sat.</p>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="contact-layout reveal">
+      <div class="contact-info">
+        <div class="contact-card"><div class="cico">✉️</div><div><div class="c-label">General</div><div class="c-val"><a href="mailto:hello@xpertial.com" style="color:var(--c);">hello@xpertial.com</a></div><div class="c-sub">General inquiries & project quotes</div></div></div>
+        <div class="contact-card"><div class="cico">💼</div><div><div class="c-label">Sales</div><div class="c-val"><a href="mailto:sales@xpertial.com" style="color:var(--c);">sales@xpertial.com</a></div><div class="c-sub">Enterprise deals & partnerships</div></div></div>
+        <div class="contact-card"><div class="cico">🛠️</div><div><div class="c-label">Support</div><div class="c-val"><a href="mailto:support@xpertial.com" style="color:var(--c);">support@xpertial.com</a></div><div class="c-sub">Help with existing projects</div></div></div>
+        <div class="contact-card"><div class="cico">🔒</div><div><div class="c-label">Privacy / Legal</div><div class="c-val"><a href="mailto:legal@xpertial.com" style="color:var(--c);">legal@xpertial.com</a></div><div class="c-sub">Data, compliance & legal queries</div></div></div>
+        <div class="contact-card"><div class="cico">📍</div><div><div class="c-label">Office</div><div class="c-val">Bangalore, Karnataka</div><div class="c-sub">Operations across India (22 states)</div></div></div>
+        <div class="contact-card"><div class="cico">⏱️</div><div><div class="c-label">Response Time</div><div class="c-val" style="color:var(--grn);">Within 24 hours</div><div class="c-sub">Mon–Sat, 9am–7pm IST</div></div></div>
+      </div>
+
+      <div class="form-card">
+        <h2 style="font-size:1.3rem;margin-bottom:.3rem;">Send a Message</h2>
+        <p style="font-size:13px;color:var(--t2);margin-bottom:1.5rem;">Tell us about your project and we'll get back to you promptly.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+          <div class="form-group" style="margin:0;"><label class="form-label">First Name</label><input type="text" class="form-input" id="ctFirst" placeholder="Rahul"/></div>
+          <div class="form-group" style="margin:0;"><label class="form-label">Last Name</label><input type="text" class="form-input" placeholder="Kumar"/></div>
+        </div>
+        <div class="form-group" style="margin-top:1rem;"><label class="form-label">Work Email</label><input type="email" class="form-input" id="ctEmail" placeholder="you@company.com"/></div>
+        <div class="form-group"><label class="form-label">Company</label><input type="text" class="form-input" placeholder="Acme AI Labs"/></div>
+        <div class="form-group"><label class="form-label">Subject</label>
+          <select class="form-select">
+            <option>Project Quote Request</option>
+            <option>Enterprise Partnership</option>
+            <option>Technical Support</option>
+            <option>Join as Collector</option>
+            <option>General Inquiry</option>
+          </select>
+        </div>
+        <div class="form-group"><label class="form-label">Message</label><textarea class="form-textarea" rows="4" placeholder="Tell us about your data needs — type, volume, timeline, and any special requirements..."></textarea></div>
+        <button class="btn-p" style="width:100%;justify-content:center;" onclick="sendMessage()">Send Message →</button>
+        <p style="font-size:11.5px;color:var(--t3);text-align:center;margin-top:.85rem;">We'll respond within 24 hours · No spam, ever</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="index.html" class="xp-logo" style="display:inline-block;margin-bottom:.85rem;"><img src="../assets/logo.png" alt="XPERTIAL" class="xp-logo-img"/></a>
+      <p>We help teams collect real-world data based on their specific requirements.</p>
+      <div class="footer-social">
+        <a href="https://www.instagram.com/xpertial" target="_blank" rel="noopener noreferrer" class="social-icon" title="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".5" fill="currentColor" stroke="none"/></svg></a>
+        <a href="https://x.com/xpertial_" target="_blank" rel="noopener noreferrer" class="social-icon" title="X (Twitter)"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+        <a href="https://www.facebook.com/xpertial" target="_blank" rel="noopener noreferrer" class="social-icon" title="Facebook"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+        <a href="https://www.youtube.com/@xpertial" target="_blank" rel="noopener noreferrer" class="social-icon" title="YouTube"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="var(--bg2)"/></svg></a>
+        <a href="https://github.com/xpertial" target="_blank" rel="noopener noreferrer" class="social-icon" title="GitHub"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/></svg></a>
+      </div>
+    </div>
+    <div class="footer-col"><h4>Services</h4><a href="../services.html#image">Image Collection</a><a href="../services.html#video">Video Collection</a><a href="../services.html#text">Text &amp; NLP</a><a href="../services.html#audio">Audio &amp; Speech</a><a href="../services.html#custom">Custom Collection</a></div>
+    <div class="footer-col"><h4>Company</h4><a href="../company/about.html">About Us</a><a href="../company/careers.html">Careers</a><a href="../company/contact.html">Contact Us</a><a href="../company/events.html">Events</a><a href="../company/press.html">Press</a></div>
+    <div class="footer-col"><h4>Collectors</h4><a href="../join-collector.html">Join as Collector</a><a href="../pricing.html">Pricing</a><a href="../join-collector.html#earn">Earnings</a><a href="../join-collector.html#req">Requirements</a></div>
+    <div class="footer-col"><h4>Legal</h4><a href="../company/privacy.html">Privacy Policy</a><a href="../company/terms.html">Terms</a><a href="../login.html">My Account</a><a href="../request.html">Book a Demo</a></div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">&copy; 2026 XPERTIAL Technologies Pvt. Ltd. All rights reserved.</div>
+    <div class="footer-status"><span class="status-dot"></span>All systems operational</div>
+  </div>
+</footer>
+<script src="../assets/xpertial.js"></script>
+<script>
+function sendMessage(){
+  const email=document.getElementById('ctEmail').value.trim();
+  const first=document.getElementById('ctFirst').value.trim();
+  if(!email||!first){xpToast('Please fill in your name and email','warn');return;}
+  xpToast('Message sent! We\'ll respond within 24 hours.','success');
+  /* AWS SES integration point */
+}
+(function(){const obs=new IntersectionObserver(e=>e.forEach(el=>{if(el.isIntersecting)el.target.classList.add('visible');}),{threshold:.1});document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));})();
+</script>
+</body>
+</html>

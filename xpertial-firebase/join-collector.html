@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Join as Collector — XPERTIAL</title>
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml"/>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Space+Mono&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="assets/xpertial.css"/>
+<style>
+.page-hero{padding:calc(var(--nav) + 110px) 5vw 80px;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(0,212,255,.065) 0%,transparent 70%);border-bottom:1px solid var(--b);position:relative;overflow:hidden;}
+.page-hero::after{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(0,212,255,.022) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,.022) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;}
+.page-hero .container{position:relative;z-index:1;}
+@media(max-width:768px){.page-hero{padding:calc(var(--nav) + 60px) 5vw 50px;}}
+.earn-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;}
+.earn-card{background:var(--bg2);border:1px solid var(--b);border-radius:12px;padding:1.5rem;text-align:center;position:relative;overflow:hidden;transition:all .35s;}
+.earn-card-glow{position:absolute;inset:0;pointer-events:none;border-radius:12px;background:radial-gradient(circle at 50% 50%,rgba(0,212,255,.1) 0%,transparent 60%);opacity:0;transition:opacity .35s;}
+.earn-card:hover{border-color:var(--b2);transform:translateY(-4px);box-shadow:var(--glow);}
+.earn-card:hover .earn-card-glow{opacity:1;}
+.earn-card>*:not(.earn-card-glow){position:relative;z-index:1;}
+.earn-num{font-family:var(--fh);font-size:2rem;font-weight:700;color:var(--c);margin-bottom:.3rem;}
+.steps-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.25rem;position:relative;}
+.steps-grid::before{content:'';position:absolute;top:28px;left:12%;right:12%;height:1px;background:linear-gradient(90deg,transparent,var(--c),var(--pur),transparent);opacity:.35;}
+.cstep{text-align:center;padding:0 .5rem;}
+.cstep-num{width:56px;height:56px;border-radius:50%;background:var(--bg2);border:1px solid var(--b2);display:flex;align-items:center;justify-content:center;font-family:var(--fh);font-size:1.1rem;font-weight:700;color:var(--c);margin:0 auto 1rem;z-index:1;position:relative;}
+.cstep h4{font-family:var(--fh);font-size:.95rem;font-weight:700;margin-bottom:.3rem;}
+.cstep p{font-size:11.5px;color:var(--t2);line-height:1.6;}
+.req-list{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;}
+.req-item{background:var(--bg2);border:1px solid var(--b);border-radius:8px;padding:.85rem 1rem;display:flex;align-items:center;gap:.65rem;}
+.req-ico{font-size:1.25rem;}
+.req-txt{font-family:var(--fh);font-size:.9rem;font-weight:600;}
+/* Multi-step form */
+.app-wrap{max-width:680px;margin:0 auto;}
+.app-progress{display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:2rem;flex-wrap:wrap;row-gap:.75rem;}
+.ap-step{display:flex;flex-direction:column;align-items:center;gap:.35rem;position:relative;z-index:1;}
+.ap-dot{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--fh);font-size:.85rem;font-weight:700;background:var(--bg3);border:1.5px solid var(--b);color:var(--t3);transition:all .3s;}
+.ap-step.active .ap-dot{background:rgba(0,212,255,.15);border-color:var(--c);color:var(--c);box-shadow:0 0 14px rgba(0,212,255,.25);}
+.ap-step.done .ap-dot{background:rgba(0,212,255,.2);border-color:var(--c);color:var(--c);}
+.ap-label{font-family:var(--fm);font-size:8.5px;color:var(--t3);letter-spacing:.08em;text-transform:uppercase;transition:color .3s;white-space:nowrap;}
+.ap-step.active .ap-label,.ap-step.done .ap-label{color:var(--c);}
+.ap-line{flex:1;height:1px;background:var(--b);max-width:50px;min-width:20px;transition:background .3s;}
+.ap-line.done{background:var(--c);}
+.app-card{background:var(--bg2);border:1px solid var(--b2);border-radius:14px;padding:2rem;box-shadow:0 24px 60px rgba(0,0,0,.4);}
+.app-card::before{content:'';display:block;height:2px;background:linear-gradient(90deg,transparent,var(--c),transparent);margin:-2rem -2rem 2rem;border-radius:14px 14px 0 0;}
+.app-panel{display:none;}
+.app-panel.active{display:block;}
+.app-step-title{font-family:var(--fh);font-size:1.25rem;font-weight:700;margin-bottom:.25rem;}
+.app-step-sub{font-size:13px;color:var(--t2);margin-bottom:1.5rem;}
+.radio-group,.check-group{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.35rem;}
+.radio-opt,.check-opt{display:flex;align-items:center;gap:.5rem;background:var(--bg3);border:1.5px solid var(--b);border-radius:6px;padding:8px 14px;cursor:pointer;transition:all .2s;user-select:none;font-size:13px;}
+.radio-opt:hover,.check-opt:hover{border-color:var(--b2);}
+.radio-opt.selected,.check-opt.selected{border-color:var(--c);color:var(--c);background:rgba(0,212,255,.08);}
+.radio-opt input,.check-opt input{display:none;}
+.upload-zone{background:var(--bg3);border:1.5px dashed var(--b2);border-radius:8px;padding:1.5rem;text-align:center;cursor:pointer;transition:border-color .2s;}
+.upload-zone:hover{border-color:var(--c);}
+.upload-zone input{display:none;}
+.upload-file-item{background:rgba(0,212,255,.06);border:1px solid var(--b2);border-radius:5px;padding:6px 12px;font-size:12px;color:var(--t2);display:flex;align-items:center;gap:.5rem;margin-top:.4rem;}
+.agree-item{display:flex;align-items:flex-start;gap:.75rem;padding:.75rem;border:1px solid var(--b);border-radius:8px;cursor:pointer;transition:border-color .2s;margin-bottom:.6rem;}
+.agree-item:hover{border-color:var(--b2);}
+.agree-item.checked{border-color:rgba(34,197,94,.4);background:rgba(34,197,94,.04);}
+.agree-box{width:18px;height:18px;border:1.5px solid var(--b2);border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px;transition:all .2s;}
+.agree-item.checked .agree-box{background:var(--grn);border-color:var(--grn);}
+.agree-box-check{width:11px;height:11px;stroke:#000;stroke-width:2.5;fill:none;display:none;}
+.agree-item.checked .agree-box-check{display:block;}
+.agree-text{font-size:13px;line-height:1.6;}
+.app-nav{display:flex;justify-content:space-between;align-items:center;margin-top:1.75rem;padding-top:1.25rem;border-top:1px solid var(--b);}
+.app-nav-info{font-size:11.5px;color:var(--t3);font-family:var(--fm);}
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .65s ease,transform .65s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+@media(max-width:900px){.earn-grid,.steps-grid{grid-template-columns:1fr 1fr;}.steps-grid::before{display:none;}.req-list{grid-template-columns:1fr;}}
+@media(max-width:600px){.earn-grid{grid-template-columns:1fr;}.app-card{padding:1.25rem;}.app-card::before{margin:-1.25rem -1.25rem 1.5rem;}}
+</style>
+</head>
+<body>
+<nav id="xpNav">
+  <a href="index.html" class="xp-logo"><img src="assets/logo.png" alt="XPERTIAL" class="xp-logo-img"/></a>
+  <div class="xp-center">
+    <div class="xp-ni">
+      <button class="xp-nb">Services<svg class="xp-arr" viewBox="0 0 8 8" fill="none"><path d="M1 2.5L4 5.5L7 2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+      <div class="xp-drop"><a href="services.html#image" class="xp-di"><div class="xp-dico">🖼️</div><div><div class="xp-dlbl">Image Collection</div><div class="xp-dsub">Labeled images for CV models</div></div></a><a href="services.html#video" class="xp-di"><div class="xp-dico">🎥</div><div><div class="xp-dlbl">Video Collection</div><div class="xp-dsub">Frame-level annotation &amp; tracking</div></div></a><a href="services.html#text" class="xp-di"><div class="xp-dico">📝</div><div><div class="xp-dlbl">Text &amp; NLP Data</div><div class="xp-dsub">Annotated text, conversations</div></div></a><a href="services.html#audio" class="xp-di"><div class="xp-dico">🎙️</div><div><div class="xp-dlbl">Audio &amp; Speech</div><div class="xp-dsub">Transcribed, labeled audio</div></div></a><div class="xp-dsep"></div><a href="services.html#custom" class="xp-di"><div class="xp-dico">⚙️</div><div><div class="xp-dlbl">Custom Collection</div><div class="xp-dsub">Any data type, any format</div></div></a></div>
+    </div>
+    <a href="pricing.html" class="xp-nb">Pricing</a>
+    <a href="join-collector.html" class="xp-nb active">Join as Collector</a>
+    <div class="xp-ni">
+      <button class="xp-nb">Company<svg class="xp-arr" viewBox="0 0 8 8" fill="none"><path d="M1 2.5L4 5.5L7 2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+      <div class="xp-drop"><a href="company/about.html" class="xp-di"><div class="xp-dico">🏢</div><div><div class="xp-dlbl">About Us</div><div class="xp-dsub">Our vision &amp; team</div></div></a><a href="company/contact.html" class="xp-di"><div class="xp-dico">📞</div><div><div class="xp-dlbl">Contact</div><div class="xp-dsub">Get in touch</div></div></a><a href="company/blog.html" class="xp-di"><div class="xp-dico">✍️</div><div><div class="xp-dlbl">Blog</div><div class="xp-dsub">Insights &amp; company updates</div></div></a><a href="company/careers.html" class="xp-di"><div class="xp-dico">💼</div><div><div class="xp-dlbl">Careers</div><div class="xp-dsub">Join our team</div></div></a><a href="company/events.html" class="xp-di"><div class="xp-dico">📅</div><div><div class="xp-dlbl">Events</div><div class="xp-dsub">Talks, webinars &amp; meetups</div></div></a><a href="company/press.html" class="xp-di"><div class="xp-dico">📰</div><div><div class="xp-dlbl">Press</div><div class="xp-dsub">Media &amp; coverage</div></div></a><div class="xp-dsep"></div><a href="company/privacy.html" class="xp-di"><div class="xp-dico">🔒</div><div><div class="xp-dlbl">Privacy Policy</div></div></a><a href="company/terms.html" class="xp-di"><div class="xp-dico">📄</div><div><div class="xp-dlbl">Terms of Service</div></div></a></div>
+    </div>
+  </div>
+  <div class="xp-right">
+    <button class="xp-icon-btn" onclick="xpSearchOpen()" title="Search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></button>
+    <div class="nav-auth-out">
+      <a href="login.html" class="btn-signin">Sign In</a>
+      <a href="login.html?tab=register" class="btn-signup">Sign Up</a>
+    </div>
+    <div class="nav-auth-in">
+      <button class="xp-icon-btn" onclick="location.href='client/index.html'"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></button>
+      <a href="request.html" class="btn-signup">Request Data →</a>
+      <button class="btn-signout" onclick="xpAuth.logout()">Sign Out</button>
+    </div>
+    <div class="xp-hbg" id="xpHbg"><span></span><span></span><span></span></div>
+  </div>
+</nav>
+<div class="xp-mob" id="xpMob">
+  <div class="xp-ms">
+    <button class="xp-msb">Services <span class="xp-marr">▼</span></button>
+    <div class="xp-msub">
+      <a href="services.html#image" class="xp-ml">Image Collection</a>
+      <a href="services.html#video" class="xp-ml">Video Collection</a>
+      <a href="services.html#text" class="xp-ml">Text &amp; NLP Data</a>
+      <a href="services.html#audio" class="xp-ml">Audio &amp; Speech</a>
+      <a href="services.html#custom" class="xp-ml">Custom Collection</a>
+    </div>
+  </div>
+  <div class="xp-ms"><button class="xp-msb"><a href="pricing.html" style="color:inherit;text-decoration:none;">Pricing</a></button></div>
+  <div class="xp-ms"><button class="xp-msb"><a href="join-collector.html" style="color:inherit;text-decoration:none;">Join as Collector</a></button></div>
+  <div class="xp-ms">
+    <button class="xp-msb">Company <span class="xp-marr">▼</span></button>
+    <div class="xp-msub">
+      <a href="company/about.html" class="xp-ml">About Us</a>
+      <a href="company/contact.html" class="xp-ml">Contact</a><a href="company/blog.html" class="xp-ml">Blog</a>
+      <a href="company/careers.html" class="xp-ml">Careers</a>
+      <a href="company/events.html" class="xp-ml">Events</a>
+      <a href="company/press.html" class="xp-ml">Press</a>
+      <a href="company/privacy.html" class="xp-ml">Privacy Policy</a>
+      <a href="company/terms.html" class="xp-ml">Terms of Service</a>
+    </div>
+  </div>
+  <div class="xp-mb">
+    <a href="login.html" class="btn-signin">Sign In</a>
+    <a href="login.html?tab=register" class="btn-signup">Sign Up</a>
+  </div>
+</div>
+
+<section class="page-hero" id="top">
+  <div class="container">
+    <div class="section-tag">Collector Network</div>
+    <h1>Earn by <span class="accent">Collecting Data</span></h1>
+    <p class="muted" style="max-width:560px;font-size:15px;margin:.75rem 0 1.75rem;line-height:1.75;">Join thousands of XPERTIAL field collectors across India. Collect data on your schedule — photos, recordings, text annotations — and get paid directly to your bank account.</p>
+    <div style="display:flex;gap:.75rem;flex-wrap:wrap;">
+      <a href="#apply" class="btn-p">Apply Now →</a>
+      <a href="#how" class="btn-g">See How It Works</a>
+    </div>
+  </div>
+</section>
+
+<div class="jc-layout">
+<section id="earn" class="jc-earn" style="background:var(--bg2);border-bottom:1px solid var(--b);">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:2rem;" class="reveal">
+      <div class="section-tag" style="justify-content:center;">Earnings</div>
+      <h2>What You Can <span class="accent">Earn</span></h2>
+      <p class="muted" style="max-width:440px;margin:.5rem auto 0;font-size:14px;">Flexible work, real pay. Earn on your schedule across any city in India.</p>
+    </div>
+    <div class="earn-grid reveal">
+      <div class="earn-card"><div class="earn-card-glow"></div><div class="earn-num">₹200–800</div><div style="font-family:var(--fh);font-weight:700;margin-bottom:.4rem;">Per Hour</div><p style="font-size:12.5px;color:var(--t2);">Rate varies by task type, complexity, and location. Photo tasks pay more in metro cities.</p></div>
+      <div class="earn-card"><div class="earn-card-glow"></div><div class="earn-num">₹15,000+</div><div style="font-family:var(--fh);font-weight:700;margin-bottom:.4rem;">Per Month</div><p style="font-size:12.5px;color:var(--t2);">Top collectors working full-time earn ₹15,000–40,000/month. Part-time is also welcome.</p></div>
+      <div class="earn-card"><div class="earn-card-glow"></div><div class="earn-num">Weekly</div><div style="font-family:var(--fh);font-weight:700;margin-bottom:.4rem;">Payout Cycle</div><p style="font-size:12.5px;color:var(--t2);">Get paid every week directly to your bank account or UPI. No delays, no minimum threshold.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="how" class="jc-how">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:2.5rem;" class="reveal">
+      <div class="section-tag" style="justify-content:center;">Process</div>
+      <h2>How <span class="accent">Collecting Works</span></h2>
+    </div>
+    <div class="steps-grid reveal">
+      <div class="cstep"><div class="cstep-num">01</div><div class="step-icon">📝</div><h4>Apply Online</h4><p>Fill out the application form below. We review within 48 hours.</p></div>
+      <div class="cstep"><div class="cstep-num">02</div><div class="step-icon">📱</div><h4>Download App</h4><p>Get the XPERTIAL Collector App (Android &amp; iOS) and complete onboarding.</p></div>
+      <div class="cstep"><div class="cstep-num">03</div><div class="step-icon">📡</div><h4>Pick Tasks</h4><p>Browse available tasks in your city. Accept tasks that suit your schedule.</p></div>
+      <div class="cstep"><div class="cstep-num">04</div><div class="step-icon">💰</div><h4>Get Paid</h4><p>Submit your data, pass QC, and receive weekly payout to your account.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="req" class="jc-req" style="background:var(--bg2);border-top:1px solid var(--b);border-bottom:1px solid var(--b);">
+  <div class="container">
+    <div style="margin-bottom:2rem;" class="reveal">
+      <div class="section-tag">Requirements</div>
+      <h2>What You <span class="accent">Need</span></h2>
+      <p class="muted" style="font-size:14px;margin:.5rem 0 0;">Low barrier to entry — if you have a smartphone, you can collect.</p>
+    </div>
+    <div class="req-list reveal">
+      <div class="req-item"><div class="req-ico">📱</div><div><div class="req-txt">Android or iOS Smartphone</div><div style="font-size:12px;color:var(--t2);">Android 8+ or iOS 13+</div></div></div>
+      <div class="req-item"><div class="req-ico">🌐</div><div><div class="req-txt">Reliable Internet Access</div><div style="font-size:12px;color:var(--t2);">For data upload</div></div></div>
+      <div class="req-item"><div class="req-ico">🪪</div><div><div class="req-txt">Valid Indian ID Proof</div><div style="font-size:12px;color:var(--t2);">Aadhaar, PAN, or Passport</div></div></div>
+      <div class="req-item"><div class="req-ico">🏦</div><div><div class="req-txt">Bank Account / UPI</div><div style="font-size:12px;color:var(--t2);">For weekly payouts</div></div></div>
+      <div class="req-item"><div class="req-ico">📍</div><div><div class="req-txt">Location in India</div><div style="font-size:12px;color:var(--t2);">Any city or town</div></div></div>
+      <div class="req-item"><div class="req-ico">🎓</div><div><div class="req-txt">No Degree Required</div><div style="font-size:12px;color:var(--t2);">Anyone 18+ can apply</div></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="jc-tasks">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:2.5rem;" class="reveal">
+      <div class="section-tag" style="justify-content:center;">Task Types</div>
+      <h2>What You'll <span class="accent">Collect</span></h2>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;" class="reveal">
+      <div class="card"><div class="card-glow"></div><div class="card-icon">🖼️</div><h3>Photo Tasks</h3><p>Photograph specific subjects — road signs, storefronts, hand gestures, vehicles, food items.</p><div class="card-tag">₹5–30/image</div></div>
+      <div class="card"><div class="card-glow"></div><div class="card-icon">🎥</div><h3>Video Recording</h3><p>Record short video clips of scenarios, activities, or environments as specified in the task brief.</p><div class="card-tag">₹20–80/video</div></div>
+      <div class="card"><div class="card-glow"></div><div class="card-icon">🎙️</div><h3>Voice Recording</h3><p>Record yourself reading sentences or having conversations in your native language or dialect.</p><div class="card-tag">₹10–50/recording</div></div>
+      <div class="card"><div class="card-glow"></div><div class="card-icon">📝</div><h3>Text Annotation</h3><p>Label text, classify intents, translate short phrases, or mark entities in sentences.</p><div class="card-tag">₹3–15/item</div></div>
+      <div class="card"><div class="card-glow"></div><div class="card-icon">📋</div><h3>Survey Tasks</h3><p>Conduct structured surveys with shopkeepers, farmers, or public in specific areas.</p><div class="card-tag">₹50–200/survey</div></div>
+      <div class="card"><div class="card-glow"></div><div class="card-icon">🗺️</div><h3>Geospatial</h3><p>Record GPS traces, tag locations, photograph map features in your city or district.</p><div class="card-tag">₹8–40/point</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- APPLICATION FORM -->
+<section id="apply" class="jc-apply" style="background:var(--bg2);border-top:1px solid var(--b);">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:2rem;" class="reveal">
+      <div class="section-tag" style="justify-content:center;">Apply Now</div>
+      <h2>Start Collecting <span class="accent">Today</span></h2>
+      <p class="muted" style="font-size:14px;margin:.5rem auto 0;max-width:480px;">Fill out this form. Our team will review and contact you within 48 hours.</p>
+    </div>
+    <div class="app-wrap reveal">
+      <div class="app-progress" id="appProgress">
+        <div class="ap-step active" data-step="1"><div class="ap-dot">1</div><div class="ap-label">Basic Info</div></div>
+        <div class="ap-line" id="apl1"></div>
+        <div class="ap-step" data-step="2"><div class="ap-dot">2</div><div class="ap-label">Device</div></div>
+        <div class="ap-line" id="apl2"></div>
+        <div class="ap-step" data-step="3"><div class="ap-dot">3</div><div class="ap-label">Work Type</div></div>
+        <div class="ap-line" id="apl3"></div>
+        <div class="ap-step" data-step="4"><div class="ap-dot">4</div><div class="ap-label">Sample</div></div>
+        <div class="ap-line" id="apl4"></div>
+        <div class="ap-step" data-step="5"><div class="ap-dot">5</div><div class="ap-label">Location</div></div>
+        <div class="ap-line" id="apl5"></div>
+        <div class="ap-step" data-step="6"><div class="ap-dot">6</div><div class="ap-label">Agreement</div></div>
+      </div>
+      <div class="app-card">
+
+        <!-- STEP 1 -->
+        <div class="app-panel active" id="ap1">
+          <div class="app-step-title">Step 1 — Basic Details</div>
+          <div class="app-step-sub">Tell us about yourself so we can get you started.</div>
+          <div class="form-group"><label class="form-label">Full Name <span style="color:var(--red)">*</span></label><input type="text" class="form-input" id="apName" placeholder="e.g. Ravi Kumar Sharma"/></div>
+          <div class="form-group"><label class="form-label">Phone Number <span style="color:var(--red)">*</span></label><input type="tel" class="form-input" id="apPhone" placeholder="+91 98765 43210"/><div class="form-hint">We'll verify this number via OTP.</div></div>
+          <div class="form-group"><label class="form-label">Email Address <span style="color:var(--t3);font-size:11px;">(Optional but recommended)</span></label><input type="email" class="form-input" id="apEmail" placeholder="ravi@gmail.com"/></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+            <div class="form-group" style="margin:0;"><label class="form-label">City <span style="color:var(--red)">*</span></label><input type="text" class="form-input" id="apCity" placeholder="Mumbai"/></div>
+            <div class="form-group" style="margin:0;"><label class="form-label">State <span style="color:var(--red)">*</span></label><input type="text" class="form-input" id="apState" placeholder="Maharashtra"/></div>
+          </div>
+          <div class="form-group" style="margin-top:1rem;"><label class="form-label">Age Group <span style="color:var(--red)">*</span></label>
+            <div class="radio-group" id="apAge">
+              <label class="radio-opt"><input type="radio" name="age" value="18-21"/><span>18 – 21</span></label>
+              <label class="radio-opt"><input type="radio" name="age" value="21-30"/><span>21 – 30</span></label>
+              <label class="radio-opt"><input type="radio" name="age" value="30+"/><span>30+</span></label>
+            </div>
+          </div>
+          <div class="form-error" id="ap1err"></div>
+          <div class="app-nav"><div class="app-nav-info">STEP 1 OF 6</div><button class="btn-p" onclick="apNext(1)">Next: Device Info →</button></div>
+        </div>
+
+        <!-- STEP 2 -->
+        <div class="app-panel" id="ap2">
+          <div class="app-step-title">Step 2 — Device &amp; Capability</div>
+          <div class="app-step-sub">Let us know what equipment you have available.</div>
+          <div class="form-group"><label class="form-label">What device will you use? <span style="color:var(--red)">*</span></label>
+            <div class="check-group" id="apDevice">
+              <label class="check-opt"><input type="checkbox" value="android"/><span>📱 Android Phone</span></label>
+              <label class="check-opt"><input type="checkbox" value="iphone"/><span>📱 iPhone (iOS)</span></label>
+              <label class="check-opt"><input type="checkbox" value="dslr"/><span>📷 DSLR / Camera</span></label>
+            </div>
+          </div>
+          <div class="form-group"><label class="form-label">Camera Quality</label>
+            <div class="radio-group" id="apCamera">
+              <label class="radio-opt"><input type="radio" name="cam" value="basic"/><span>Basic</span></label>
+              <label class="radio-opt"><input type="radio" name="cam" value="good"/><span>Good</span></label>
+              <label class="radio-opt"><input type="radio" name="cam" value="high"/><span>High Quality</span></label>
+            </div>
+          </div>
+          <div class="form-group"><label class="form-label">Internet Availability <span style="color:var(--red)">*</span></label>
+            <div class="radio-group" id="apInternet">
+              <label class="radio-opt"><input type="radio" name="net" value="good"/><span>✅ Good (WiFi / 4G / 5G)</span></label>
+              <label class="radio-opt"><input type="radio" name="net" value="limited"/><span>⚠️ Limited</span></label>
+            </div>
+            <div class="form-hint">This determines which upload tasks you'll receive.</div>
+          </div>
+          <div class="form-error" id="ap2err"></div>
+          <div class="app-nav"><button class="btn-g" onclick="apPrev(2)">← Back</button><div class="app-nav-info">STEP 2 OF 6</div><button class="btn-p" onclick="apNext(2)">Next: Work Type →</button></div>
+        </div>
+
+        <!-- STEP 3 -->
+        <div class="app-panel" id="ap3">
+          <div class="app-step-title">Step 3 — Work Type &amp; Availability</div>
+          <div class="app-step-sub">Tell us what kind of work you'd like to do and your schedule.</div>
+          <div class="form-group"><label class="form-label">What type of work can you do? <span style="color:var(--red)">*</span></label>
+            <div class="check-group" id="apWorkType">
+              <label class="check-opt"><input type="checkbox" value="image"/><span>🖼️ Image Collection</span></label>
+              <label class="check-opt"><input type="checkbox" value="video"/><span>🎥 Video Recording</span></label>
+              <label class="check-opt"><input type="checkbox" value="audio"/><span>🎙️ Audio Recording</span></label>
+              <label class="check-opt"><input type="checkbox" value="text"/><span>📝 Text / Typing</span></label>
+            </div>
+          </div>
+          <div class="form-group"><label class="form-label">Availability <span style="color:var(--red)">*</span></label>
+            <div class="radio-group" id="apAvail">
+              <label class="radio-opt"><input type="radio" name="avail" value="1-2"/><span>1–2 hours/day</span></label>
+              <label class="radio-opt"><input type="radio" name="avail" value="2-4"/><span>2–4 hours/day</span></label>
+              <label class="radio-opt"><input type="radio" name="avail" value="fulltime"/><span>Full-time</span></label>
+            </div>
+          </div>
+          <div class="form-group"><label class="form-label">Work Preference</label>
+            <div class="radio-group" id="apPref">
+              <label class="radio-opt"><input type="radio" name="pref" value="nearby"/><span>📍 Nearby tasks only</span></label>
+              <label class="radio-opt"><input type="radio" name="pref" value="city"/><span>🏙️ Anywhere in city</span></label>
+              <label class="radio-opt"><input type="radio" name="pref" value="travel"/><span>✈️ Travel okay</span></label>
+            </div>
+          </div>
+          <div class="form-error" id="ap3err"></div>
+          <div class="app-nav"><button class="btn-g" onclick="apPrev(3)">← Back</button><div class="app-nav-info">STEP 3 OF 6</div><button class="btn-p" onclick="apNext(3)">Next: Sample Test →</button></div>
+        </div>
+
+        <!-- STEP 4 -->
+        <div class="app-panel" id="ap4">
+          <div class="app-step-title">Step 4 — Sample Test</div>
+          <div class="app-step-sub" style="color:var(--amb);">⭐ Most important step — upload 2–5 sample photos or videos to demonstrate your capability.</div>
+          <div class="form-group">
+            <label class="form-label">Upload Samples <span style="color:var(--red)">*</span></label>
+            <div class="upload-zone" onclick="document.getElementById('sampleFiles').click()">
+              <input type="file" id="sampleFiles" multiple accept="image/*,video/*" onchange="handleSampleFiles(this)"/>
+              <div style="font-size:1.5rem;margin-bottom:.5rem;">📸</div>
+              <div style="font-size:13px;color:var(--t2);">Click to upload sample photos or videos</div>
+              <div style="font-size:11.5px;color:var(--t3);margin-top:.3rem;">JPG, PNG, MP4, MOV — 2 to 5 files, max 50MB each</div>
+            </div>
+            <div id="sampleFilesList"></div>
+            <div class="form-hint" style="margin-top:.75rem;">Tips: good lighting, steady hands, no blur, clear subjects.</div>
+          </div>
+          <div class="form-error" id="ap4err"></div>
+          <div class="app-nav"><button class="btn-g" onclick="apPrev(4)">← Back</button><div class="app-nav-info">STEP 4 OF 6</div><button class="btn-p" onclick="apNext(4)">Next: Location →</button></div>
+        </div>
+
+        <!-- STEP 5 -->
+        <div class="app-panel" id="ap5">
+          <div class="app-step-title">Step 5 — Location Proof <span style="font-size:13px;color:var(--t3);font-weight:400;">(Optional but strongly recommended)</span></div>
+          <div class="app-step-sub">Verifies you're a real collector — prevents fake applications.</div>
+          <div class="form-group"><label class="form-label">Verification Method</label>
+            <div class="radio-group" id="apLocMethod">
+              <label class="radio-opt"><input type="radio" name="locmethod" value="gps"/><span>📍 Enable GPS Capture</span></label>
+              <label class="radio-opt"><input type="radio" name="locmethod" value="photo"/><span>📷 Upload Photo with Live Location</span></label>
+              <label class="radio-opt"><input type="radio" name="locmethod" value="skip"/><span>⏭️ Skip for now</span></label>
+            </div>
+          </div>
+          <div id="locGPSPanel" style="display:none;" class="form-group">
+            <button class="btn-g" style="width:100%;justify-content:center;" onclick="captureGPS()">📍 Capture My Current Location</button>
+            <div id="gpsResult" style="font-size:12.5px;color:var(--grn);margin-top:.5rem;font-family:var(--fm);"></div>
+          </div>
+          <div id="locPhotoPanel" style="display:none;" class="form-group">
+            <div class="upload-zone" onclick="document.getElementById('locPhoto').click()">
+              <input type="file" id="locPhoto" accept="image/*" onchange="handleLocPhoto(this)"/>
+              <div style="font-size:1.5rem;margin-bottom:.4rem;">🗺️</div>
+              <div style="font-size:13px;color:var(--t2);">Upload a photo taken with location metadata enabled</div>
+            </div>
+            <div id="locPhotoName" style="font-size:12px;color:var(--grn);margin-top:.5rem;"></div>
+          </div>
+          <div class="form-error" id="ap5err"></div>
+          <div class="app-nav"><button class="btn-g" onclick="apPrev(5)">← Back</button><div class="app-nav-info">STEP 5 OF 6</div><button class="btn-p" onclick="apNext(5)">Next: Agreement →</button></div>
+        </div>
+
+        <!-- STEP 6 -->
+        <div class="app-panel" id="ap6">
+          <div class="app-step-title">Step 6 — Agreement</div>
+          <div class="app-step-sub">Please confirm the following before submitting.</div>
+          <div class="form-group">
+            <div class="agree-item" id="agr1" onclick="toggleAgree('agr1')">
+              <div class="agree-box"><svg class="agree-box-check" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+              <div class="agree-text">I confirm that all submitted information and data is real and accurate.</div>
+            </div>
+            <div class="agree-item" id="agr2" onclick="toggleAgree('agr2')">
+              <div class="agree-box"><svg class="agree-box-check" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+              <div class="agree-text">I agree to follow task instructions and XPERTIAL's data collection guidelines.</div>
+            </div>
+            <div class="agree-item" id="agr3" onclick="toggleAgree('agr3')">
+              <div class="agree-box"><svg class="agree-box-check" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+              <div class="agree-text">I understand that payment is only made for approved, quality-verified work.</div>
+            </div>
+          </div>
+          <div style="background:var(--bg3);border:1px solid var(--b);border-radius:8px;padding:1rem;margin-bottom:1rem;">
+            <div style="font-family:var(--fm);font-size:9.5px;color:var(--c);letter-spacing:.15em;margin-bottom:.6rem;">PAYMENT STRUCTURE</div>
+            <div style="font-size:13px;color:var(--t2);">₹5 – ₹20 per data point depending on task type, complexity, and location. Full-time collectors earn ₹15,000–₹40,000/month. Payouts are weekly to your bank / UPI.</div>
+          </div>
+          <div class="form-error" id="ap6err"></div>
+          <div class="app-nav"><button class="btn-g" onclick="apPrev(6)">← Back</button><div class="app-nav-info">STEP 6 OF 6</div><button class="btn-p" onclick="apSubmit()">Submit Application →</button></div>
+        </div>
+
+        <!-- SUCCESS -->
+        <div class="app-panel" id="apSuccess">
+          <div style="text-align:center;padding:1rem 0;">
+            <div style="font-size:3.5rem;margin-bottom:1rem;">✅</div>
+            <h2 style="margin-bottom:.5rem;">Application Submitted!</h2>
+            <p class="muted" style="font-size:14px;margin-bottom:1.25rem;">Your application is now in our system.</p>
+            <div style="background:var(--bg3);border:1px solid var(--b2);border-radius:8px;padding:1rem 1.5rem;margin-bottom:1.5rem;text-align:left;">
+              <div style="font-family:var(--fm);font-size:9.5px;color:var(--c);letter-spacing:.15em;margin-bottom:.6rem;">WHAT HAPPENS NEXT</div>
+              <div style="font-size:13px;color:var(--t2);line-height:1.9;">
+                ✔ You will be approved within <strong style="color:var(--text);">24–48 hours</strong><br/>
+                ✔ Tasks will be assigned via <strong style="color:var(--text);">WhatsApp / App</strong><br/>
+                ✔ Payment every week to your <strong style="color:var(--text);">bank / UPI</strong>
+              </div>
+            </div>
+            <div style="display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap;">
+              <a href="index.html" class="btn-p">Back to Home</a>
+              <a href="how-it-works.html" class="btn-g">How It Works</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+</div><!-- /jc-layout -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="index.html" class="xp-logo" style="display:inline-block;margin-bottom:.85rem;"><img src="assets/logo.png" alt="XPERTIAL" class="xp-logo-img"/></a>
+      <p>We help teams collect real-world data based on their specific requirements.</p>
+      <div class="footer-social">
+        <a href="https://www.instagram.com/xpertial" target="_blank" rel="noopener noreferrer" class="social-icon" title="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".5" fill="currentColor" stroke="none"/></svg></a>
+        <a href="https://x.com/xpertial_" target="_blank" rel="noopener noreferrer" class="social-icon" title="X (Twitter)"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+        <a href="https://www.facebook.com/xpertial" target="_blank" rel="noopener noreferrer" class="social-icon" title="Facebook"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+        <a href="https://www.youtube.com/@xpertial" target="_blank" rel="noopener noreferrer" class="social-icon" title="YouTube"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="var(--bg2)"/></svg></a>
+        <a href="https://github.com/xpertial" target="_blank" rel="noopener noreferrer" class="social-icon" title="GitHub"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/></svg></a>
+      </div>
+    </div>
+    <div class="footer-col"><h4>Services</h4><a href="services.html#image">Image Collection</a><a href="services.html#video">Video Collection</a><a href="services.html#text">Text &amp; NLP</a><a href="services.html#audio">Audio &amp; Speech</a><a href="services.html#custom">Custom Collection</a></div>
+    <div class="footer-col"><h4>Company</h4><a href="company/about.html">About Us</a><a href="company/careers.html">Careers</a><a href="company/contact.html">Contact Us</a><a href="company/events.html">Events</a><a href="company/press.html">Press</a></div>
+    <div class="footer-col"><h4>Collectors</h4><a href="join-collector.html">Join as Collector</a><a href="pricing.html">Pricing</a><a href="join-collector.html#earn">Earnings</a><a href="join-collector.html#req">Requirements</a></div>
+    <div class="footer-col"><h4>Legal</h4><a href="company/privacy.html">Privacy Policy</a><a href="company/terms.html">Terms</a><a href="login.html">My Account</a><a href="request.html">Book a Demo</a></div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">&copy; 2026 XPERTIAL Technologies Pvt. Ltd. All rights reserved.</div>
+    <div class="footer-status"><span class="status-dot"></span>All systems operational</div>
+  </div>
+</footer>
+
+<script src="assets/xpertial.js"></script>
+<script>
+(function(){
+  document.querySelectorAll('.radio-group').forEach(function(grp){
+    grp.querySelectorAll('.radio-opt').forEach(function(opt){
+      opt.addEventListener('click',function(e){
+        e.preventDefault(); e.stopPropagation();
+        grp.querySelectorAll('.radio-opt').forEach(function(o){o.classList.remove('selected');});
+        opt.classList.add('selected');
+      });
+    });
+  });
+  document.querySelectorAll('.check-group').forEach(function(grp){
+    grp.querySelectorAll('.check-opt').forEach(function(opt){
+      opt.addEventListener('click',function(e){
+        e.preventDefault(); e.stopPropagation();
+        opt.classList.toggle('selected');
+      });
+    });
+  });
+})();
+document.querySelectorAll('#apLocMethod .radio-opt').forEach(function(opt){
+  opt.addEventListener('click',function(e){
+    e.preventDefault(); e.stopPropagation();
+    document.querySelectorAll('#apLocMethod .radio-opt').forEach(function(o){o.classList.remove('selected');});
+    opt.classList.add('selected');
+    var v=opt.querySelector('input').value;
+    document.getElementById('locGPSPanel').style.display=v==='gps'?'block':'none';
+    document.getElementById('locPhotoPanel').style.display=v==='photo'?'block':'none';
+  });
+});
+function handleSampleFiles(inp){
+  const list=document.getElementById('sampleFilesList');list.innerHTML='';
+  Array.from(inp.files).forEach(f=>{
+    const el=document.createElement('div');el.className='upload-file-item';
+    el.innerHTML='<span>'+f.name+'</span><span style="color:var(--t3)">'+(f.size/1024/1024).toFixed(1)+' MB</span>';
+    list.appendChild(el);
+  });
+}
+function handleLocPhoto(inp){ if(inp.files[0]) document.getElementById('locPhotoName').textContent='✓ '+inp.files[0].name; }
+function captureGPS(){
+  if(!navigator.geolocation){xpToast('Geolocation not supported.','warn');return;}
+  navigator.geolocation.getCurrentPosition(p=>{ document.getElementById('gpsResult').textContent='✓ Location captured: '+p.coords.latitude.toFixed(4)+', '+p.coords.longitude.toFixed(4); },()=>xpToast('Location access denied.','error'));
+}
+function toggleAgree(id){ document.getElementById(id).classList.toggle('checked'); }
+
+let apStep=1;
+function apNext(from){
+  if(from===1){
+    if(!document.getElementById('apName').value.trim()||!document.getElementById('apPhone').value.trim()||!document.getElementById('apCity').value.trim()||!document.getElementById('apState').value.trim()||!document.querySelector('#apAge .radio-opt.selected')){
+      showErr('ap1err','Please fill all required fields and select age group.');return;
+    }clearErr('ap1err');
+  }
+  if(from===2){
+    if(!document.querySelectorAll('#apDevice .check-opt.selected').length||!document.querySelector('#apInternet .radio-opt.selected')){showErr('ap2err','Please select a device and internet availability.');return;}clearErr('ap2err');
+  }
+  if(from===3){
+    if(!document.querySelectorAll('#apWorkType .check-opt.selected').length||!document.querySelector('#apAvail .radio-opt.selected')){showErr('ap3err','Please select work type and availability.');return;}clearErr('ap3err');
+  }
+  if(from===4){
+    const f=document.getElementById('sampleFiles').files;
+    if(!f||f.length<2){showErr('ap4err','Please upload at least 2 sample files.');return;}clearErr('ap4err');
+  }
+  goToApStep(from+1);
+}
+function apPrev(from){goToApStep(from-1);}
+function goToApStep(n){
+  document.querySelectorAll('.app-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('ap'+n).classList.add('active');
+  document.querySelectorAll('.ap-step').forEach(s=>{const sn=parseInt(s.dataset.step);s.classList.toggle('active',sn===n);s.classList.toggle('done',sn<n);});
+  for(let i=1;i<=5;i++){const l=document.getElementById('apl'+i);if(l)l.classList.toggle('done',i<n);}
+  apStep=n;
+  const applyEl=document.getElementById('apply');
+  if(applyEl) window.scrollTo({top:applyEl.offsetTop-90,behavior:'smooth'});
+}
+function apSubmit(){
+  if(!document.getElementById('agr1').classList.contains('checked')||!document.getElementById('agr2').classList.contains('checked')||!document.getElementById('agr3').classList.contains('checked')){showErr('ap6err','Please agree to all three terms.');return;}
+  clearErr('ap6err');
+  document.getElementById('appProgress').style.display='none';
+  document.querySelectorAll('.app-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('apSuccess').classList.add('active');
+  xpToast('Application submitted!','success');
+}
+function showErr(id,msg){const el=document.getElementById(id);el.textContent=msg;el.classList.add('show');}
+function clearErr(id){document.getElementById(id).classList.remove('show');}
+(function(){const obs=new IntersectionObserver(e=>e.forEach(el=>{if(el.isIntersecting)el.target.classList.add('visible');}),{threshold:.1});document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));})();
+</script>
+</body>
+</html>

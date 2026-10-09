@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>About Us — XPERTIAL</title>
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml"/>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Space+Mono&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../assets/xpertial.css"/>
+<style>
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .65s ease,transform .65s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.team-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.25rem;}
+.team-card{background:var(--bg2);border:1px solid var(--b);border-radius:12px;padding:1.5rem;text-align:center;transition:all .3s;position:relative;overflow:hidden;}
+.team-card-glow{position:absolute;inset:0;pointer-events:none;border-radius:12px;background:radial-gradient(circle at 50% 50%,rgba(0,212,255,.1) 0%,transparent 60%);opacity:0;transition:opacity .35s;}
+.team-card:hover{border-color:var(--b2);transform:translateY(-4px);box-shadow:var(--glow);}
+.team-card:hover .team-card-glow{opacity:1;}
+.team-card>*:not(.team-card-glow){position:relative;z-index:1;}
+.team-avatar{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--c),var(--pur));display:flex;align-items:center;justify-content:center;font-family:var(--fh);font-weight:700;font-size:1.6rem;color:#000;margin:0 auto 1rem;}
+.team-name{font-family:var(--fh);font-size:1rem;font-weight:700;margin-bottom:.2rem;}
+.team-role{font-size:12px;color:var(--c);font-family:var(--fm);letter-spacing:.08em;margin-bottom:.5rem;}
+.team-bio{font-size:12px;color:var(--t2);line-height:1.65;}
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1.25rem;margin-bottom:3rem;}
+.stat-box{background:var(--bg2);border:1px solid var(--b);border-radius:10px;padding:1.5rem;text-align:center;}
+.stat-big{font-family:var(--fh);font-size:2.2rem;font-weight:700;color:var(--c);}
+.stat-lbl{font-size:12px;color:var(--t2);margin-top:.3rem;}
+.value-item{display:flex;align-items:flex-start;gap:1rem;padding:1.25rem;background:var(--bg2);border:1px solid var(--b);border-radius:10px;transition:all .2s;}
+.value-item:hover{border-color:var(--b2);}
+.value-ico{font-size:1.6rem;flex-shrink:0;}
+.value-title{font-family:var(--fh);font-size:1rem;font-weight:700;margin-bottom:.3rem;}
+.value-desc{font-size:12.5px;color:var(--t2);line-height:1.65;}
+@media(max-width:900px){.team-grid{grid-template-columns:1fr 1fr;}.stat-row{grid-template-columns:1fr 1fr;}}
+@media(max-width:500px){.team-grid{grid-template-columns:1fr;}.stat-row{grid-template-columns:1fr 1fr;}}
+</style>
+</head>
+<body>
+<nav id="xpNav">
+  <a href="../index.html" class="xp-logo"><img src="../assets/logo.png" alt="XPERTIAL" class="xp-logo-img"/></a>
+  <div class="xp-center">
+    <div class="xp-ni">
+      <button class="xp-nb">Services<svg class="xp-arr" viewBox="0 0 8 8" fill="none"><path d="M1 2.5L4 5.5L7 2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+      <div class="xp-drop"><a href="../services.html#image" class="xp-di"><div class="xp-dico">🖼️</div><div><div class="xp-dlbl">Image Collection</div><div class="xp-dsub">Labeled images for CV models</div></div></a><a href="../services.html#video" class="xp-di"><div class="xp-dico">🎥</div><div><div class="xp-dlbl">Video Collection</div><div class="xp-dsub">Frame-level annotation &amp; tracking</div></div></a><a href="../services.html#text" class="xp-di"><div class="xp-dico">📝</div><div><div class="xp-dlbl">Text &amp; NLP Data</div><div class="xp-dsub">Annotated text, conversations</div></div></a><a href="../services.html#audio" class="xp-di"><div class="xp-dico">🎙️</div><div><div class="xp-dlbl">Audio &amp; Speech</div><div class="xp-dsub">Transcribed, labeled audio</div></div></a><div class="xp-dsep"></div><a href="../services.html#custom" class="xp-di"><div class="xp-dico">⚙️</div><div><div class="xp-dlbl">Custom Collection</div><div class="xp-dsub">Any data type, any format</div></div></a></div>
+    </div>
+    <a href="../pricing.html" class="xp-nb">Pricing</a>
+    <a href="../join-collector.html" class="xp-nb">Join as Collector</a>
+    <div class="xp-ni">
+      <button class="xp-nb active">Company<svg class="xp-arr" viewBox="0 0 8 8" fill="none"><path d="M1 2.5L4 5.5L7 2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+      <div class="xp-drop"><a href="../company/about.html" class="xp-di"><div class="xp-dico">🏢</div><div><div class="xp-dlbl">About Us</div><div class="xp-dsub">Our vision &amp; team</div></div></a><a href="../company/contact.html" class="xp-di"><div class="xp-dico">📞</div><div><div class="xp-dlbl">Contact</div><div class="xp-dsub">Get in touch</div></div></a><a href="../company/blog.html" class="xp-di"><div class="xp-dico">✍️</div><div><div class="xp-dlbl">Blog</div><div class="xp-dsub">Insights &amp; company updates</div></div></a><a href="../company/careers.html" class="xp-di"><div class="xp-dico">💼</div><div><div class="xp-dlbl">Careers</div><div class="xp-dsub">Join our team</div></div></a><a href="../company/events.html" class="xp-di"><div class="xp-dico">📅</div><div><div class="xp-dlbl">Events</div><div class="xp-dsub">Talks, webinars &amp; meetups</div></div></a><a href="../company/press.html" class="xp-di"><div class="xp-dico">📰</div><div><div class="xp-dlbl">Press</div><div class="xp-dsub">Media &amp; coverage</div></div></a><div class="xp-dsep"></div><a href="../company/privacy.html" class="xp-di"><div class="xp-dico">🔒</div><div><div class="xp-dlbl">Privacy Policy</div></div></a><a href="../company/terms.html" class="xp-di"><div class="xp-dico">📄</div><div><div class="xp-dlbl">Terms of Service</div></div></a></div>
+    </div>
+  </div>
+  <div class="xp-right">
+    <button class="xp-icon-btn" onclick="xpSearchOpen()" title="Search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></button>
+    <div class="nav-auth-out">
+      <a href="../login.html" class="btn-signin">Sign In</a>
+      <a href="../login.html?tab=register" class="btn-signup">Sign Up</a>
+    </div>
+    <div class="nav-auth-in">
+      <button class="xp-icon-btn" onclick="location.href='../client/index.html'"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></button>
+      <a href="../request.html" class="btn-signup">Request Data →</a>
+      <button class="btn-signout" onclick="xpAuth.logout()">Sign Out</button>
+    </div>
+    <div class="xp-hbg" id="xpHbg"><span></span><span></span><span></span></div>
+  </div>
+</nav>
+<div class="xp-mob" id="xpMob">
+  <div class="xp-ms">
+    <button class="xp-msb">Services <span class="xp-marr">▼</span></button>
+    <div class="xp-msub">
+      <a href="../services.html#image" class="xp-ml">Image Collection</a>
+      <a href="../services.html#video" class="xp-ml">Video Collection</a>
+      <a href="../services.html#text" class="xp-ml">Text &amp; NLP Data</a>
+      <a href="../services.html#audio" class="xp-ml">Audio &amp; Speech</a>
+      <a href="../services.html#custom" class="xp-ml">Custom Collection</a>
+    </div>
+  </div>
+  <div class="xp-ms"><button class="xp-msb"><a href="../pricing.html" style="color:inherit;text-decoration:none;">Pricing</a></button></div>
+  <div class="xp-ms"><button class="xp-msb"><a href="../join-collector.html" style="color:inherit;text-decoration:none;">Join as Collector</a></button></div>
+  <div class="xp-ms">
+    <button class="xp-msb">Company <span class="xp-marr">▼</span></button>
+    <div class="xp-msub">
+      <a href="../company/about.html" class="xp-ml">About Us</a>
+      <a href="../company/contact.html" class="xp-ml">Contact</a><a href="../company/blog.html" class="xp-ml">Blog</a>
+      <a href="../company/careers.html" class="xp-ml">Careers</a>
+      <a href="../company/events.html" class="xp-ml">Events</a>
+      <a href="../company/press.html" class="xp-ml">Press</a>
+      <a href="../company/privacy.html" class="xp-ml">Privacy Policy</a>
+      <a href="../company/terms.html" class="xp-ml">Terms of Service</a>
+    </div>
+  </div>
+  <div class="xp-mb">
+    <a href="../login.html" class="btn-signin">Sign In</a>
+    <a href="../login.html?tab=register" class="btn-signup">Sign Up</a>
+  </div>
+</div>
+
+<section class="page-hero">
+  <div class="container">
+    <div class="section-tag">About Us</div>
+    <h1>Powering AI with <span class="accent">Human-Collected Data</span></h1>
+    <p class="muted" style="max-width:600px;font-size:15px;margin:.75rem 0 0;line-height:1.8;">XPERTIAL was founded with one mission: make high-quality, custom training data accessible to every AI team in India and beyond — at speed, at scale, and with full transparency.</p>
+  </div>
+</section>
+
+<!-- STATS -->
+<section style="background:var(--bg2);border-bottom:1px solid var(--b);">
+  <div class="container">
+    <div class="stat-row reveal">
+      <div class="stat-box"><div class="stat-big">2.4M+</div><div class="stat-lbl">Data Points Collected</div></div>
+      <div class="stat-box"><div class="stat-big">340+</div><div class="stat-lbl">Projects Completed</div></div>
+      <div class="stat-box"><div class="stat-big">1,200+</div><div class="stat-lbl">Active Collectors</div></div>
+      <div class="stat-box"><div class="stat-big">98.7%</div><div class="stat-lbl">QC Pass Rate</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- MISSION -->
+<section>
+  <div class="container">
+    <div class="grid-2 reveal">
+      <div>
+        <div class="section-tag">Mission</div>
+        <h2>Why We <span class="accent">Exist</span></h2>
+        <div class="glow-div"></div>
+        <p style="color:var(--t2);line-height:1.8;font-size:14px;margin-bottom:1rem;">AI teams spend 60–80% of their time searching for, cleaning, and preparing training data. Off-the-shelf datasets don't reflect Indian realities — the diversity of languages, faces, environments, and contexts that real-world AI needs to handle.</p>
+        <p style="color:var(--t2);line-height:1.8;font-size:14px;margin-bottom:1.5rem;">XPERTIAL bridges this gap. We built a distributed collection network across India, combined it with rigorous quality control, and wrapped it in a client experience that's simple, transparent, and fast.</p>
+        <a href="../request.html" class="btn-p">Start a Project →</a>
+      </div>
+      <div>
+        <div class="terminal-panel">
+          <div class="t-bar"><div class="t-dot" style="background:#FF5F56"></div><div class="t-dot" style="background:#FFBD2E"></div><div class="t-dot" style="background:#27C93F"></div><div class="t-filename">xpertial_stats.json</div></div>
+          <div class="t-body">
+            <div><span class="td"># Company snapshot 2025</span></div>
+            <div><span class="tp">"founded"</span><span class="tw">: </span><span class="tg">"2023"</span><span class="tw">,</span></div>
+            <div><span class="tp">"hq"</span><span class="tw">: </span><span class="tg">"Bangalore, India"</span><span class="tw">,</span></div>
+            <div><span class="tp">"collectors"</span><span class="tw">: </span><span class="tc">1247</span><span class="tw">,</span></div>
+            <div><span class="tp">"states_covered"</span><span class="tw">: </span><span class="tc">22</span><span class="tw">,</span></div>
+            <div><span class="tp">"languages"</span><span class="tw">: </span><span class="tc">18</span><span class="tw">,</span></div>
+            <div><span class="tp">"avg_turnaround_hrs"</span><span class="tw">: </span><span class="tc">72</span><span class="tw">,</span></div>
+            <div><span class="tp">"qc_pass_rate"</span><span class="tw">: </span><span class="tg">"98.7%"</span></div>
+            <div class="t-divider"></div>
+            <div><span class="tg">✓ </span><span class="tw">AWS-hosted infrastructure</span></div>
+            <div><span class="tg">✓ </span><span class="tw">Razorpay payment gateway</span></div>
+            <div><span class="tg">✓ </span><span class="tw">ISO 27001 compliant processes</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VALUES -->
+<section style="background:var(--bg2);border-top:1px solid var(--b);border-bottom:1px solid var(--b);">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:2.5rem;" class="reveal">
+      <div class="section-tag" style="justify-content:center;">Values</div>
+      <h2>What We <span class="accent">Stand For</span></h2>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.1rem;" class="reveal">
+      <div class="value-item"><div class="value-ico">🎯</div><div><div class="value-title">Precision Over Volume</div><div class="value-desc">We'd rather deliver 9,000 perfect samples than 10,000 mediocre ones. Quality is non-negotiable at every project tier.</div></div></div>
+      <div class="value-item"><div class="value-ico">🔍</div><div><div class="value-title">Full Transparency</div><div class="value-desc">No hidden costs, no surprise delays. Every step of your project is visible on your dashboard in real time.</div></div></div>
+      <div class="value-item"><div class="value-ico">🤝</div><div><div class="value-title">Fair Collector Pay</div><div class="value-desc">Our collectors earn above-market rates with weekly payouts. Happy collectors produce better data — it's simple.</div></div></div>
+      <div class="value-item"><div class="value-ico">🌍</div><div><div class="value-title">India-First Coverage</div><div class="value-desc">We're built for India's diversity — 22 states, 18 languages, rural and urban environments all covered.</div></div></div>
+      <div class="value-item"><div class="value-ico">🔒</div><div><div class="value-title">Security by Default</div><div class="value-desc">Every dataset is encrypted at rest and in transit. AWS S3 with IAM role-based access. NDAs available on request.</div></div></div>
+      <div class="value-item"><div class="value-ico">⚡</div><div><div class="value-title">Speed Without Compromise</div><div class="value-desc">We've engineered our workflows for 72-hour delivery without cutting corners on quality. Rush delivery available.</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section>
+  <div class="container">
+    <div style="text-align:center;margin-bottom:2.5rem;" class="reveal">
+      <div class="section-tag" style="justify-content:center;">Team</div>
+      <h2>The People Behind <span class="accent">XPERTIAL</span></h2>
+    </div>
+    <div class="team-grid reveal">
+      <div class="team-card"><div class="team-card-glow"></div><div class="team-avatar">AK</div><div class="team-name">Arjun Kapoor</div><div class="team-role">CEO & Co-Founder</div><div class="team-bio">Former ML engineer at Flipkart. Built and scaled data pipelines for recommendation systems serving 300M users.</div></div>
+      <div class="team-card"><div class="team-card-glow"></div><div class="team-avatar">PS</div><div class="team-name">Priya Sharma</div><div class="team-role">CTO & Co-Founder</div><div class="team-bio">PhD in Computer Vision, IIT Bombay. Led annotation quality at Scale AI India before co-founding XPERTIAL.</div></div>
+      <div class="team-card"><div class="team-card-glow"></div><div class="team-avatar">RM</div><div class="team-name">Rohit Mishra</div><div class="team-role">Head of Operations</div><div class="team-bio">Logistics and field operations expert with 8 years building ground networks across rural India.</div></div>
+      <div class="team-card"><div class="team-card-glow"></div><div class="team-avatar">SN</div><div class="team-name">Sneha Nair</div><div class="team-role">Head of Quality</div><div class="team-bio">Former QC lead at iMerit. Designed the 3-tier quality framework that powers XPERTIAL's 98.7% pass rate.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section style="text-align:center;padding:4rem 5vw;background:radial-gradient(ellipse 80% 60% at 50% 50%,rgba(0,212,255,.055) 0%,transparent 70%);border-top:1px solid var(--b);">
+  <div class="container reveal">
+    <h2 style="margin-bottom:1rem;">Want to work with us?</h2>
+    <p class="muted" style="font-size:14px;margin-bottom:1.75rem;">Whether as a client, collector, or future team member — we'd love to connect.</p>
+    <div style="display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap;">
+      <a href="contact.html" class="btn-p">Get in Touch →</a>
+      <a href="../join-collector.html" class="btn-g">Join as Collector</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="index.html" class="xp-logo" style="display:inline-block;margin-bottom:.85rem;"><img src="../assets/logo.png" alt="XPERTIAL" class="xp-logo-img"/></a>
+      <p>We help teams collect real-world data based on their specific requirements.</p>
+      <div class="footer-social">
+        <a href="https://www.instagram.com/xpertial" target="_blank" rel="noopener noreferrer" class="social-icon" title="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".5" fill="currentColor" stroke="none"/></svg></a>
+        <a href="https://x.com/xpertial_" target="_blank" rel="noopener noreferrer" class="social-icon" title="X (Twitter)"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+        <a href="https://www.facebook.com/xpertial" target="_blank" rel="noopener noreferrer" class="social-icon" title="Facebook"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+        <a href="https://www.youtube.com/@xpertial" target="_blank" rel="noopener noreferrer" class="social-icon" title="YouTube"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="var(--bg2)"/></svg></a>
+        <a href="https://github.com/xpertial" target="_blank" rel="noopener noreferrer" class="social-icon" title="GitHub"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/></svg></a>
+      </div>
+    </div>
+    <div class="footer-col"><h4>Services</h4><a href="../services.html#image">Image Collection</a><a href="../services.html#video">Video Collection</a><a href="../services.html#text">Text &amp; NLP</a><a href="../services.html#audio">Audio &amp; Speech</a><a href="../services.html#custom">Custom Collection</a></div>
+    <div class="footer-col"><h4>Company</h4><a href="../company/about.html">About Us</a><a href="../company/careers.html">Careers</a><a href="../company/contact.html">Contact Us</a><a href="../company/events.html">Events</a><a href="../company/press.html">Press</a></div>
+    <div class="footer-col"><h4>Collectors</h4><a href="../join-collector.html">Join as Collector</a><a href="../pricing.html">Pricing</a><a href="../join-collector.html#earn">Earnings</a><a href="../join-collector.html#req">Requirements</a></div>
+    <div class="footer-col"><h4>Legal</h4><a href="../company/privacy.html">Privacy Policy</a><a href="../company/terms.html">Terms</a><a href="../login.html">My Account</a><a href="../request.html">Book a Demo</a></div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">&copy; 2026 XPERTIAL Technologies Pvt. Ltd. All rights reserved.</div>
+    <div class="footer-status"><span class="status-dot"></span>All systems operational</div>
+  </div>
+</footer>
+<script src="../assets/xpertial.js"></script>
+<script>(function(){const obs=new IntersectionObserver(e=>e.forEach(el=>{if(el.isIntersecting)el.target.classList.add('visible');}),{threshold:.1});document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));})();</script>
+</body>
+</html>

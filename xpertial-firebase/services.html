@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Services — XPERTIAL Data Collection</title>
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml"/>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Space+Mono&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="assets/xpertial.css"/>
+<style>
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .65s ease,transform .65s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.service-section{padding:4.5rem 5vw;border-bottom:1px solid var(--b);}
+.service-section:nth-child(even){background:var(--bg2);}
+.svc-header{display:flex;align-items:flex-start;gap:1.5rem;margin-bottom:2rem;flex-wrap:wrap;}
+.svc-ico{width:64px;height:64px;background:rgba(0,212,255,.08);border:1px solid var(--b2);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:2rem;flex-shrink:0;}
+.svc-types{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.25rem;}
+.stype{background:var(--bg3);border:1px solid var(--b);border-radius:8px;padding:1rem 1.25rem;transition:all .2s;position:relative;overflow:hidden;}
+.stype-glow{position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(0,212,255,.09) 0%,transparent 60%);opacity:0;transition:opacity .3s;}
+.stype:hover{border-color:var(--b2);}
+.stype:hover .stype-glow{opacity:1;}
+.stype>*:not(.stype-glow){position:relative;z-index:1;}
+.stype-name{font-family:var(--fh);font-size:.95rem;font-weight:700;margin-bottom:.3rem;}
+.stype-desc{font-size:12px;color:var(--t2);line-height:1.6;}
+.formats-table{width:100%;border-collapse:collapse;margin-top:1rem;}
+.formats-table th{background:var(--bg3);font-family:var(--fm);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--t2);padding:10px 14px;text-align:left;border-bottom:1px solid var(--b);}
+.formats-table td{padding:10px 14px;border-bottom:1px solid var(--b);font-size:13px;color:var(--t2);}
+.formats-table tr:last-child td{border:none;}
+.formats-table td:first-child{font-family:var(--fh);font-weight:600;color:var(--text);}
+.check{color:var(--grn);font-weight:700;}
+@media(max-width:800px){.svc-types{grid-template-columns:1fr 1fr;}.svc-header{flex-direction:column;}}
+@media(max-width:500px){.svc-types{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<nav id="xpNav">
+  <a href="index.html" class="xp-logo"><img src="assets/logo.png" alt="XPERTIAL" class="xp-logo-img"/></a>
+  <div class="xp-center">
+    <div class="xp-ni">
+      <button class="xp-nb">Services<svg class="xp-arr" viewBox="0 0 8 8" fill="none"><path d="M1 2.5L4 5.5L7 2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+      <div class="xp-drop"><a href="services.html#image" class="xp-di"><div class="xp-dico">🖼️</div><div><div class="xp-dlbl">Image Collection</div><div class="xp-dsub">Labeled images for CV models</div></div></a><a href="services.html#video" class="xp-di"><div class="xp-dico">🎥</div><div><div class="xp-dlbl">Video Collection</div><div class="xp-dsub">Frame-level annotation &amp; tracking</div></div></a><a href="services.html#text" class="xp-di"><div class="xp-dico">📝</div><div><div class="xp-dlbl">Text &amp; NLP Data</div><div class="xp-dsub">Annotated text, conversations</div></div></a><a href="services.html#audio" class="xp-di"><div class="xp-dico">🎙️</div><div><div class="xp-dlbl">Audio &amp; Speech</div><div class="xp-dsub">Transcribed, labeled audio</div></div></a><div class="xp-dsep"></div><a href="services.html#custom" class="xp-di"><div class="xp-dico">⚙️</div><div><div class="xp-dlbl">Custom Collection</div><div class="xp-dsub">Any data type, any format</div></div></a></div>
+    </div>
+    <a href="pricing.html" class="xp-nb">Pricing</a>
+    <a href="join-collector.html" class="xp-nb">Join as Collector</a>
+    <div class="xp-ni">
+      <button class="xp-nb">Company<svg class="xp-arr" viewBox="0 0 8 8" fill="none"><path d="M1 2.5L4 5.5L7 2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+      <div class="xp-drop"><a href="company/about.html" class="xp-di"><div class="xp-dico">🏢</div><div><div class="xp-dlbl">About Us</div><div class="xp-dsub">Our vision &amp; team</div></div></a><a href="company/contact.html" class="xp-di"><div class="xp-dico">📞</div><div><div class="xp-dlbl">Contact</div><div class="xp-dsub">Get in touch</div></div></a><a href="company/blog.html" class="xp-di"><div class="xp-dico">✍️</div><div><div class="xp-dlbl">Blog</div><div class="xp-dsub">Insights &amp; company updates</div></div></a><a href="company/careers.html" class="xp-di"><div class="xp-dico">💼</div><div><div class="xp-dlbl">Careers</div><div class="xp-dsub">Join our team</div></div></a><a href="company/events.html" class="xp-di"><div class="xp-dico">📅</div><div><div class="xp-dlbl">Events</div><div class="xp-dsub">Talks, webinars &amp; meetups</div></div></a><a href="company/press.html" class="xp-di"><div class="xp-dico">📰</div><div><div class="xp-dlbl">Press</div><div class="xp-dsub">Media &amp; coverage</div></div></a><div class="xp-dsep"></div><a href="company/privacy.html" class="xp-di"><div class="xp-dico">🔒</div><div><div class="xp-dlbl">Privacy Policy</div></div></a><a href="company/terms.html" class="xp-di"><div class="xp-dico">📄</div><div><div class="xp-dlbl">Terms of Service</div></div></a></div>
+    </div>
+  </div>
+  <div class="xp-right">
+    <button class="xp-icon-btn" onclick="xpSearchOpen()" title="Search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></button>
+    <div class="nav-auth-out">
+      <a href="login.html" class="btn-signin">Sign In</a>
+      <a href="login.html?tab=register" class="btn-signup">Sign Up</a>
+    </div>
+    <div class="nav-auth-in">
+      <button class="xp-icon-btn" onclick="location.href='client/index.html'"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></button>
+      <a href="request.html" class="btn-signup">Request Data →</a>
+      <button class="btn-signout" onclick="xpAuth.logout()">Sign Out</button>
+    </div>
+    <div class="xp-hbg" id="xpHbg"><span></span><span></span><span></span></div>
+  </div>
+</nav>
+<div class="xp-mob" id="xpMob">
+  <div class="xp-ms">
+    <button class="xp-msb">Services <span class="xp-marr">▼</span></button>
+    <div class="xp-msub">
+      <a href="services.html#image" class="xp-ml">Image Collection</a>
+      <a href="services.html#video" class="xp-ml">Video Collection</a>
+      <a href="services.html#text" class="xp-ml">Text &amp; NLP Data</a>
+      <a href="services.html#audio" class="xp-ml">Audio &amp; Speech</a>
+      <a href="services.html#custom" class="xp-ml">Custom Collection</a>
+    </div>
+  </div>
+  <div class="xp-ms"><button class="xp-msb"><a href="pricing.html" style="color:inherit;text-decoration:none;">Pricing</a></button></div>
+  <div class="xp-ms"><button class="xp-msb"><a href="join-collector.html" style="color:inherit;text-decoration:none;">Join as Collector</a></button></div>
+  <div class="xp-ms">
+    <button class="xp-msb">Company <span class="xp-marr">▼</span></button>
+    <div class="xp-msub">
+      <a href="company/about.html" class="xp-ml">About Us</a>
+      <a href="company/contact.html" class="xp-ml">Contact</a><a href="company/blog.html" class="xp-ml">Blog</a>
+      <a href="company/careers.html" class="xp-ml">Careers</a>
+      <a href="company/events.html" class="xp-ml">Events</a>
+      <a href="company/press.html" class="xp-ml">Press</a>
+      <a href="company/privacy.html" class="xp-ml">Privacy Policy</a>
+      <a href="company/terms.html" class="xp-ml">Terms of Service</a>
+    </div>
+  </div>
+  <div class="xp-mb">
+    <a href="login.html" class="btn-signin">Sign In</a>
+    <a href="login.html?tab=register" class="btn-signup">Sign Up</a>
+  </div>
+</div>
+
+<section class="page-hero">
+  <div class="container">
+    <div class="section-tag">Services</div>
+    <h1>What We <span class="accent">Collect</span></h1>
+    <p class="muted" style="max-width:560px;font-size:15px;margin:.75rem 0 1.75rem;line-height:1.75;">From raw image collection to fully annotated NLP corpora — every data type your AI pipeline needs, collected by vetted human experts.</p>
+    <a href="request.html" class="btn-p">Request a Dataset →</a>
+  </div>
+</section>
+
+<!-- IMAGE & VIDEO -->
+<section class="service-section" id="image">
+  <div class="container">
+    <div class="svc-header reveal">
+      <div class="svc-ico">🖼️</div>
+      <div>
+        <div class="section-tag">Service 01</div>
+        <h2>Image & <span class="accent">Video Data</span></h2>
+        <p class="muted" style="max-width:560px;font-size:14px;margin:.5rem 0 0;line-height:1.7;">Collect, photograph, record, and annotate visual datasets to your exact specification — lighting, angles, demographics, environments, annotation schema.</p>
+      </div>
+    </div>
+    <div class="svc-types reveal">
+      <div class="stype"><div class="stype-glow"></div><div class="stype-name">Classification Labels</div><div class="stype-desc">Binary or multi-class labels for image classification model training.</div></div>
+      <div class="stype"><div class="stype-glow"></div><div class="stype-name">Bounding Boxes</div><div class="stype-desc">Rectangular object detection annotations in YOLO, COCO, Pascal VOC.</div></div>
+      <div class="stype"><div class="stype-glow"></div><div class="stype-name">Semantic Segmentation</div><div class="stype-desc">Pixel-level labeling for scene understanding and autonomous systems.</div></div>
+      <div class="stype"><div class="stype-glow"></div><div class="stype-name">Instance Segmentation</div><div class="stype-desc">Individual object masks for counting and precise boundary detection.</div></div>
+      <div class="stype"><div class="stype-glow"></div><div class="stype-name">Keypoint / Pose</div><div class="stype-desc">Human pose estimation, facial landmark, body keypoint annotation.</div></div>
+      <div class="stype"><div class="stype-glow"></div><div class="stype-name">Video Labeling</div><div class="stype-desc">Frame-by-frame annotation, tracking, temporal activity classification.</div></div>
+    </div>
+    <div style="margin-top:1.5rem;"><a href="request.html?type=image" class="btn-p btn-sm">Request Image Data →</a></div>
+  </div>
+</section>
+
+<!-- TEXT & NLP -->
+<section class="service-section" id="text">
+  <div class="container">
+    <div class="svc-header reveal">
+      <div class="svc-ico">📝</div>
+      <div>
+        <div class="section-tag">Service 02</div>
+        <h2>Text & <span class="accent">NLP Data</span></h2>
+        <p class="muted" style="max-width:560px;font-size:14px;margin:.5rem 0 0;line-height:1.7;">Human-generated and human-annotated text datasets across 20+ Indian and international languages. Perfect for LLM fine-tuning, NER, and classification tasks.</p>
+      </div>
+    </div>
+    <div class="svc-types reveal">
+      <div class="stype"><div class="stype-glow"></div><div class="stype-name">Intent Classification</div><div class="stype-desc">User queries labeled with intent tags for chatbot and NLU training.</div></div>
+      <div class="stype"><div class="stype-glow"></div><div class="stype-name">Named Entity Recognition</div><div class="stype-desc">Person, org, location, date entities marked in natural text.</div></div>
+      <div class="stype"><div class="stype-glow"></div><div class="stype-name">Sentiment Analysis</div><div class="stype-desc">Positive, negative, neutral + emotion categories on reviews and posts.</div></div>
+      <div class="stype"><div class="stype-glow"></div><div class="stype-name">Translation Pairs</div><div class="stype-desc">Parallel corpora in Indian language pairs — Hindi, Tamil, Telugu, etc.</div></div>
+      <div class="stype"><div class="stype-glow"></div><div class="stype-name">Conversational Data</div><div class="stype-desc">Multi-turn dialogue, Q&A pairs, instruction-following datasets.</div></div>
+      <div class="stype"><div class="stype-glow"></div><div class="stype-name">Text Generation</div><div class="stype-desc">Human-written creative content, summaries, rewrites for RLHF data.</div></div>
+    </div>
+    <div style="margin-top:1.5rem;"><a href="request.html?type=text" class="btn-p btn-sm">Request NLP Data →</a></div>
+  </div>
+</section>
+
+<!-- AUDIO -->
+<section class="service-section" id="audio">
+  <div class="container">
+    <div class="svc-header reveal">
+      <div class="svc-ico">🎙️</div>
+      <div>
+        <div class="section-tag">Service 03</div>
+        <h2>Audio & <span class="accent">Speech Data</span></h2>
+        <p class="muted" style="max-width:560px;font-size:14px;margin:.5rem 0 0;line-height:1.7;">Native speaker recordings, accent-diverse corpora, and transcribed audio in studio and real-world environments across 15+ Indian languages.</p>
+      </div>
+    </div>
+    <div class="svc-types reveal">
+      <div class="stype"><div class="stype-glow"></div><div class="stype-name">ASR Training Data</div><div class="stype-desc">Diverse speaker recordings with transcription for speech recognition.</div></div>
+      <div class="stype"><div class="stype-glow"></div><div class="stype-name">Speaker Diarization</div><div class="stype-desc">Multi-speaker audio with speaker-level segmentation and labels.</div></div>
+      <div class="stype"><div class="stype-glow"></div><div class="stype-name">Accent Collection</div><div class="stype-desc">Regional accent diversity — rural, urban, dialect-specific recordings.</div></div>
+      <div class="stype"><div class="stype-glow"></div><div class="stype-name">Emotion in Speech</div><div class="stype-desc">Emotional tone labels — joy, anger, neutral, sadness on audio clips.</div></div>
+      <div class="stype"><div class="stype-glow"></div><div class="stype-name">Wake Word Data</div><div class="stype-desc">Custom wake word recordings for voice assistant training.</div></div>
+      <div class="stype"><div class="stype-glow"></div><div class="stype-name">Noise Augmentation</div><div class="stype-desc">Recordings in noisy environments — traffic, crowds, industrial sites.</div></div>
+    </div>
+    <div style="margin-top:1.5rem;"><a href="request.html?type=audio" class="btn-p btn-sm">Request Audio Data →</a></div>
+  </div>
+</section>
+
+<!-- CUSTOM -->
+<section class="service-section" id="custom">
+  <div class="container">
+    <div class="svc-header reveal">
+      <div class="svc-ico">⚙️</div>
+      <div>
+        <div class="section-tag">Service 04</div>
+        <h2>Custom <span class="accent">Collection</span></h2>
+        <p class="muted" style="max-width:560px;font-size:14px;margin:.5rem 0 0;line-height:1.7;">Need something unique? We design custom collection workflows for geospatial, sensor data, structured forms, web scraping, surveys, and more.</p>
+      </div>
+    </div>
+    <div class="svc-types reveal">
+      <div class="stype"><div class="stype-glow"></div><div class="stype-name">Geospatial Data</div><div class="stype-desc">GPS traces, map annotations, location tagging, route mapping.</div></div>
+      <div class="stype"><div class="stype-glow"></div><div class="stype-name">Form & Survey Data</div><div class="stype-desc">Structured data collection via field surveys and interviews.</div></div>
+      <div class="stype"><div class="stype-glow"></div><div class="stype-name">Product Data</div><div class="stype-desc">E-commerce cataloguing, price monitoring, attribute extraction.</div></div>
+      <div class="stype"><div class="stype-glow"></div><div class="stype-name">Social & Web Data</div><div class="stype-desc">Compliant web data collection, content monitoring datasets.</div></div>
+      <div class="stype"><div class="stype-glow"></div><div class="stype-name">Medical / Healthcare</div><div class="stype-desc">Clinical form filling, symptom datasets, medical image collection.</div></div>
+      <div class="stype"><div class="stype-glow"></div><div class="stype-name">Sensor & IoT</div><div class="stype-desc">Custom sensor readings, telemetry, embedded system data capture.</div></div>
+    </div>
+    <div style="margin-top:1.5rem;"><a href="company/contact.html" class="btn-p btn-sm">Discuss Custom Needs →</a></div>
+  </div>
+</section>
+
+<!-- FORMATS TABLE -->
+<section style="padding:4rem 5vw;background:var(--bg2);border-bottom:1px solid var(--b);">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:2rem;" class="reveal">
+      <div class="section-tag" style="justify-content:center;">Delivery</div>
+      <h2>All Major <span class="accent">Formats Supported</span></h2>
+    </div>
+    <div style="background:var(--bg);border:1px solid var(--b);border-radius:10px;overflow:hidden;" class="reveal">
+      <table class="formats-table">
+        <thead><tr><th>Format</th><th>Best For</th><th>Image</th><th>Text</th><th>Audio</th></tr></thead>
+        <tbody>
+          <tr><td>JSON / JSONL</td><td>Universal, LLM fine-tuning, NLP</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
+          <tr><td>CSV</td><td>Classification, tabular data</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
+          <tr><td>COCO JSON</td><td>Object detection, segmentation</td><td class="check">✓</td><td style="color:var(--t3)">—</td><td style="color:var(--t3)">—</td></tr>
+          <tr><td>YOLO (.txt)</td><td>Real-time object detection</td><td class="check">✓</td><td style="color:var(--t3)">—</td><td style="color:var(--t3)">—</td></tr>
+          <tr><td>Pascal VOC XML</td><td>Object detection (legacy)</td><td class="check">✓</td><td style="color:var(--t3)">—</td><td style="color:var(--t3)">—</td></tr>
+          <tr><td>Parquet</td><td>Large-scale ML pipelines</td><td class="check">✓</td><td class="check">✓</td><td style="color:var(--t3)">—</td></tr>
+          <tr><td>WAV + TXT</td><td>Speech recognition training</td><td style="color:var(--t3)">—</td><td style="color:var(--t3)">—</td><td class="check">✓</td></tr>
+          <tr><td>Custom Schema</td><td>Any enterprise format</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="text-align:center;margin-top:2rem;"><a href="request.html" class="btn-p">Request Your Dataset →</a></div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="index.html" class="xp-logo" style="display:inline-block;margin-bottom:.85rem;"><img src="assets/logo.png" alt="XPERTIAL" class="xp-logo-img"/></a>
+      <p>We help teams collect real-world data based on their specific requirements.</p>
+      <div class="footer-social">
+        <a href="https://www.instagram.com/xpertial" target="_blank" rel="noopener noreferrer" class="social-icon" title="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".5" fill="currentColor" stroke="none"/></svg></a>
+        <a href="https://x.com/xpertial_" target="_blank" rel="noopener noreferrer" class="social-icon" title="X (Twitter)"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+        <a href="https://www.facebook.com/xpertial" target="_blank" rel="noopener noreferrer" class="social-icon" title="Facebook"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+        <a href="https://www.youtube.com/@xpertial" target="_blank" rel="noopener noreferrer" class="social-icon" title="YouTube"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="var(--bg2)"/></svg></a>
+        <a href="https://github.com/xpertial" target="_blank" rel="noopener noreferrer" class="social-icon" title="GitHub"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/></svg></a>
+      </div>
+    </div>
+    <div class="footer-col"><h4>Services</h4><a href="services.html#image">Image Collection</a><a href="services.html#video">Video Collection</a><a href="services.html#text">Text &amp; NLP</a><a href="services.html#audio">Audio &amp; Speech</a><a href="services.html#custom">Custom Collection</a></div>
+    <div class="footer-col"><h4>Company</h4><a href="company/about.html">About Us</a><a href="company/careers.html">Careers</a><a href="company/contact.html">Contact Us</a><a href="company/events.html">Events</a><a href="company/press.html">Press</a></div>
+    <div class="footer-col"><h4>Collectors</h4><a href="join-collector.html">Join as Collector</a><a href="pricing.html">Pricing</a><a href="join-collector.html#earn">Earnings</a><a href="join-collector.html#req">Requirements</a></div>
+    <div class="footer-col"><h4>Legal</h4><a href="company/privacy.html">Privacy Policy</a><a href="company/terms.html">Terms</a><a href="login.html">My Account</a><a href="request.html">Book a Demo</a></div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">&copy; 2026 XPERTIAL Technologies Pvt. Ltd. All rights reserved.</div>
+    <div class="footer-status"><span class="status-dot"></span>All systems operational</div>
+  </div>
+</footer>
+<script src="assets/xpertial.js"></script>
+<script>
+(function(){
+  const obs=new IntersectionObserver(e=>e.forEach(el=>{if(el.isIntersecting)el.target.classList.add('visible');}),{threshold:.1});
+  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+  // Glow on stype cards
+  document.querySelectorAll('.stype').forEach(card=>{
+    card.addEventListener('mousemove',e=>{
+      const r=card.getBoundingClientRect();
+      card.style.setProperty('--mx',((e.clientX-r.left)/r.width*100).toFixed(1)+'%');
+      card.style.setProperty('--my',((e.clientY-r.top)/r.height*100).toFixed(1)+'%');
+    });
+  });
+})();
+</script>
+</body>
+</html>

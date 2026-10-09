@@ -1,0 +1,17 @@
+{
+  "indexes": [
+    { "collectionGroup": "projects",       "queryScope": "COLLECTION", "fields": [{"fieldPath":"clientId","order":"ASCENDING"},{"fieldPath":"createdAt","order":"DESCENDING"}] },
+    { "collectionGroup": "projects",       "queryScope": "COLLECTION", "fields": [{"fieldPath":"clientId","order":"ASCENDING"},{"fieldPath":"status","order":"ASCENDING"}] },
+    { "collectionGroup": "projects",       "queryScope": "COLLECTION", "fields": [{"fieldPath":"clientId","order":"ASCENDING"},{"fieldPath":"finalPaid","order":"ASCENDING"},{"fieldPath":"status","order":"ASCENDING"}] },
+    { "collectionGroup": "payments",       "queryScope": "COLLECTION", "fields": [{"fieldPath":"clientId","order":"ASCENDING"},{"fieldPath":"createdAt","order":"DESCENDING"}] },
+    { "collectionGroup": "notifications",  "queryScope": "COLLECTION", "fields": [{"fieldPath":"userId","order":"ASCENDING"},{"fieldPath":"createdAt","order":"DESCENDING"}] },
+    { "collectionGroup": "notifications",  "queryScope": "COLLECTION", "fields": [{"fieldPath":"userId","order":"ASCENDING"},{"fieldPath":"read","order":"ASCENDING"}] },
+    { "collectionGroup": "invoices",       "queryScope": "COLLECTION", "fields": [{"fieldPath":"clientId","order":"ASCENDING"},{"fieldPath":"createdAt","order":"DESCENDING"}] },
+    { "collectionGroup": "contracts",      "queryScope": "COLLECTION", "fields": [{"fieldPath":"clientId","order":"ASCENDING"},{"fieldPath":"createdAt","order":"DESCENDING"}] },
+    { "collectionGroup": "downloads",      "queryScope": "COLLECTION", "fields": [{"fieldPath":"clientId","order":"ASCENDING"},{"fieldPath":"createdAt","order":"DESCENDING"}] },
+    { "collectionGroup": "tasks",          "queryScope": "COLLECTION", "fields": [{"fieldPath":"collectorId","order":"ASCENDING"},{"fieldPath":"createdAt","order":"DESCENDING"}] },
+    { "collectionGroup": "submissions",    "queryScope": "COLLECTION", "fields": [{"fieldPath":"collectorId","order":"ASCENDING"},{"fieldPath":"createdAt","order":"DESCENDING"}] },
+    { "collectionGroup": "payoutRequests", "queryScope": "COLLECTION", "fields": [{"fieldPath":"collectorId","order":"ASCENDING"},{"fieldPath":"createdAt","order":"DESCENDING"}] }
+  ],
+  "fieldOverrides": []
+}

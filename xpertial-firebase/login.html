@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Sign In — XPERTIAL</title>
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml"/>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Space+Mono&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="assets/xpertial.css"/>
+<style>
+body{display:flex;flex-direction:column;min-height:100vh;overflow-x:hidden;background:var(--bg);}
+.auth-wrap{flex:1;width:100%;display:flex;align-items:center;justify-content:center;padding:calc(var(--nav) + 1.5rem) 1rem 2rem;background:radial-gradient(ellipse 70% 60% at 50% 0%,rgba(0,212,255,.06) 0%,transparent 70%);position:relative;overflow:hidden;box-sizing:border-box;}
+.auth-wrap::before{content:'';position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(0,212,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,.025) 1px,transparent 1px);background-size:50px 50px;}
+.auth-box{background:var(--bg2);border:1px solid var(--b2);border-radius:14px;padding:1.5rem 1.75rem;width:100%;max-width:400px;position:relative;z-index:1;box-shadow:0 24px 60px rgba(0,0,0,.5);box-sizing:border-box;}
+.auth-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--c),transparent);border-radius:14px 14px 0 0;}
+.auth-logo{text-align:center;margin-bottom:1.1rem;}
+.auth-logo img{height:34px;mix-blend-mode:screen;filter:brightness(1.3) saturate(1.2);}
+.auth-tabs{display:flex;background:var(--bg3);border-radius:8px;padding:3px;margin-bottom:1.25rem;}
+.auth-tab{flex:1;text-align:center;padding:7px;border-radius:6px;cursor:pointer;font-family:var(--fh);font-size:12px;font-weight:600;color:var(--t2);transition:all .25s;}
+.auth-tab.active{background:var(--bg2);color:var(--c);border:1px solid var(--b2);}
+.auth-panel{display:none;}.auth-panel.active{display:block;}
+.auth-title{font-family:var(--fh);font-size:1.1rem;font-weight:700;margin-bottom:.2rem;}
+.auth-sub{font-size:12px;color:var(--t2);margin-bottom:1.1rem;}
+.social-auth{display:flex;gap:.5rem;margin-bottom:1rem;}
+.social-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:.5rem;padding:8px 10px;border-radius:7px;border:1px solid var(--b2);background:none;color:var(--text);cursor:pointer;font-family:var(--fh);font-size:12.5px;font-weight:600;transition:all .2s;}
+.social-btn:hover{border-color:var(--c);background:rgba(0,212,255,.06);}
+.social-btn svg{width:16px;height:16px;flex-shrink:0;}
+.auth-divider{display:flex;align-items:center;gap:.6rem;margin:.85rem 0;}
+.auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:var(--b);}
+.auth-divider span{font-size:10px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.1em;}
+.form-group{margin-bottom:.7rem;}
+.form-label{font-family:var(--fm);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--t3);display:block;margin-bottom:.3rem;}
+.form-input{width:100%;background:var(--bg3);border:1px solid var(--b2);border-radius:7px;padding:.55rem .8rem;color:var(--text);font-family:var(--fb);font-size:13px;outline:none;transition:border-color .2s;box-sizing:border-box;}
+.form-input:focus{border-color:var(--c);box-shadow:0 0 0 3px rgba(0,212,255,.1);}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;}
+.input-wrap{position:relative;}
+.inp-ico{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--t3);font-size:13px;pointer-events:none;}
+.input-wrap input{padding-left:32px;}
+.show-pw{position:absolute;right:10px;top:50%;transform:translateY(-50%);color:var(--t3);cursor:pointer;background:none;border:none;padding:0;font-size:11px;font-family:var(--fm);}
+.show-pw:hover{color:var(--c);}
+.auth-hint{text-align:center;font-size:11.5px;color:var(--t2);margin-top:.85rem;}
+.auth-hint a{color:var(--c);}
+.auth-submit{width:100%;padding:10px;font-size:13.5px;margin-top:.75rem;}
+.auth-loading{display:none;position:absolute;inset:0;background:rgba(10,14,20,.85);border-radius:14px;z-index:10;flex-direction:column;align-items:center;justify-content:center;gap:1rem;backdrop-filter:blur(4px);}
+.auth-loading.show{display:flex;}
+.spin{width:32px;height:32px;border:2px solid var(--b);border-top-color:var(--c);border-radius:50%;animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.loading-text{font-family:var(--fm);font-size:10px;letter-spacing:.15em;color:var(--c);}
+.form-error{font-size:11px;color:var(--red);margin-top:.25rem;display:none;}
+.form-error.show{display:block;}
+.terms-check{display:flex;align-items:flex-start;gap:.6rem;cursor:pointer;padding:.5rem;border:1px solid var(--b);border-radius:7px;transition:border-color .2s;-webkit-tap-highlight-color:transparent;}
+.terms-check:hover{border-color:var(--b2);}
+.terms-check.checked{border-color:rgba(34,197,94,.4);background:rgba(34,197,94,.03);}
+.terms-box{width:18px;height:18px;border:1.5px solid var(--b2);border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;transition:all .2s;}
+.terms-check.checked .terms-box{background:#22C55E;border-color:#22C55E;color:#000;}
+.terms-box svg{width:11px;height:11px;opacity:0;transition:opacity .2s;}
+.terms-check.checked .terms-box svg{opacity:1;}
+.terms-text{font-size:12px;color:var(--t2);line-height:1.55;}
+.terms-text a{color:var(--c);}
+/* Verify panel */
+.verify-icon{font-size:3rem;text-align:center;margin-bottom:.75rem;}
+.verify-msg{font-size:13px;color:var(--t2);text-align:center;margin-bottom:1.25rem;line-height:1.65;}
+.verify-actions{display:flex;flex-direction:column;gap:.6rem;}
+@media(max-width:480px){
+  .auth-wrap{padding:calc(var(--nav) + 1rem) .75rem 1.5rem;align-items:flex-start;}
+  .auth-box{padding:1.25rem 1.25rem;max-width:100%;}
+  .form-grid{grid-template-columns:1fr;}
+  .social-auth{flex-direction:column;}
+}
+</style>
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+</head>
+<body>
+<nav id="xpNav">
+  <a href="index.html" class="xp-logo"><img src="assets/logo.png" alt="XPERTIAL" class="xp-logo-img"/></a>
+  <div class="xp-center">
+    <div class="xp-ni">
+      <button class="xp-nb">Services<svg class="xp-arr" viewBox="0 0 8 8" fill="none"><path d="M1 2.5L4 5.5L7 2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+      <div class="xp-drop"><a href="services.html#image" class="xp-di"><div class="xp-dico">🖼️</div><div><div class="xp-dlbl">Image Collection</div><div class="xp-dsub">Labeled images for CV models</div></div></a><a href="services.html#video" class="xp-di"><div class="xp-dico">🎥</div><div><div class="xp-dlbl">Video Collection</div><div class="xp-dsub">Frame-level annotation &amp; tracking</div></div></a><a href="services.html#text" class="xp-di"><div class="xp-dico">📝</div><div><div class="xp-dlbl">Text &amp; NLP Data</div><div class="xp-dsub">Annotated text, conversations</div></div></a><a href="services.html#audio" class="xp-di"><div class="xp-dico">🎙️</div><div><div class="xp-dlbl">Audio &amp; Speech</div><div class="xp-dsub">Transcribed, labeled audio</div></div></a><div class="xp-dsep"></div><a href="services.html#custom" class="xp-di"><div class="xp-dico">⚙️</div><div><div class="xp-dlbl">Custom Collection</div><div class="xp-dsub">Any data type, any format</div></div></a></div>
+    </div>
+    <a href="pricing.html" class="xp-nb">Pricing</a>
+    <a href="join-collector.html" class="xp-nb">Join as Collector</a>
+    <div class="xp-ni">
+      <button class="xp-nb">Company<svg class="xp-arr" viewBox="0 0 8 8" fill="none"><path d="M1 2.5L4 5.5L7 2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+      <div class="xp-drop"><a href="company/about.html" class="xp-di"><div class="xp-dico">🏢</div><div><div class="xp-dlbl">About Us</div><div class="xp-dsub">Our vision &amp; team</div></div></a><a href="company/contact.html" class="xp-di"><div class="xp-dico">📞</div><div><div class="xp-dlbl">Contact</div><div class="xp-dsub">Get in touch</div></div></a><a href="company/blog.html" class="xp-di"><div class="xp-dico">✍️</div><div><div class="xp-dlbl">Blog</div><div class="xp-dsub">Insights &amp; company updates</div></div></a><a href="company/careers.html" class="xp-di"><div class="xp-dico">💼</div><div><div class="xp-dlbl">Careers</div><div class="xp-dsub">Join our team</div></div></a><div class="xp-dsep"></div><a href="company/privacy.html" class="xp-di"><div class="xp-dico">🔒</div><div><div class="xp-dlbl">Privacy Policy</div></div></a><a href="company/terms.html" class="xp-di"><div class="xp-dico">📄</div><div><div class="xp-dlbl">Terms of Service</div></div></a></div>
+    </div>
+  </div>
+  <div class="xp-right">
+    <button class="xp-icon-btn" onclick="xpSearchOpen()" title="Search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></button>
+    <div class="nav-auth-out">
+      <a href="login.html" class="btn-signin">Sign In</a>
+      <a href="login.html?tab=register" class="btn-signup">Sign Up</a>
+    </div>
+    <div class="nav-auth-in">
+      <button class="xp-icon-btn" onclick="location.href='client/index.html'"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></button>
+      <a href="request.html" class="btn-signup">Request Data →</a>
+      <button class="btn-signout" onclick="xpAuth.logout()">Sign Out</button>
+    </div>
+    <div class="xp-hbg" id="xpHbg"><span></span><span></span><span></span></div>
+  </div>
+</nav>
+<div class="xp-mob" id="xpMob">
+  <div class="xp-ms"><button class="xp-msb">Services <span class="xp-marr">▼</span></button><div class="xp-msub"><a href="services.html#image" class="xp-ml">Image Collection</a><a href="services.html#video" class="xp-ml">Video Collection</a><a href="services.html#text" class="xp-ml">Text &amp; NLP Data</a><a href="services.html#audio" class="xp-ml">Audio &amp; Speech</a><a href="services.html#custom" class="xp-ml">Custom Collection</a></div></div>
+  <div class="xp-ms"><button class="xp-msb"><a href="pricing.html" style="color:inherit;text-decoration:none;">Pricing</a></button></div>
+  <div class="xp-ms"><button class="xp-msb"><a href="join-collector.html" style="color:inherit;text-decoration:none;">Join as Collector</a></button></div>
+  <div class="xp-ms"><button class="xp-msb">Company <span class="xp-marr">▼</span></button><div class="xp-msub"><a href="company/about.html" class="xp-ml">About Us</a><a href="company/contact.html" class="xp-ml">Contact</a><a href="company/blog.html" class="xp-ml">Blog</a><a href="company/careers.html" class="xp-ml">Careers</a><a href="company/privacy.html" class="xp-ml">Privacy Policy</a><a href="company/terms.html" class="xp-ml">Terms of Service</a></div></div>
+  <div class="xp-mb"><a href="login.html" class="btn-signin">Sign In</a><a href="login.html?tab=register" class="btn-signup">Sign Up</a></div>
+</div>
+
+<div class="auth-wrap">
+  <div class="auth-box" id="authBox">
+    <div class="auth-loading" id="authLoading">
+      <div class="spin"></div>
+      <div class="loading-text" id="loadingText">AUTHENTICATING...</div>
+    </div>
+
+    <div class="auth-logo"><img src="assets/logo.png" alt="XPERTIAL" style="height:34px;mix-blend-mode:screen;filter:brightness(1.3) saturate(1.2);"/></div>
+
+    <div class="auth-tabs" id="authTabs">
+      <div class="auth-tab active" data-tab="login">Sign In</div>
+      <div class="auth-tab" data-tab="register">Register</div>
+    </div>
+
+    <!-- ── LOGIN PANEL ── -->
+    <div class="auth-panel active" id="loginPanel">
+      <div class="auth-title">Welcome back</div>
+      <div class="auth-sub">Sign in to your client dashboard</div>
+      <div class="social-auth">
+        <button class="social-btn" onclick="socialAuth('google')">
+          <svg viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+          Continue with Google
+        </button>
+        <button class="social-btn" onclick="socialAuth('github')">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+          GitHub
+        </button>
+      </div>
+      <div class="auth-divider"><span>or email</span></div>
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <div class="input-wrap"><span class="inp-ico">✉</span><input type="email" class="form-input" id="loginEmail" placeholder="you@company.com" autocomplete="email"/></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" style="display:flex;justify-content:space-between;">Password<a href="#" id="forgotLink" style="color:var(--c);font-size:11px;text-transform:none;letter-spacing:0;font-family:var(--fb);font-weight:400;">Forgot?</a></label>
+        <div class="input-wrap"><span class="inp-ico">🔒</span><input type="password" class="form-input" id="loginPassword" placeholder="••••••••" autocomplete="current-password"/><button class="show-pw" onclick="togglePw('loginPassword',this)">👁</button></div>
+        <div class="form-error" id="loginError"></div>
+      </div>
+      <button class="btn-p" style="width:100%;justify-content:center;" onclick="doLogin()">Sign In →</button>
+      <div class="auth-hint">No account? <a href="#" onclick="switchTab('register')">Register here</a></div>
+    </div>
+
+    <!-- ── REGISTER PANEL ── -->
+    <div class="auth-panel" id="registerPanel">
+      <div class="auth-title">Create account</div>
+      <div class="auth-sub">Get started — free to join</div>
+      <div class="social-auth">
+        <button class="social-btn" onclick="socialAuth('google')">
+          <svg viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+          Sign up with Google
+        </button>
+        <button class="social-btn" onclick="socialAuth('github')">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+          GitHub
+        </button>
+      </div>
+      <div class="auth-divider"><span>or email</span></div>
+      <div class="form-grid">
+        <div class="form-group" style="margin:0;"><label class="form-label">First Name *</label><input type="text" class="form-input" id="regFirst" placeholder="Rahul"/></div>
+        <div class="form-group" style="margin:0;"><label class="form-label">Last Name</label><input type="text" class="form-input" id="regLast" placeholder="Kumar"/></div>
+      </div>
+      <div class="form-group" style="margin-top:.7rem;"><label class="form-label">Work Email *</label><div class="input-wrap"><span class="inp-ico">✉</span><input type="email" class="form-input" id="regEmail" placeholder="you@company.com"/></div></div>
+      <div class="form-group"><label class="form-label">Company</label><input type="text" class="form-input" id="regCompany" placeholder="Acme AI Labs"/></div>
+      <div class="form-group"><label class="form-label">Phone</label><input type="tel" class="form-input" id="regPhone" placeholder="+91 98765 43210"/></div>
+      <div class="form-group"><label class="form-label">Password *</label><div class="input-wrap"><span class="inp-ico">🔒</span><input type="password" class="form-input" id="regPassword" placeholder="Min 8 chars" autocomplete="new-password"/><button class="show-pw" onclick="togglePw('regPassword',this)">👁</button></div></div>
+      <div class="terms-check" id="termsCheck" onclick="toggleTerms()">
+        <div class="terms-box" id="termsBox"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="2,6 5,9 10,3"/></svg></div>
+        <div class="terms-text">I agree to XPERTIAL's <a href="company/terms.html" onclick="event.stopPropagation()">Terms of Service</a> and <a href="company/privacy.html" onclick="event.stopPropagation()">Privacy Policy</a></div>
+      </div>
+      <div class="form-error" id="regError"></div>
+      <button class="btn-p" style="width:100%;justify-content:center;margin-top:.75rem;" onclick="doRegister()">Create Account →</button>
+      <div class="auth-hint">Already have an account? <a href="#" onclick="switchTab('login')">Sign in</a></div>
+    </div>
+
+    <!-- ── VERIFY EMAIL (shown after register) ── -->
+    <div class="auth-panel" id="verifyPanel">
+      <div class="verify-icon">📬</div>
+      <div class="auth-title" style="text-align:center;">Check your email</div>
+      <p class="verify-msg" id="verifyMsg">We sent a verification link to your email address. Click the link to verify and then sign in.</p>
+      <div class="verify-actions">
+        <button class="btn-p" style="width:100%;justify-content:center;" onclick="checkVerified()">I've verified — Sign In →</button>
+        <button class="btn-g" style="width:100%;justify-content:center;" onclick="resendVerification()">Resend verification email</button>
+        <button class="btn-g" style="width:100%;justify-content:center;" onclick="switchTab('login')">← Back to sign in</button>
+      </div>
+      <div class="form-error" id="verifyError" style="text-align:center;margin-top:.75rem;"></div>
+    </div>
+
+    <!-- ── FORGOT PASSWORD ── -->
+    <div class="auth-panel" id="forgotPanel">
+      <div style="text-align:center;font-size:2rem;margin-bottom:.75rem;">🔑</div>
+      <div class="auth-title">Reset password</div>
+      <div class="auth-sub">Enter your email and we'll send a reset link.</div>
+      <div class="form-group"><label class="form-label">Email Address</label><div class="input-wrap"><span class="inp-ico">✉</span><input type="email" class="form-input" id="forgotEmail" placeholder="you@company.com"/></div><div class="form-error" id="forgotError"></div></div>
+      <button class="btn-p" style="width:100%;justify-content:center;" onclick="doForgot()">Send Reset Link →</button>
+      <div class="auth-hint"><a href="#" onclick="showLoginPanel()">← Back to sign in</a></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="index.html" class="xp-logo" style="display:inline-block;margin-bottom:.85rem;"><img src="assets/logo.png" alt="XPERTIAL" class="xp-logo-img"/></a>
+      <p>We help teams collect real-world data based on their specific requirements.</p>
+    </div>
+    <div class="footer-col"><h4>Services</h4><a href="services.html#image">Image Collection</a><a href="services.html#video">Video Collection</a><a href="services.html#text">Text &amp; NLP</a><a href="services.html#audio">Audio &amp; Speech</a></div>
+    <div class="footer-col"><h4>Company</h4><a href="company/about.html">About Us</a><a href="company/contact.html">Contact</a><a href="company/blog.html">Blog</a><a href="company/careers.html">Careers</a></div>
+    <div class="footer-col"><h4>Legal</h4><a href="company/privacy.html">Privacy Policy</a><a href="company/terms.html">Terms</a><a href="login.html">My Account</a></div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">&copy; 2026 XPERTIAL Technologies Pvt. Ltd. All rights reserved.</div>
+    <div class="footer-status"><span class="status-dot"></span>All systems operational</div>
+  </div>
+</footer>
+
+<script src="assets/xpertial.js"></script>
+<script>
+var termsAccepted = false;
+var pendingEmail = '';
+var registeredUser = null;
+
+/* Redirect if already signed in */
+firebase.auth().onAuthStateChanged(function(fbUser) {
+  if (fbUser && fbUser.emailVerified && !location.search.includes('redirect')) {
+    window.location.href = 'client/index.html';
+  }
+});
+
+/* Tab init from URL param */
+var urlTab = new URLSearchParams(location.search).get('tab');
+if (urlTab === 'register') switchTab('register');
+
+/* ── PANEL / TAB HELPERS ── */
+function showPanel(id) {
+  ['loginPanel','registerPanel','verifyPanel','forgotPanel'].forEach(function(p) {
+    var el = document.getElementById(p);
+    if (el) el.classList.remove('active');
+  });
+  var t = document.getElementById(id);
+  if (t) t.classList.add('active');
+}
+function switchTab(tab) {
+  document.querySelectorAll('.auth-tab').forEach(function(t) { t.classList.toggle('active', t.dataset.tab === tab); });
+  document.getElementById('authTabs').style.display = 'flex';
+  showPanel(tab === 'login' ? 'loginPanel' : 'registerPanel');
+}
+document.querySelectorAll('.auth-tab').forEach(function(t) { t.addEventListener('click', function() { switchTab(t.dataset.tab); }); });
+document.getElementById('forgotLink').addEventListener('click', function(e) {
+  e.preventDefault();
+  document.getElementById('authTabs').style.display = 'none';
+  showPanel('forgotPanel');
+});
+function showLoginPanel() {
+  document.getElementById('authTabs').style.display = 'flex';
+  switchTab('login');
+}
+
+function toggleTerms() { termsAccepted = !termsAccepted; document.getElementById('termsCheck').classList.toggle('checked', termsAccepted); }
+function togglePw(id, btn) { var i = document.getElementById(id); i.type = i.type === 'password' ? 'text' : 'password'; btn.textContent = i.type === 'password' ? '👁' : '🙈'; }
+function setLoading(show, msg) { document.getElementById('loadingText').textContent = msg || 'PROCESSING...'; document.getElementById('authLoading').classList.toggle('show', show); }
+function showErr(id, msg) { var e = document.getElementById(id); if (!e) return; e.textContent = msg; e.classList.add('show'); }
+function clearErr(id) { var e = document.getElementById(id); if (!e) return; e.textContent = ''; e.classList.remove('show'); }
+function getRedirect() { return new URLSearchParams(location.search).get('redirect') || 'client/index.html'; }
+
+/* Firebase error messages → human readable */
+function friendlyError(code) {
+  const map = {
+    'auth/user-not-found': 'No account found with this email.',
+    'auth/wrong-password': 'Incorrect password. Try again.',
+    'auth/invalid-credential': 'Invalid email or password.',
+    'auth/email-already-in-use': 'This email is already registered. Sign in instead.',
+    'auth/weak-password': 'Password must be at least 6 characters.',
+    'auth/too-many-requests': 'Too many attempts. Please wait a few minutes.',
+    'auth/network-request-failed': 'Network error. Check your connection.',
+    'auth/popup-closed-by-user': 'Sign-in window was closed. Try again.',
+  };
+  return map[code] || 'Something went wrong. Please try again.';
+}
+
+/* ── SOCIAL AUTH (Google + GitHub) ── */
+async function socialAuth(provider) {
+  setLoading(true, provider === 'google' ? 'CONNECTING GOOGLE...' : 'CONNECTING GITHUB...');
+  try {
+    const prov = provider === 'google'
+      ? new firebase.auth.GoogleAuthProvider()
+      : new firebase.auth.GithubAuthProvider();
+    const result = await firebase.auth().signInWithPopup(prov);
+    const fbUser = result.user;
+    /* Create/update Firestore profile */
+    await db.collection('users').doc(fbUser.uid).set({
+      email: fbUser.email,
+      name: fbUser.displayName || fbUser.email.split('@')[0],
+      role: 'client',
+      provider: provider,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    }, { merge: true });
+    xpAuth.setUser({ uid: fbUser.uid, email: fbUser.email, name: fbUser.displayName || fbUser.email.split('@')[0], role: 'client' });
+    setLoading(false);
+    window.location.href = getRedirect();
+  } catch(err) {
+    setLoading(false);
+    xpToast(friendlyError(err.code), 'error');
+  }
+}
+
+/* ── EMAIL LOGIN ── */
+async function doLogin() {
+  clearErr('loginError');
+  const email = document.getElementById('loginEmail').value.trim();
+  const pw = document.getElementById('loginPassword').value;
+  if (!email || !pw) { showErr('loginError', 'Please fill in all fields.'); return; }
+  setLoading(true, 'SIGNING IN...');
+  try {
+    const cred = await firebase.auth().signInWithEmailAndPassword(email, pw);
+    if (!cred.user.emailVerified) {
+      setLoading(false);
+      pendingEmail = email;
+      registeredUser = cred.user;
+      document.getElementById('authTabs').style.display = 'none';
+      document.getElementById('verifyMsg').textContent = 'Please verify your email before signing in. Check your inbox for a verification link sent to ' + email + '.';
+      showPanel('verifyPanel');
+      return;
+    }
+    /* Pull Firestore profile and cache */
+    const user = await xpAuth._refreshCache(cred.user);
+    setLoading(false);
+    window.location.href = getRedirect();
+  } catch(err) {
+    setLoading(false);
+    showErr('loginError', friendlyError(err.code));
+  }
+}
+
+/* ── REGISTER ── */
+async function doRegister() {
+  clearErr('regError');
+  var first = document.getElementById('regFirst').value.trim();
+  var last = document.getElementById('regLast').value.trim();
+  var email = document.getElementById('regEmail').value.trim();
+  var pw = document.getElementById('regPassword').value;
+  var company = document.getElementById('regCompany').value.trim();
+  var phone = document.getElementById('regPhone').value.trim();
+  if (!first || !email || !pw) { showErr('regError', 'Please fill in all required fields.'); return; }
+  if (pw.length < 8) { showErr('regError', 'Password must be at least 8 characters.'); return; }
+  if (!termsAccepted) { showErr('regError', 'Please accept the Terms of Service and Privacy Policy.'); return; }
+  setLoading(true, 'CREATING ACCOUNT...');
+  try {
+    const cred = await firebase.auth().createUserWithEmailAndPassword(email, pw);
+    const fullName = (first + ' ' + last).trim();
+    /* Update Firebase Auth display name */
+    await cred.user.updateProfile({ displayName: fullName });
+    /* Create Firestore user profile */
+    await db.collection('users').doc(cred.user.uid).set({
+      email, name: fullName, company, phone, role: 'client',
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    /* Send verification email */
+    await cred.user.sendEmailVerification();
+    pendingEmail = email;
+    registeredUser = cred.user;
+    setLoading(false);
+    document.getElementById('authTabs').style.display = 'none';
+    document.getElementById('verifyMsg').textContent = 'We sent a verification link to ' + email + '. Click the link in your inbox to activate your account.';
+    showPanel('verifyPanel');
+    xpToast('Account created! Check your email to verify.', 'success');
+  } catch(err) {
+    setLoading(false);
+    showErr('regError', friendlyError(err.code));
+  }
+}
+
+/* ── VERIFY — check if user has clicked verification link ── */
+async function checkVerified() {
+  clearErr('verifyError');
+  if (!registeredUser) { showLoginPanel(); return; }
+  setLoading(true, 'CHECKING...');
+  try {
+    await registeredUser.reload();
+    if (registeredUser.emailVerified) {
+      const user = await xpAuth._refreshCache(registeredUser);
+      setLoading(false);
+      xpToast('Email verified! Welcome to XPERTIAL.', 'success');
+      setTimeout(() => window.location.href = 'client/index.html', 800);
+    } else {
+      setLoading(false);
+      showErr('verifyError', 'Email not verified yet. Check your inbox and click the link.');
+    }
+  } catch(err) {
+    setLoading(false);
+    showErr('verifyError', 'Could not check status. Try signing in normally.');
+  }
+}
+
+async function resendVerification() {
+  if (!registeredUser) { xpToast('Please register first', 'warn'); return; }
+  try {
+    await registeredUser.sendEmailVerification();
+    xpToast('Verification email resent to ' + pendingEmail, 'success');
+  } catch(err) {
+    xpToast('Could not resend. Please try again in a minute.', 'error');
+  }
+}
+
+/* ── FORGOT PASSWORD ── */
+async function doForgot() {
+  clearErr('forgotError');
+  const email = document.getElementById('forgotEmail').value.trim();
+  if (!email) { showErr('forgotError', 'Please enter your email.'); return; }
+  setLoading(true, 'SENDING...');
+  try {
+    await firebase.auth().sendPasswordResetEmail(email);
+    setLoading(false);
+    xpToast('Password reset link sent to ' + email, 'success');
+    showLoginPanel();
+  } catch(err) {
+    setLoading(false);
+    showErr('forgotError', friendlyError(err.code));
+  }
+}
+</script>
+</body>
+</html>
